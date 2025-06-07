@@ -1,0 +1,3 @@
+[submodule "hayagriva"]
+	path = hayagriva
+	url = https://github.com/typst/hayagriva.git
