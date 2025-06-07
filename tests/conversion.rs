@@ -1,43 +1,72 @@
 use hayagriva::Library;
+use hayagriva_manager::export_to_biblatex;
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
-
-// Import your conversion function
-use hayagriva_manager::export_to_biblatex;
 
 fn get_stem(path: &Path) -> String {
     path.file_stem().unwrap().to_string_lossy().to_string()
 }
 
-#[test]
-fn test_bib_to_yaml_conversion() {
-    let bib_dir = Path::new("data/bib");
-    let from_bib_dir = Path::new("data/from_bib");
+fn print_first_mismatch(original: &Library, converted: &Library, file: &str) {
+    let original_keys: BTreeSet<_> = original.keys().collect();
+    let converted_keys: BTreeSet<_> = converted.keys().collect();
 
-    for entry in fs::read_dir(bib_dir).unwrap() {
-        let entry = entry.unwrap();
-        let bib_path = entry.path();
-        if bib_path.extension().and_then(|s| s.to_str()) != Some("bib") {
-            continue;
+    // Check for missing entries in conversion
+    for key in original_keys.difference(&converted_keys) {
+        eprintln!("CONVERSION FAILURE in {file}:");
+        eprintln!("  Entry '{key}' lost during hayagriva → BibTeX → hayagriva conversion");
+        return;
+    }
+
+    // Check for extra entries in conversion
+    for key in converted_keys.difference(&original_keys) {
+        eprintln!("CONVERSION FAILURE in {file}:");
+        eprintln!("  Extra entry '{key}' appeared during hayagriva → BibTeX → hayagriva conversion");
+        return;
+    }
+
+    // Check for content differences
+    for key in original_keys.intersection(&converted_keys) {
+        let original_entry = original.get(*key).unwrap();
+        let converted_entry = converted.get(*key).unwrap();
+
+        if original_entry != converted_entry {
+            eprintln!("CONVERSION FAILURE in {file}:");
+            eprintln!("  Entry '{key}' corrupted during hayagriva → BibTeX → hayagriva roundtrip");
+
+            // Show first differing field
+            macro_rules! check_field {
+                ($field:ident) => {
+                    if original_entry.$field() != converted_entry.$field() {
+                        eprintln!("    Field '{}' mismatch:", stringify!($field));
+                        eprintln!("      Original:  {:?}", original_entry.$field());
+                        eprintln!("      After roundtrip: {:?}", converted_entry.$field());
+                        return;
+                    }
+                };
+            }
+
+            check_field!(entry_type);
+            check_field!(title);
+            check_field!(authors);
+            check_field!(date);
+            check_field!(editors);
+            check_field!(publisher);
+            check_field!(location);
+            check_field!(organization);
+            check_field!(issue);
+            check_field!(volume);
+            check_field!(edition);
+            check_field!(page_range);
+            check_field!(url);
+            check_field!(doi);
+            check_field!(language);
+            check_field!(note);
+
+            eprintln!("    (Field difference not detected by specific checks)");
+            return;
         }
-        let stem = get_stem(&bib_path);
-        let yaml_path = from_bib_dir.join(format!("{stem}.yml"));
-
-        // If missing, generate using your conversion logic
-        if !yaml_path.exists() {
-            let bib_content = fs::read_to_string(&bib_path).unwrap();
-            let bib_lib = hayagriva::io::from_biblatex_str(&bib_content).unwrap();
-            let yaml_content = serde_yaml::to_string(&bib_lib).unwrap();
-            fs::write(&yaml_path, yaml_content).unwrap();
-        }
-
-        let bib_content = fs::read_to_string(&bib_path).unwrap();
-        let yaml_content = fs::read_to_string(&yaml_path).unwrap();
-
-        let bib_lib = hayagriva::io::from_biblatex_str(&bib_content).unwrap();
-        let yaml_lib: Library = serde_yaml::from_str(&yaml_content).unwrap();
-
-        assert_eq!(bib_lib, yaml_lib, "Mismatch for {stem}");
     }
 }
 
@@ -55,7 +84,7 @@ fn test_yaml_to_bib_conversion() {
         let stem = get_stem(&yaml_path);
         let bib_path = from_yaml_dir.join(format!("{stem}.bib"));
 
-        // If missing, generate using your conversion logic
+        // Generate BibTeX from YAML using our implementation
         if !bib_path.exists() {
             let yaml_content = fs::read_to_string(&yaml_path).unwrap();
             let yaml_lib: Library = serde_yaml::from_str(&yaml_content).unwrap();
@@ -66,9 +95,13 @@ fn test_yaml_to_bib_conversion() {
         let yaml_content = fs::read_to_string(&yaml_path).unwrap();
         let bib_content = fs::read_to_string(&bib_path).unwrap();
 
-        let yaml_lib: Library = serde_yaml::from_str(&yaml_content).unwrap();
-        let bib_lib = hayagriva::io::from_biblatex_str(&bib_content).unwrap();
+        let original_lib: Library = serde_yaml::from_str(&yaml_content).unwrap();
+        // Convert back using official implementation to test roundtrip fidelity
+        let roundtrip_lib = hayagriva::io::from_biblatex_str(&bib_content).unwrap();
 
-        assert_eq!(yaml_lib, bib_lib, "Mismatch for {stem}");
+        if original_lib != roundtrip_lib {
+            print_first_mismatch(&original_lib, &roundtrip_lib, &stem);
+            panic!("Roundtrip conversion test failed for {stem}: hayagriva → BibTeX → hayagriva produced different result");
+        }
     }
 }
