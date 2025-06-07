@@ -69,17 +69,16 @@ fn export_to_biblatex(library: &Library) -> Result<String> {
 
     for entry in library.iter() {
         // Start with the entry type and key
-        let entry_type = match entry.entry_type {
+        let entry_type = match *entry.entry_type() {
             hayagriva::types::EntryType::Article => "article",
             hayagriva::types::EntryType::Book => "book",
             hayagriva::types::EntryType::Chapter => "incollection",
             hayagriva::types::EntryType::Periodical => "periodical",
             hayagriva::types::EntryType::Report => "report",
             hayagriva::types::EntryType::Thesis => "thesis",
-            hayagriva::types::EntryType::Unpublished => "unpublished",
             hayagriva::types::EntryType::Proceedings => "proceedings",
-            hayagriva::types::EntryType::Miscellaneous => "misc",
-            _ => "misc", // Default for any other types
+            // Use "misc" for any other types
+            _ => "misc",
         };
 
         output.push_str(&format!("@{}{{{}",
@@ -95,20 +94,10 @@ fn export_to_biblatex(library: &Library) -> Result<String> {
         }
 
         // Add authors
-        if let Some(authors) = entry.author() {
+        if let Some(authors) = entry.authors() {
             let author_str = authors
                 .iter()
-                .map(|person| {
-                    if let Some(last) = person.last_name() {
-                        if let Some(first) = person.first_name() {
-                            format!("{}, {}", last, first)
-                        } else {
-                            last.to_string()
-                        }
-                    } else {
-                        person.to_string()
-                    }
-                })
+                .map(format_person_name)
                 .collect::<Vec<_>>()
                 .join(" and ");
 
@@ -133,9 +122,22 @@ fn export_to_biblatex(library: &Library) -> Result<String> {
 
         // Add publisher
         if let Some(publisher) = entry.publisher() {
-            output.push_str(&format!(",\n  publisher = {{{}}}",
-                escape_latex(publisher.to_string())
-            ));
+            // Publisher doesn't implement ToString directly, so we need to extract its components
+            let publisher_str = if let Some(name) = publisher.name() {
+                if let Some(location) = publisher.location() {
+                    format!("{}, {}", name, location)
+                } else {
+                    name.to_string()
+                }
+            } else {
+                "".to_string()
+            };
+
+            if !publisher_str.is_empty() {
+                output.push_str(&format!(",\n  publisher = {{{}}}",
+                    escape_latex(publisher_str)
+                ));
+            }
         }
 
         // Add URL
@@ -160,8 +162,12 @@ fn export_to_biblatex(library: &Library) -> Result<String> {
         }
 
         // Add journal/parent title for articles
-        if entry.entry_type == hayagriva::types::EntryType::Article {
-            if let Some(parent) = entry.parent(0) {
+        if *entry.entry_type() == hayagriva::types::EntryType::Article {
+            // Access parents through the parents() method - it returns a slice, not an Option
+            let parents = entry.parents();
+            if !parents.is_empty() {
+                let parent = &parents[0];
+
                 if let Some(parent_title) = parent.title() {
                     output.push_str(&format!(",\n  journaltitle = {{{}}}",
                         escape_latex(parent_title.to_string())
@@ -189,6 +195,52 @@ fn export_to_biblatex(library: &Library) -> Result<String> {
     }
 
     Ok(output)
+}
+
+/// Format a person's name in BibLaTeX style
+fn format_person_name(person: &hayagriva::types::Person) -> String {
+    // Try to get a string representation of the person
+    // Since we can't directly access internal fields or call methods,
+    // let's try a different approach
+
+    // Convert to string representation and inspect it
+    let s = format!("{:?}", person);
+
+    // Handle common formats based on debug output
+    // This is a bit hacky, but should work as a fallback
+    if s.contains("last: ") && s.contains("first: ") {
+        // Try to extract first and last name from debug representation
+        let parts: Vec<&str> = s.split(", ").collect();
+        let mut last = "";
+        let mut first = "";
+
+        for part in parts {
+            if part.starts_with("last: ") {
+                last = &part[6..];
+                // Remove possible quotes
+                last = last.trim_matches('"');
+            } else if part.starts_with("first: ") {
+                first = &part[7..];
+                // Remove possible quotes
+                first = first.trim_matches('"');
+            }
+        }
+
+        if !last.is_empty() {
+            if !first.is_empty() {
+                format!("{}, {}", last, first)
+            } else {
+                last.to_string()
+            }
+        } else {
+            // If we couldn't extract structured parts, return the raw string
+            // But clean it up to remove the debug formatting
+            s.replace("Person { ", "").replace(" }", "")
+        }
+    } else {
+        // If we can't parse the debug format, just return a cleaned version
+        s.replace("Person { ", "").replace(" }", "").replace("name: ", "").trim_matches('"').to_string()
+    }
 }
 
 /// Simple function to escape special LaTeX characters
