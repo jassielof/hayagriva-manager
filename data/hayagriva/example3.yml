@@ -1,0 +1,30 @@
+# A patent entry and a blog post entry.
+# The patent demonstrates the 'Patent' type with a 'holder' and custom serial number.
+# The post demonstrates a modern online source with a 'Blog' as its parent.
+page-turner-patent:
+  type: Patent
+  author:
+    - name: "Inventor"
+      given-name: "Ada"
+  title: "Automated Page-Turning Device"
+  date: "2021-03-15"
+  serial-number:
+    serial: "US 11,000,000 B2"
+  affiliated:
+    - role: "holder"
+      names: ["Innovative Reading Corp."]
+  note: "Demonstrates patent type and the 'holder' affiliated role."
+
+# A post on a fictional blog.
+future-of-typesetting:
+  type: Post
+  author:
+    - name: "Tip-Tap"
+      given-name: "Tippy"
+      alias: "TypoTheTypist"
+  title: "The Future of Digital Typesetting"
+  date: "2023-11-01"
+  url: "https://typesettingthoughts.blog/2023/11/01/future"
+  parent:
+    type: Blog
+    title: "Typesetting Thoughts"

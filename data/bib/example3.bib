@@ -1,0 +1,59 @@
+@comment{This file focuses on media types, translations, and specific author/editor roles.}
+
+% == SOFTWARE: To cite computer software. ==
+@software{git-scm,
+  author       = {Torvalds, Linus and others},
+  title        = {Git},
+  version      = {2.45.1},
+  url          = {https://git-scm.com/},
+  date         = {2024-05-14},
+  organization = {Software Freedom Conservancy}
+}
+
+% == AUDIO: For a musical album or audio recording. ==
+@audio{daft-punk:ram,
+  author  = {Daft Punk},
+  title   = {Random Access Memories},
+  year    = {2013},
+  publisher = {Columbia Records},
+  location = {New York},
+  ismn    = {888837168628},
+  note    = {Winner of the Grammy Award for Album of the Year in 2014.}
+}
+
+% == BOOK: A translated work, showing original language/date info. ==
+% This demonstrates the use of `translator` and the 'orig' fields.
+@book{dostoevsky:crime-pevear,
+  author       = {Dostoevsky, Fyodor},
+  translator   = {Pevear, Richard and Volokhonsky, Larissa},
+  title        = {Crime and Punishment},
+  year         = {1992},
+  publisher    = {Vintage Books},
+  location     = {New York},
+  origlanguage = {russian},
+  origdate     = {1866},
+  introduction = {Pevear, Richard},
+  note         = {A celebrated modern translation.}
+}
+
+% == PROCEEDINGS: Showcasing different editor roles. ==
+% Uses `editora` and `editoratype` to specify a secondary editor role.
+@proceedings{compsci-conf1999,
+  title       = {Advanced Topics in Computer Science},
+  year        = {1999},
+  editor      = {Johnson, Abigail},
+  editora     = {Chomsky, Noam},
+  editoratype = {foreword},
+  publisher   = {Academic Press},
+  note        = {Proceedings from a fictional conference.}
+}
+
+% == MANUAL: The user manual for a product or software. ==
+@manual{raspberrypi-pico-manual,
+    title        = {Raspberry Pi Pico C/C++ SDK},
+    organization = {Raspberry Pi Ltd},
+    date         = {2023-11-20},
+    version      = {1.5.1},
+    url          = {https://datasheets.raspberrypi.com/pico/sdk/pico_c_sdk.pdf},
+    note         = {User manual for the Pico Software Development Kit.}
+}

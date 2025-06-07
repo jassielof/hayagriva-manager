@@ -1,0 +1,169 @@
+einstein1905:
+  type: article
+  title: Zur Elektrodynamik bewegter Körper
+  author: Einstein, Albert
+  date: 1905
+  page-range: 891-921
+  serial-number:
+    doi: 10.1002/andp.19053221004
+  abstract: This is the paper that introduced the theory of special relativity.
+  parent:
+    type: periodical
+    title: Annalen der Physik
+    issue: 10
+    volume: 322
+knuth1986:
+  type: book
+  title: The TeXbook
+  author: Knuth, Donald E.
+  date: 1986
+  publisher:
+    name: Addison-Wesley Professional
+    location: Reading, Mass.
+  serial-number:
+    isbn: 0-201-13448-9
+  note: This is Volume A in the 'Computers & Typesetting' series.
+  parent:
+    type: book
+    title: Computers & Typesetting
+tolkien:lotr:
+  type: book
+  title: The Lord of the Rings
+  author: Tolkien, J. R. R.
+  date: 1954
+  publisher: George Allen & Unwin
+  note: A classic high-fantasy novel.
+tolkien:fellowship:
+  type: chapter
+  title: The Fellowship of the Ring
+  author: Tolkien, J. R. R.
+  date: 1954
+  note: The first part of the trilogy.
+  parent:
+    type: book
+    publisher: George Allen & Unwin
+    volume: 1
+various:physics:
+  type: anthology
+  title: Quantum Theory and Measurement
+  date: 1983
+  editor:
+  - Wheeler, John Archibald
+  - Zurek, Wojciech Hubert
+  publisher:
+    name: Princeton University Press
+    location: Princeton, NJ
+  serial-number:
+    isbn: 978-0-691-08316-2
+bohr1935:
+  type: anthos
+  title: Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?
+  author: Bohr, Niels
+  date: 1983
+  editor:
+  - Wheeler, John Archibald
+  - Zurek, Wojciech Hubert
+  page-range: 145-151
+  serial-number:
+    isbn: 978-0-691-08316-2
+  note: A reply to the EPR paradox.
+  parent:
+    type: anthology
+    title: Quantum Theory and Measurement
+    author:
+    - Einstein, Albert
+    - Podolsky, Boris
+    - Rosen, Nathan
+    publisher:
+      name: Princeton University Press
+      location: Princeton, NJ
+ctan:biblatex:
+  type: web
+  title: Biblatex—sophisticated bibliographies in LaTeX
+  organization: Comprehensive TeX Archive Network
+  url:
+    value: https://ctan.org/pkg/biblatex
+    date: 2024-05-10
+  note: The main page for the biblatex package on CTAN.
+latexconf2023:
+  type: proceedings
+  title: Proceedings of the 14th Annual LaTeX Conference
+  date: 2023
+  organization: The TeX Users Group
+  parent:
+    type: conference
+    date: 2023-09-17
+    location: Virtual
+lehman:biblatex:
+  type: article
+  title: The Future of Biblatex
+  author:
+  - Lehman, Philipp
+  - Kime, Philip
+  date: 2023
+  page-range: 42-50
+  note: A talk about upcoming features.
+  parent:
+  - type: proceedings
+    title: Proceedings of the 14th Annual LaTeX Conference
+    organization: The TeX Users Group
+  - type: conference
+    location: Virtual
+nasa:report:
+  type: report
+  title: A Report on Interplanetary Travel
+  author: National Aeronautics and Space Administration
+  date: 2022
+  organization: NASA Jet Propulsion Laboratory
+  serial-number:
+    arxiv: '2201.12345'
+    serial: JPL-TR-22-001
+  genre: Technical Report
+student:phd:
+  type: thesis
+  title: An Advanced Study of Fictional Works
+  author: Student, Jane
+  date: 2021
+  publisher:
+    name: null
+    location: Nowheresville
+  organization: University of Erewhon
+  note: A groundbreaking thesis.
+  genre: phdthesis
+cool-dataset:
+  type: misc
+  title: Cool Dataset for AI
+  author: Developer, Ann
+  date: 2020
+  serial-number:
+    version: 1.2.3
+  note: Can be downloaded from the author's personal website.
+uni-press:
+  type: misc
+  publisher:
+    name: University of Utopia Press
+    location: New Atlantis
+scholar:book:
+  type: book
+  title: On the Nature of Things
+  author: Scholar, John
+  date: 2019
+  publisher:
+    name: University of Utopia Press
+    location: New Atlantis
+major-works:
+  type: misc
+  note: A set containing two foundational works.
+clever-invention:
+  type: patent
+  title: A Method for Perpetual Motion
+  author:
+  - Inventor, Jane Marie
+  - Inventor, John
+  date: 2022
+  publisher:
+    name: null
+    location: countryus
+  serial-number:
+    serial: US1234567B2
+
