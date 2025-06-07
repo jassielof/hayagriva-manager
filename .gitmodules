@@ -1,3 +1,6 @@
 [submodule "hayagriva"]
 	path = hayagriva
 	url = https://github.com/typst/hayagriva.git
+[submodule "json-schemas"]
+	path = json-schemas
+	url = https://github.com/jassielof/json-schemas
