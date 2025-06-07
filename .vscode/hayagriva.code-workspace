@@ -1,0 +1,25 @@
+{
+    "folders": [
+        {
+            "path": "../",
+            "name": "Hayagraiva Manager"
+        },
+        {
+            "path": "../hayagriva",
+            "name": "Typst/Hayagriva"
+        },
+        {
+            "path": "../json-schemas",
+            "name": "JSON Schemas"
+        }
+    ],
+    "settings": {
+            "cSpell.words": [
+        "biblatex",
+        "hayagriva",
+        "Hayagriva",
+        "serde"
+    ]
+
+    }
+}
