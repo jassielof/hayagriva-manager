@@ -1,25 +1,26 @@
 {
-    "folders": [
-        {
-            "path": "../",
-            "name": "Hayagraiva Manager"
-        },
-        {
-            "path": "../hayagriva",
-            "name": "Typst/Hayagriva"
-        },
-        {
-            "path": "../json-schemas",
-            "name": "JSON Schemas"
-        }
-    ],
-    "settings": {
-            "cSpell.words": [
-        "biblatex",
-        "hayagriva",
-        "Hayagriva",
-        "serde"
-    ]
-
+  "folders": [
+    {
+      "path": "../",
+      "name": "Hayagraiva Manager"
+    },
+    {
+      "path": "../hayagriva",
+      "name": "Typst/Hayagriva"
+    },
+    {
+      "path": "../json-schemas",
+      "name": "JSON Schemas"
     }
+  ],
+  "settings": {
+    "cSpell.words": ["biblatex", "hayagriva", "Hayagriva", "serde"],
+    "yaml.schemas": {
+      "https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json": [
+        "*.[hay,haya,hayagriva].[yml,yaml]",
+        "*.[hay,haya,hayagriva]",
+        "file:///home/jassielof/GitHub/jassielof/hayagriva-manager/data/hayagriva/hayagriva.yml"
+      ]
+    }
+  }
 }
