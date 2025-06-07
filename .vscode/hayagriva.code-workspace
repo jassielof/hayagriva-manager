@@ -11,10 +11,19 @@
     {
       "path": "../json-schemas",
       "name": "JSON Schemas"
+    },
+    {
+      "path": "../hayagriva-zotero-translator",
+      "name": "Hayagriva Zotero Translator"
     }
   ],
   "settings": {
-    "cSpell.words": ["biblatex", "hayagriva", "Hayagriva", "serde"],
+    "cSpell.words": [
+      "biblatex",
+      "hayagriva",
+      "Hayagriva",
+      "serde"
+    ],
     "yaml.schemas": {
       "https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json": [
         "*.[hay,haya,hayagriva].[yml,yaml]",

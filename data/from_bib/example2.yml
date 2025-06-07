@@ -1,0 +1,49 @@
+marbury-v-madison:
+  type: misc
+  title: Marbury v. Madison
+  author: Supreme Court of the United States
+  date: 1803
+  volume: 5
+  page-range: '137'
+  note: Established the principle of judicial review.
+unesco:education2030:
+  type: report
+  title: 'Education 2030: Incheon Declaration and Framework for Action'
+  author: United Nations Educational, Scientific and Cultural Organization
+  date: 2015
+  organization: UNESCO
+  url:
+    value: https://unesdoc.unesco.org/ark:/48223/pf0000245656
+    date: 2024-03-01
+lab-members:
+  type: misc
+  author:
+  - Smith, Alan
+  - Miller, Beatrice
+jones:study:
+  type: article
+  title: A Collaborative Study on Quantum States
+  author:
+  - Jones, Priya
+  - ''
+  date: 2023
+  parent:
+    type: periodical
+    title: Journal of Obscure Physics
+speaker:lecture:
+  type: manuscript
+  title: The Role of Archives in the Digital Age
+  author: Speaker, Eloise
+  note: The author provided a transcript of the talk.
+calvino:invisible:
+  type: book
+  title: Invisible Cities
+  author: Calvino, Italo
+  date: 1974
+  affiliated:
+    names: Weaver, William
+    role: translator
+  publisher:
+    name: Harcourt Brace Jovanovich
+    location: New York
+
