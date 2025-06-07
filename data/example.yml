@@ -1,0 +1,155 @@
+# A comprehensive example Hayagriva file, demonstrating various entry types,
+# fields, and data structures based on the Hayagriva JSON schema (v0.7).
+
+# -- Article with a Parent Periodical --
+# Shows a basic article, a structured person, a DOI, and the parent model.
+# Biblatex: @article
+einstein1905:
+  type: Article
+  author:
+    name: Einstein
+    given-name: Albert
+  title: "Zur Elektrodynamik bewegter Körper"
+  date: 1905
+  parent:
+    type: Periodical
+    title: "Annalen der Physik"
+    volume: 322
+    issue: 10
+  page-range: "891-921"
+  serial-number:
+    doi: "10.1002/andp.19053221004"
+  language: de
+  abstract: "This is the paper that introduced the theory of special relativity."
+
+# -- Book with Formattable Title and Publisher Location --
+# Demonstrates short titles, structured publisher, and ISBN.
+# Biblatex: @book
+knuth1986:
+  type: Book
+  author: "Knuth, Donald E."
+  title:
+    value: "The TeXbook"
+    short: "TeXbook"
+    verbatim: true
+  edition: 2
+  publisher:
+    name: "Addison-Wesley Professional"
+    location: "Reading, MA"
+  date: 1986
+  volume: "A"
+  note: "This entry demonstrates the book type with a structured publisher."
+  serial-number:
+    isbn: "0-201-13448-9"
+
+# -- Chapter with a Parent Anthology & Multiple Editors --
+# This is equivalent to an 'incollection' or 'inbook' from Biblatex.
+# Note the use of `editor` in the parent entry.
+bohr1935:
+  type: Chapter
+  author:
+    - name: "Bohr"
+      given-name: "Niels"
+  title: "Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?"
+  page-range: "145-151"
+  parent:
+    type: Anthology
+    title: "Quantum Theory and Measurement"
+    editor:
+      - "Wheeler, John Archibald"
+      - "Zurek, Wojciech Hubert"
+    date: 1983
+    publisher:
+      name: "Princeton University Press"
+      location: "Princeton, NJ"
+
+# -- Web Entry with Access Date and Organization --
+# Biblatex: @online
+ctan:biblatex:
+  type: Web
+  title: "Biblatex—sophisticated bibliographies in LaTeX"
+  organization: "Comprehensive TeX Archive Network"
+  url:
+    value: "https://ctan.org/pkg/biblatex"
+    date: 2024-05-10
+  note: "An example of a web resource with an access date."
+
+# -- Conference Proceedings with Multiple Parents & Affiliated Roles --
+# This shows two key Hayagriva features: an array of parents (it was
+# both a conference presentation and is available as a video), and the
+# use of the 'affiliated' field for roles other than author/editor.
+wwdc-talk:
+  type: Article
+  title: "Boost Performance and Security with Modern Networking"
+  date: "2020-06-26"
+  affiliated:
+    - role: "writer"
+      names:
+        - "Mehta, Jiten"
+        - "Kinnear, Eric"
+  parent:
+    - type: Conference
+      title: "World Wide Developer Conference 2020"
+      organization: "Apple Inc."
+      location: "Mountain View, CA"
+    - type: Video
+      runtime: "00:13:42" # HH:MM:SS
+      url: "https://developer.apple.com/videos/play/wwdc2020/10111/"
+      note: "Official video recording of the conference talk."
+
+# -- Report with a Corporate Author (alias) and Multiple Serial Numbers --
+# `shortauthor` in Biblatex is mapped to an alias for a structured person.
+# Also shows a specific genre and multiple types of serial numbers.
+# Biblatex: @report
+nasa:report:
+  type: Report
+  author:
+    name: "National Aeronautics and Space Administration"
+    alias: "NASA"
+  title: "A Report on Interplanetary Travel"
+  genre: "Technical Report"
+  organization: "NASA Jet Propulsion Laboratory"
+  date: 2022
+  serial-number:
+    arxiv: "2201.12345"
+    serial: "JPL-TR-22-001"
+  note: "This demonstrates corporate authors and multiple serial numbers."
+
+# -- Thesis with an Affiliated Translator and a custom Genre --
+# Demonstrates the 'translator' role in the affiliated list.
+# Biblatex: @thesis
+student:phd:
+  type: Thesis
+  author:
+    name: "Student"
+    given-name: "Jane"
+  title: "An Advanced Study of Fictional Works"
+  genre: "Doctoral dissertation" # more specific than the type 'thesis'
+  organization: "University of Erewhon"
+  date: 2021
+  affiliated:
+    - role: "translator"
+      names: "Doe, John"
+  note: "Translated from its original Latin for modern publication."
+
+# -- Artwork with Nested Parents, Archive, and Call Number --
+# Shows a deeply nested parent structure and archival information.
+jacoby-plaque:
+  type: Misc # The informational plaque is of miscellaneous type.
+  title: "Informational plaque about Jacoby's 1967 photos"
+  publisher: { name: "Stiftung Reinbeckhallen", location: "Berlin, Germany" }
+  date: 2020
+  # The parent is the photo itself.
+  parent:
+    type: Artwork
+    date: 1967
+    author:
+      name: "Jacoby"
+      given-name: "Max"
+    # The photo itself is part of a larger collection.
+    parent:
+      type: Anthology
+      title: "Bleibtreustraße"
+      archive: "Landesmuseum Koblenz"
+      archive-location: "Koblenz, Germany"
+      call-number: "F16 D14"

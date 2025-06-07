@@ -1,0 +1,161 @@
+@comment{This is a comprehensive example biblatex file.}
+@comment{It demonstrates various entry types and fields.}
+
+% == ARTICLE: An article in a journal, magazine, or newspaper. ==
+@article{einstein1905,
+  author       = {Einstein, Albert},
+  title        = {Zur Elektrodynamik bewegter Körper},
+  journaltitle = {Annalen der Physik},
+  year         = {1905},
+  volume       = {322},
+  number       = {10},
+  pages        = {891-921},
+  doi          = {10.1002/andp.19053221004},
+  langid       = {german},
+  abstract     = {This is the paper that introduced the theory of special relativity.}
+}
+
+% == BOOK: A single-volume book. ==
+@book{knuth1986,
+  author    = {Knuth, Donald E.},
+  title     = {The TeXbook},
+  volume    = {A},
+  maintitle = {Computers & Typesetting},
+  publisher = {Addison-Wesley Professional},
+  year      = {1986},
+  location  = {Reading, Mass.},
+  isbn      = {0-201-13448-9},
+  note      = {This is Volume A in the 'Computers & Typesetting' series.}
+}
+
+% == MVBOOK & INBOOK: A multi-volume work and a self-contained part of it. ==
+@mvbook{tolkien:lotr,
+  author    = {Tolkien, J. R. R.},
+  title     = {The Lord of the Rings},
+  publisher = {George Allen & Unwin},
+  year      = {1954/1955},
+  volumes   = {3},
+  note      = {A classic high-fantasy novel.}
+}
+
+@inbook{tolkien:fellowship,
+  title    = {The Fellowship of the Ring},
+  crossref = {tolkien:lotr},
+  volume   = {1},
+  note     = {The first part of the trilogy.}
+}
+
+
+% == COLLECTION & INCOLLECTION: A book with multiple authors & a chapter within it. ==
+@collection{various:physics,
+  editor    = {Wheeler, John Archibald and Zurek, Wojciech Hubert},
+  title     = {Quantum Theory and Measurement},
+  publisher = {Princeton University Press},
+  year      = {1983},
+  isbn      = {978-0-691-08316-2},
+  location  = {Princeton, NJ}
+}
+
+@incollection{bohr1935,
+  author     = {Bohr, Niels},
+  title      = {Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
+  crossref   = {various:physics},
+  pages      = {145-151},
+  bookauthor = {Einstein, Albert and Podolsky, Boris and Rosen, Nathan},
+  note       = {A reply to the EPR paradox.}
+}
+
+
+% == ONLINE: An online resource, like a website. ==
+@online{ctan:biblatex,
+  title        = {Biblatex---sophisticated bibliographies in LaTeX},
+  url          = {https://ctan.org/pkg/biblatex},
+  urldate      = {2024-05-10},
+  organization = {Comprehensive TeX Archive Network},
+  note         = {The main page for the biblatex package on CTAN.}
+}
+
+
+% == PROCEEDINGS & INPROCEEDINGS: Conference proceedings and an article within them. ==
+@proceedings{latexconf2023,
+  title        = {Proceedings of the 14th Annual LaTeX Conference},
+  year         = {2023},
+  eventdate    = {2023-09-15/2023-09-17},
+  venue        = {Virtual},
+  organization = {The TeX Users Group}
+}
+
+@inproceedings{lehman:biblatex,
+  author   = {Lehman, Philipp and Kime, Philip},
+  title    = {The Future of Biblatex},
+  crossref = {latexconf2023},
+  pages    = {42-50},
+  note     = {A talk about upcoming features.}
+}
+
+
+% == REPORT: A technical report or white paper. ==
+@report{nasa:report,
+  author      = {{National Aeronautics and Space Administration}},
+  shortauthor = {NASA},
+  title       = {A Report on Interplanetary Travel},
+  type        = {Technical Report},
+  institution = {NASA Jet Propulsion Laboratory},
+  year        = {2022},
+  number      = {JPL-TR-22-001},
+  pubstate    = {prepublished},
+  eprint      = {2201.12345},
+  eprinttype  = {arxiv},
+  eprintclass = {astro-ph}
+}
+
+% == THESIS: An academic thesis. ==
+@thesis{student:phd,
+  author      = {Student, Jane},
+  title       = {An Advanced Study of Fictional Works},
+  type        = {phdthesis},
+  institution = {University of Erewhon},
+  year        = {2021},
+  location    = {Nowheresville},
+  note        = {A groundbreaking thesis.}
+}
+
+
+% == MISC: A fallback type for things that don't fit elsewhere. ==
+@misc{cool-dataset,
+  author       = {Developer, Ann},
+  title        = {Cool Dataset for AI},
+  howpublished = {Self-published online},
+  year         = {2020},
+  version      = {1.2.3},
+  note         = {Can be downloaded from the author's personal website.}
+}
+
+% == XDATA: A data container for inheriting fields. ==
+@xdata{uni-press,
+  publisher = {University of Utopia Press},
+  location  = {New Atlantis}
+}
+
+@book{scholar:book,
+  author = {Scholar, John},
+  title  = {On the Nature of Things},
+  year   = {2019},
+  xdata  = {uni-press}
+}
+
+% == SET: A collection of works to be cited as a group. ==
+@set{major-works,
+  entryset = {einstein1905,knuth1986},
+  note     = {A set containing two foundational works.}
+}
+
+% == PATENT: A patent or patent request. ==
+@patent{clever-invention,
+  author   = {Inventor, Jane Marie and Inventor, John},
+  title    = {A Method for Perpetual Motion},
+  number   = {US 1234567 B2},
+  year     = {2022},
+  month    = {11},
+  location = {countryus}
+}
