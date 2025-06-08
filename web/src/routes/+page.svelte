@@ -254,7 +254,214 @@
 								}}
 							/>
 						</label>
-						<!-- Add more fields as needed -->
+						<label class="form-control w-full">
+							<span class="label-text">Edition</span>
+							<input
+								class="input input-bordered"
+								bind:value={entries[selectedId].edition}
+								on:input={(e) => {
+									const target = e.target as HTMLInputElement | null;
+									if (target) updateSelectedEntry('edition', target.value);
+								}}
+							/>
+						</label>
+						<label class="form-control w-full">
+							<span class="label-text">Publisher</span>
+							{#if typeof entries[selectedId].publisher === 'object' && entries[selectedId].publisher !== null}
+								<div class="mb-2 flex gap-2">
+									<button
+										type="button"
+										class="btn btn-xs btn-outline"
+										on:click={() => updateSelectedEntry('publisher', '')}>Use as string</button
+									>
+								</div>
+								<input
+									class="input input-bordered mb-2"
+									placeholder="Name"
+									bind:value={entries[selectedId].publisher.name}
+									on:input={(e) => {
+										const val = e.target.value;
+										updateSelectedEntry('publisher', {
+											...entries[selectedId].publisher,
+											name: val
+										});
+									}}
+								/>
+								<input
+									class="input input-bordered"
+									placeholder="Location (optional)"
+									bind:value={entries[selectedId].publisher.location}
+									on:input={(e) => {
+										const val = e.target.value;
+										updateSelectedEntry('publisher', {
+											...entries[selectedId].publisher,
+											location: val
+										});
+									}}
+								/>
+							{:else}
+								<div class="mb-2 flex gap-2">
+									<button
+										type="button"
+										class="btn btn-xs btn-outline"
+										on:click={() =>
+											updateSelectedEntry('publisher', {
+												name: entries[selectedId].publisher || ''
+											})}>Use as object</button
+									>
+								</div>
+								<input
+									class="input input-bordered"
+									placeholder="Publisher"
+									bind:value={entries[selectedId].publisher}
+									on:input={(e) => updateSelectedEntry('publisher', e.target.value)}
+								/>
+							{/if}
+						</label>
+						<label class="form-control w-full">
+							<span class="label-text">Language</span>
+							<input
+								class="input input-bordered"
+								bind:value={entries[selectedId].language}
+								on:input={(e) => {
+									const target = e.target as HTMLInputElement | null;
+									if (target) updateSelectedEntry('language', target.value);
+								}}
+							/>
+						</label>
+						<label class="form-control w-full">
+							<span class="label-text">URL</span>
+							{#if typeof entries[selectedId].url === 'object' && entries[selectedId].url !== null}
+								<div class="mb-2 flex gap-2">
+									<button
+										type="button"
+										class="btn btn-xs btn-outline"
+										on:click={() => updateSelectedEntry('url', '')}>Use as string</button
+									>
+								</div>
+								<input
+									class="input input-bordered mb-2"
+									placeholder="URL"
+									bind:value={entries[selectedId].url.value}
+									on:input={(e) => {
+										const val = e.target.value;
+										updateSelectedEntry('url', { ...entries[selectedId].url, value: val });
+									}}
+								/>
+								<input
+									class="input input-bordered"
+									placeholder="Access Date (YYYY-MM-DD)"
+									bind:value={entries[selectedId].url.date}
+									on:input={(e) => {
+										const val = e.target.value;
+										updateSelectedEntry('url', { ...entries[selectedId].url, date: val });
+									}}
+								/>
+							{:else}
+								<div class="mb-2 flex gap-2">
+									<button
+										type="button"
+										class="btn btn-xs btn-outline"
+										on:click={() =>
+											updateSelectedEntry('url', {
+												value: entries[selectedId].url || '',
+												date: ''
+											})}>Use as object</button
+									>
+								</div>
+								<input
+									class="input input-bordered"
+									placeholder="URL"
+									bind:value={entries[selectedId].url}
+									on:input={(e) => updateSelectedEntry('url', e.target.value)}
+								/>
+							{/if}
+						</label>
+						<label class="form-control w-full">
+							<span class="label-text">Serial Number</span>
+							{#if typeof entries[selectedId]['serial-number'] === 'object' && entries[selectedId]['serial-number'] !== null}
+								<div class="mb-2 flex gap-2">
+									<button
+										type="button"
+										class="btn btn-xs btn-outline"
+										on:click={() => updateSelectedEntry('serial-number', '')}
+										>Use as string/number</button
+									>
+								</div>
+								{#each ['doi', 'isbn', 'issn', 'pmid', 'pmcid', 'arxiv', 'serial'] as key}
+									<input
+										class="input input-bordered mb-1"
+										placeholder={key.toUpperCase()}
+										bind:value={entries[selectedId]['serial-number'][key]}
+										on:input={(e) => {
+											const val = e.target.value;
+											updateSelectedEntry('serial-number', {
+												...entries[selectedId]['serial-number'],
+												[key]: val
+											});
+										}}
+									/>
+								{/each}
+							{:else}
+								<div class="mb-2 flex gap-2">
+									<button
+										type="button"
+										class="btn btn-xs btn-outline"
+										on:click={() =>
+											updateSelectedEntry('serial-number', {
+												doi: '',
+												isbn: '',
+												issn: '',
+												pmid: '',
+												pmcid: '',
+												arxiv: '',
+												serial: ''
+											})}>Use as object</button
+									>
+								</div>
+								<input
+									class="input input-bordered"
+									placeholder="Serial Number"
+									bind:value={entries[selectedId]['serial-number']}
+									on:input={(e) => updateSelectedEntry('serial-number', e.target.value)}
+								/>
+							{/if}
+						</label>
+						<!-- Recursive Parent Entry -->
+						{#if entries[selectedId].parent}
+							<div class="collapse-arrow bg-base-200 collapse">
+								<input type="checkbox" />
+								<div class="collapse-title font-medium">Parent Entry</div>
+								<div class="collapse-content">
+									{#if Array.isArray(entries[selectedId].parent)}
+										{#each entries[selectedId].parent as parentEntry, idx}
+											<div class="border-base-300 mb-2 border-b pb-2">
+												<span class="font-semibold">Parent #{idx + 1}</span>
+												<!-- Recursive rendering: you can extract this to a component for cleaner code -->
+												{#each Object.entries(parentEntry) as [pkey, pval]}
+													<div class="mb-1">
+														<span class="font-semibold">{pkey}:</span>
+														<span class="ml-2"
+															>{typeof pval === 'object' ? JSON.stringify(pval) : pval}</span
+														>
+													</div>
+												{/each}
+											</div>
+										{/each}
+									{:else}
+										<!-- Single parent object -->
+										{#each Object.entries(entries[selectedId].parent) as [pkey, pval]}
+											<div class="mb-1">
+												<span class="font-semibold">{pkey}:</span>
+												<span class="ml-2"
+													>{typeof pval === 'object' ? JSON.stringify(pval) : pval}</span
+												>
+											</div>
+										{/each}
+									{/if}
+								</div>
+							</div>
+						{/if}
 					</form>
 				</div>
 			</div>
