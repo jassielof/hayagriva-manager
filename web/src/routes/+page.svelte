@@ -200,7 +200,7 @@
 
   <!-- Sidebar: Entry Details -->
   <div class="w-full md:w-96">
-    {#if selectedId && entries[selectedId]}
+    {#if selectedId !== null && entries[selectedId]}
       <div class="card bg-base-100 sticky top-4 shadow-md">
         <div class="card-body">
           <h2 class="card-title mb-2">Entry Details</h2>
@@ -210,10 +210,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].title}
-                on:input={(e) => {
-                  const target = e.target as HTMLInputElement | null;
-                  if (target) updateSelectedEntry('title', target.value);
-                }}
+                on:input={(e) => updateSelectedEntry('title', (e.target as HTMLInputElement).value)}
               />
             </label>
             <label class="form-control w-full">
@@ -221,10 +218,8 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].author}
-                on:input={(e) => {
-                  const target = e.target as HTMLInputElement | null;
-                  if (target) updateSelectedEntry('author', target.value);
-                }}
+                on:input={(e) =>
+                  updateSelectedEntry('author', (e.target as HTMLInputElement).value)}
               />
             </label>
             <label class="form-control w-full">
@@ -232,10 +227,8 @@
               <select
                 class="select select-bordered"
                 bind:value={entries[selectedId].type}
-                on:change={(e) => {
-                  const target = e.target as HTMLSelectElement | null;
-                  if (target) updateSelectedEntry('type', target.value);
-                }}
+                on:change={(e) =>
+                  updateSelectedEntry('type', (e.target as HTMLSelectElement).value)}
               >
                 <option value="">Select type</option>
                 {#each entryTypes as type}
@@ -248,10 +241,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].date}
-                on:input={(e) => {
-                  const target = e.target as HTMLInputElement | null;
-                  if (target) updateSelectedEntry('date', target.value);
-                }}
+                on:input={(e) => updateSelectedEntry('date', (e.target as HTMLInputElement).value)}
               />
             </label>
             <label class="form-control w-full">
@@ -259,10 +249,8 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].edition}
-                on:input={(e) => {
-                  const target = e.target as HTMLInputElement | null;
-                  if (target) updateSelectedEntry('edition', target.value);
-                }}
+                on:input={(e) =>
+                  updateSelectedEntry('edition', (e.target as HTMLInputElement).value)}
               />
             </label>
             <label class="form-control w-full">
@@ -272,31 +260,44 @@
                   <button
                     type="button"
                     class="btn btn-xs btn-outline"
-                    on:click={() => updateSelectedEntry('publisher', '')}>Use as string</button
+                    on:click={() => {
+                      const currentId = selectedId;
+                      if (currentId !== null) {
+                        updateSelectedEntry('publisher', '');
+                      }
+                    }}>Use as string</button
                   >
                 </div>
                 <input
                   class="input input-bordered mb-2"
                   placeholder="Name"
-                  bind:value={entries[selectedId].publisher.name}
+                  value={entries[selectedId].publisher.name}
                   on:input={(e) => {
-                    const val = e.target.value;
-                    updateSelectedEntry('publisher', {
-                      ...entries[selectedId].publisher,
-                      name: val
-                    });
+                    const val = (e.target as HTMLInputElement).value;
+                    const currentId = selectedId;
+                    if (currentId !== null) {
+                      const currentPublisher = entries[currentId].publisher;
+                      updateSelectedEntry('publisher', {
+                        ...(currentPublisher as object),
+                        name: val
+                      });
+                    }
                   }}
                 />
                 <input
                   class="input input-bordered"
                   placeholder="Location (optional)"
-                  bind:value={entries[selectedId].publisher.location}
+                  value={entries[selectedId].publisher.location}
                   on:input={(e) => {
-                    const val = e.target.value;
-                    updateSelectedEntry('publisher', {
-                      ...entries[selectedId].publisher,
-                      location: val
-                    });
+                    const val = (e.target as HTMLInputElement).value;
+                    const currentId = selectedId;
+                    if (currentId !== null) {
+                      const currentPublisher = entries[currentId].publisher;
+                      updateSelectedEntry('publisher', {
+                        ...(currentPublisher as object),
+                        location: val
+                      });
+                    }
                   }}
                 />
               {:else}
@@ -304,17 +305,26 @@
                   <button
                     type="button"
                     class="btn btn-xs btn-outline"
-                    on:click={() =>
-                      updateSelectedEntry('publisher', {
-                        name: entries[selectedId].publisher || ''
-                      })}>Use as object</button
+                    on:click={() => {
+                      const currentId = selectedId;
+                      if (currentId !== null) {
+                        updateSelectedEntry('publisher', {
+                          name: entries[currentId].publisher || ''
+                        });
+                      }
+                    }}>Use as object</button
                   >
                 </div>
                 <input
                   class="input input-bordered"
                   placeholder="Publisher"
-                  bind:value={entries[selectedId].publisher}
-                  on:input={(e) => updateSelectedEntry('publisher', e.target.value)}
+                  value={entries[selectedId].publisher}
+                  on:input={(e) => {
+                    const currentId = selectedId;
+                    if (currentId !== null) {
+                      updateSelectedEntry('publisher', (e.target as HTMLInputElement).value);
+                    }
+                  }}
                 />
               {/if}
             </label>
@@ -323,10 +333,8 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].language}
-                on:input={(e) => {
-                  const target = e.target as HTMLInputElement | null;
-                  if (target) updateSelectedEntry('language', target.value);
-                }}
+                on:input={(e) =>
+                  updateSelectedEntry('language', (e.target as HTMLInputElement).value)}
               />
             </label>
             <label class="form-control w-full">
@@ -336,25 +344,38 @@
                   <button
                     type="button"
                     class="btn btn-xs btn-outline"
-                    on:click={() => updateSelectedEntry('url', '')}>Use as string</button
+                    on:click={() => {
+                      const currentId = selectedId;
+                      if (currentId !== null) {
+                        updateSelectedEntry('url', '');
+                      }
+                    }}>Use as string</button
                   >
                 </div>
                 <input
                   class="input input-bordered mb-2"
                   placeholder="URL"
-                  bind:value={entries[selectedId].url.value}
+                  value={entries[selectedId].url.value}
                   on:input={(e) => {
-                    const val = e.target.value;
-                    updateSelectedEntry('url', { ...entries[selectedId].url, value: val });
+                    const val = (e.target as HTMLInputElement).value;
+                    const currentId = selectedId;
+                    if (currentId !== null) {
+                      const currentUrl = entries[currentId].url;
+                      updateSelectedEntry('url', { ...(currentUrl as object), value: val });
+                    }
                   }}
                 />
                 <input
                   class="input input-bordered"
                   placeholder="Access Date (YYYY-MM-DD)"
-                  bind:value={entries[selectedId].url.date}
+                  value={entries[selectedId].url.date}
                   on:input={(e) => {
-                    const val = e.target.value;
-                    updateSelectedEntry('url', { ...entries[selectedId].url, date: val });
+                    const val = (e.target as HTMLInputElement).value;
+                    const currentId = selectedId;
+                    if (currentId !== null) {
+                      const currentUrl = entries[currentId].url;
+                      updateSelectedEntry('url', { ...(currentUrl as object), date: val });
+                    }
                   }}
                 />
               {:else}
@@ -362,18 +383,27 @@
                   <button
                     type="button"
                     class="btn btn-xs btn-outline"
-                    on:click={() =>
-                      updateSelectedEntry('url', {
-                        value: entries[selectedId].url || '',
-                        date: ''
-                      })}>Use as object</button
+                    on:click={() => {
+                      const currentId = selectedId;
+                      if (currentId !== null) {
+                        updateSelectedEntry('url', {
+                          value: entries[currentId].url || '',
+                          date: ''
+                        });
+                      }
+                    }}>Use as object</button
                   >
                 </div>
                 <input
                   class="input input-bordered"
                   placeholder="URL"
-                  bind:value={entries[selectedId].url}
-                  on:input={(e) => updateSelectedEntry('url', e.target.value)}
+                  value={entries[selectedId].url}
+                  on:input={(e) => {
+                    const currentId = selectedId;
+                    if (currentId !== null) {
+                      updateSelectedEntry('url', (e.target as HTMLInputElement).value);
+                    }
+                  }}
                 />
               {/if}
             </label>
@@ -384,21 +414,29 @@
                   <button
                     type="button"
                     class="btn btn-xs btn-outline"
-                    on:click={() => updateSelectedEntry('serial-number', '')}
-                    >Use as string/number</button
+                    on:click={() => {
+                      const currentId = selectedId;
+                      if (currentId !== null) {
+                        updateSelectedEntry('serial-number', '');
+                      }
+                    }}>Use as string/number</button
                   >
                 </div>
                 {#each ['doi', 'isbn', 'issn', 'pmid', 'pmcid', 'arxiv', 'serial'] as key}
                   <input
                     class="input input-bordered mb-1"
                     placeholder={key.toUpperCase()}
-                    bind:value={entries[selectedId]['serial-number'][key]}
+                    value={entries[selectedId]['serial-number'][key]}
                     on:input={(e) => {
-                      const val = e.target.value;
-                      updateSelectedEntry('serial-number', {
-                        ...entries[selectedId]['serial-number'],
-                        [key]: val
-                      });
+                      const val = (e.target as HTMLInputElement).value;
+                      const currentId = selectedId;
+                      if (currentId !== null) {
+                        const currentSerialNumber = entries[currentId]['serial-number'];
+                        updateSelectedEntry('serial-number', {
+                          ...(currentSerialNumber as object),
+                          [key]: val
+                        });
+                      }
                     }}
                   />
                 {/each}
@@ -407,27 +445,131 @@
                   <button
                     type="button"
                     class="btn btn-xs btn-outline"
-                    on:click={() =>
-                      updateSelectedEntry('serial-number', {
-                        doi: '',
-                        isbn: '',
-                        issn: '',
-                        pmid: '',
-                        pmcid: '',
-                        arxiv: '',
-                        serial: ''
-                      })}>Use as object</button
+                    on:click={() => {
+                      const currentId = selectedId;
+                      if (currentId !== null) {
+                        updateSelectedEntry('serial-number', {
+                          doi: '',
+                          isbn: '',
+                          issn: '',
+                          pmid: '',
+                          pmcid: '',
+                          arxiv: '',
+                          serial: ''
+                        });
+                      }
+                    }}>Use as object</button
                   >
                 </div>
                 <input
                   class="input input-bordered"
                   placeholder="Serial Number"
-                  bind:value={entries[selectedId]['serial-number']}
-                  on:input={(e) => updateSelectedEntry('serial-number', e.target.value)}
+                  value={entries[selectedId]['serial-number']}
+                  on:input={(e) => {
+                    const currentId = selectedId;
+                    if (currentId !== null) {
+                      updateSelectedEntry('serial-number', (e.target as HTMLInputElement).value);
+                    }
+                  }}
                 />
               {/if}
             </label>
-            <!-- Recursive Parent Entry -->
+            <label class="form-control w-full">
+              <span class="label-text">Volume</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId].volume}
+                on:input={(e) =>
+                  updateSelectedEntry('volume', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Issue</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId].issue}
+                on:input={(e) => updateSelectedEntry('issue', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Page Range</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId]['page-range']}
+                on:input={(e) =>
+                  updateSelectedEntry('page-range', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Page Total</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId]['page-total']}
+                on:input={(e) =>
+                  updateSelectedEntry('page-total', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Abstract</span>
+              <textarea
+                class="textarea textarea-bordered"
+                bind:value={entries[selectedId].abstract}
+                on:input={(e) =>
+                  updateSelectedEntry('abstract', (e.target as HTMLTextAreaElement).value)}
+              ></textarea>
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Genre</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId].genre}
+                on:input={(e) => updateSelectedEntry('genre', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Organization</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId].organization}
+                on:input={(e) =>
+                  updateSelectedEntry('organization', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Location</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId].location}
+                on:input={(e) =>
+                  updateSelectedEntry('location', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Archive</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId].archive}
+                on:input={(e) =>
+                  updateSelectedEntry('archive', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Archive Location</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId]['archive-location']}
+                on:input={(e) =>
+                  updateSelectedEntry('archive-location', (e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <label class="form-control w-full">
+              <span class="label-text">Note</span>
+              <input
+                class="input input-bordered"
+                bind:value={entries[selectedId].note}
+                on:input={(e) => updateSelectedEntry('note', (e.target as HTMLInputElement).value)}
+              />
+            </label>
             {#if entries[selectedId].parent}
               <div class="collapse-arrow bg-base-200 collapse">
                 <input type="checkbox" />
@@ -437,7 +579,6 @@
                     {#each entries[selectedId].parent as parentEntry, idx}
                       <div class="border-base-300 mb-2 border-b pb-2">
                         <span class="font-semibold">Parent #{idx + 1}</span>
-                        <!-- Recursive rendering: you can extract this to a component for cleaner code -->
                         {#each Object.entries(parentEntry) as [pkey, pval]}
                           <div class="mb-1">
                             <span class="font-semibold">{pkey}:</span>
@@ -449,7 +590,6 @@
                       </div>
                     {/each}
                   {:else}
-                    <!-- Single parent object -->
                     {#each Object.entries(entries[selectedId].parent) as [pkey, pval]}
                       <div class="mb-1">
                         <span class="font-semibold">{pkey}:</span>
