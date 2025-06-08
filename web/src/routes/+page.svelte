@@ -7,20 +7,9 @@
 	let fileName = 'hayagriva.yml';
 	let idPattern = 'TitleDateAuthorEdition';
 	let selectedId: string | null = null;
-	let entryTypes = [
-		'article',
-		'book',
-		'web',
-		'conference',
-		'report',
-		'thesis',
-		'misc',
-		'reference',
-		'periodical',
-		'proceedings'
-	];
+	let entryTypes: string[] = [];
 
-	onMount(() => {
+	onMount(async () => {
 		const saved = localStorage.getItem('hayagriva-yaml');
 		if (saved) {
 			try {
@@ -28,6 +17,33 @@
 			} catch (e) {
 				console.error('Failed to parse local data:', e);
 			}
+		}
+		// Fetch entry types from schema
+		try {
+			const res = await fetch(
+				'https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json'
+			);
+			const schema = await res.json();
+			const examples = schema?.definitions?.entryType?.examples;
+			if (Array.isArray(examples)) {
+				entryTypes = examples.map((e: string) => e.toLowerCase());
+			} else {
+				throw new Error('No entryType examples found');
+			}
+		} catch (e) {
+			console.warn('Could not fetch schema, using fallback entry types.');
+			entryTypes = [
+				'article',
+				'book',
+				'web',
+				'conference',
+				'report',
+				'thesis',
+				'misc',
+				'reference',
+				'periodical',
+				'proceedings'
+			];
 		}
 	});
 
@@ -104,22 +120,22 @@
 <div
 	class="navbar bg-base-100 flex flex-col gap-2 px-4 shadow-sm md:flex-row md:items-center md:justify-between"
 >
-    <a class="btn btn-ghost text-xl" href="/">Hayagriva Manager</a>
-    <div class="flex flex-wrap items-center gap-2 flex-1">
-        <input
-            type="file"
-            accept=".yml,.yaml,.json,.toml"
-            on:change={handleFileUpload}
-            class="file-input file-input-bordered"
-        />
-        <button class="btn btn-primary" on:click={createNew}>New</button>
-        <button class="btn btn-secondary" on:click={saveToLocal}>Save</button>
-        <button class="btn" on:click={() => doExport('yaml')}>YAML</button>
-        <button class="btn" on:click={() => doExport('json')}>JSON</button>
-        <button class="btn" on:click={() => doExport('toml')}>TOML</button>
-        <input class="input input-bordered w-48" bind:value={idPattern} placeholder="ID Pattern" />
-        <button class="btn btn-accent" on:click={addEntry}>Add Entry</button>
-    </div>
+	<a class="btn btn-ghost text-xl" href="/">Hayagriva Manager</a>
+	<div class="flex flex-1 flex-wrap items-center gap-2">
+		<input
+			type="file"
+			accept=".yml,.yaml,.json,.toml"
+			on:change={handleFileUpload}
+			class="file-input file-input-bordered"
+		/>
+		<button class="btn btn-primary" on:click={createNew}>New</button>
+		<button class="btn btn-secondary" on:click={saveToLocal}>Save</button>
+		<button class="btn" on:click={() => doExport('yaml')}>YAML</button>
+		<button class="btn" on:click={() => doExport('json')}>JSON</button>
+		<button class="btn" on:click={() => doExport('toml')}>TOML</button>
+		<input class="input input-bordered w-48" bind:value={idPattern} placeholder="ID Pattern" />
+		<button class="btn btn-accent" on:click={addEntry}>Add Entry</button>
+	</div>
 </div>
 
 <div class="mx-auto mt-4 flex max-w-7xl gap-4">
