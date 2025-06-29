@@ -17,7 +17,8 @@
       "name": "Hayagriva Zotero Translator"
     },
     {
-      "path": "../web/","name": "Web"
+      "path": "../web/",
+      "name": "Web"
     }
   ],
   "settings": {
@@ -25,7 +26,8 @@
       "biblatex",
       "hayagriva",
       "Hayagriva",
-      "serde"
+      "serde",
+      "Zotero"
     ],
     "yaml.schemas": {
       "https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json": [
