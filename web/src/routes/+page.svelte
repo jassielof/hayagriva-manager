@@ -1,13 +1,13 @@
-<script lang="ts">
+<script>
   import '../app.css';
   import { onMount } from 'svelte';
-  import { parseFile, exportYaml, exportJson, exportToml } from '$lib/hayagriva';
+  import { parseFile, exportYaml } from '$lib/hayagriva'; // Removed exportJson, exportToml
 
-  let entries: Record<string, any> = {};
+  let entries = {};
   let fileName = 'hayagriva.yml';
   let idPattern = 'TitleDateAuthorEdition';
-  let selectedId: string | null = null;
-  let entryTypes: string[] = [];
+  let selectedId = null;
+  let entryTypes = [];
 
   onMount(async () => {
     const saved = localStorage.getItem('hayagriva-yaml');
@@ -26,7 +26,7 @@
       const schema = await res.json();
       const examples = schema?.definitions?.entryType?.examples;
       if (Array.isArray(examples)) {
-        entryTypes = examples.map((e: string) => e.toLowerCase());
+        entryTypes = examples.map((e) => e.toLowerCase());
       } else {
         throw new Error('No entryType examples found');
       }
@@ -47,8 +47,8 @@
     }
   });
 
-  async function handleFileUpload(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
+  async function handleFileUpload(event) {
+    const file = event.target.files?.[0];
     if (!file) return;
     fileName = file.name;
     try {
@@ -72,16 +72,14 @@
     alert('Saved to local storage!');
   }
 
-  function doExport(type: 'yaml' | 'json' | 'toml') {
-    let blob;
-    if (type === 'yaml') blob = exportYaml(entries);
-    if (type === 'json') blob = exportJson(entries);
-    if (type === 'toml') blob = exportToml(entries);
+  function doExport(type) {
+    if (type !== 'yaml') return; // Only allow YAML export
+    let blob = exportYaml(entries);
     if (!blob) return;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = fileName.replace(/\.\w+$/, `.${type}`);
+    a.download = fileName.replace(/\.\w+$/, `.yaml`);
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -97,18 +95,18 @@
     selectedId = id;
   }
 
-  function generateIdFromPattern(): string {
+  function generateIdFromPattern() {
     return idPattern.split(/[^a-zA-Z0-9]+/).join('');
   }
 
-  function deleteEntry(id: string) {
+  function deleteEntry(id) {
     if (!confirm(`Delete entry "${id}"?`)) return;
     const { [id]: _, ...rest } = entries;
     entries = rest;
     if (selectedId === id) selectedId = null;
   }
 
-  function updateSelectedEntry(field: string, value: any) {
+  function updateSelectedEntry(field, value) {
     if (!selectedId) return;
     entries = {
       ...entries,
@@ -131,15 +129,13 @@
     <button class="btn btn-primary" on:click={createNew}>New</button>
     <button class="btn btn-secondary" on:click={saveToLocal}>Save</button>
     <button class="btn" on:click={() => doExport('yaml')}>YAML</button>
-    <button class="btn" on:click={() => doExport('json')}>JSON</button>
-    <button class="btn" on:click={() => doExport('toml')}>TOML</button>
+    <!-- Removed JSON and TOML export buttons -->
     <input class="input input-bordered w-48" bind:value={idPattern} placeholder="ID Pattern" />
     <button class="btn btn-accent" on:click={addEntry}>Add Entry</button>
   </div>
 </div>
 
 <div class="mx-auto mt-4 flex max-w-7xl gap-4">
-  <!-- Entries List -->
   <div class="flex-1">
     <div class="card bg-base-100 shadow-md">
       <div class="card-body p-4">
@@ -210,7 +206,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].title}
-                on:input={(e) => updateSelectedEntry('title', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('title', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -218,8 +214,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].author}
-                on:input={(e) =>
-                  updateSelectedEntry('author', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('author', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -227,8 +222,7 @@
               <select
                 class="select select-bordered"
                 bind:value={entries[selectedId].type}
-                on:change={(e) =>
-                  updateSelectedEntry('type', (e.target as HTMLSelectElement).value)}
+                on:change={(e) => updateSelectedEntry('type', e.target.value)}
               >
                 <option value="">Select type</option>
                 {#each entryTypes as type}
@@ -241,7 +235,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].date}
-                on:input={(e) => updateSelectedEntry('date', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('date', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -249,8 +243,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].edition}
-                on:input={(e) =>
-                  updateSelectedEntry('edition', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('edition', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -273,12 +266,12 @@
                   placeholder="Name"
                   value={entries[selectedId].publisher.name}
                   on:input={(e) => {
-                    const val = (e.target as HTMLInputElement).value;
+                    const val = e.target.value;
                     const currentId = selectedId;
                     if (currentId !== null) {
                       const currentPublisher = entries[currentId].publisher;
                       updateSelectedEntry('publisher', {
-                        ...(currentPublisher as object),
+                        ...currentPublisher,
                         name: val
                       });
                     }
@@ -289,12 +282,12 @@
                   placeholder="Location (optional)"
                   value={entries[selectedId].publisher.location}
                   on:input={(e) => {
-                    const val = (e.target as HTMLInputElement).value;
+                    const val = e.target.value;
                     const currentId = selectedId;
                     if (currentId !== null) {
                       const currentPublisher = entries[currentId].publisher;
                       updateSelectedEntry('publisher', {
-                        ...(currentPublisher as object),
+                        ...currentPublisher,
                         location: val
                       });
                     }
@@ -312,8 +305,9 @@
                           name: entries[currentId].publisher || ''
                         });
                       }
-                    }}>Use as object</button
-                  >
+                    }}
+                    >Use
+                  </button>
                 </div>
                 <input
                   class="input input-bordered"
@@ -322,7 +316,7 @@
                   on:input={(e) => {
                     const currentId = selectedId;
                     if (currentId !== null) {
-                      updateSelectedEntry('publisher', (e.target as HTMLInputElement).value);
+                      updateSelectedEntry('publisher', e.target.value);
                     }
                   }}
                 />
@@ -333,8 +327,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].language}
-                on:input={(e) =>
-                  updateSelectedEntry('language', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('language', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -357,11 +350,11 @@
                   placeholder="URL"
                   value={entries[selectedId].url.value}
                   on:input={(e) => {
-                    const val = (e.target as HTMLInputElement).value;
+                    const val = e.target.value;
                     const currentId = selectedId;
                     if (currentId !== null) {
                       const currentUrl = entries[currentId].url;
-                      updateSelectedEntry('url', { ...(currentUrl as object), value: val });
+                      updateSelectedEntry('url', { ...currentUrl, value: val });
                     }
                   }}
                 />
@@ -370,11 +363,11 @@
                   placeholder="Access Date (YYYY-MM-DD)"
                   value={entries[selectedId].url.date}
                   on:input={(e) => {
-                    const val = (e.target as HTMLInputElement).value;
+                    const val = e.target.value;
                     const currentId = selectedId;
                     if (currentId !== null) {
                       const currentUrl = entries[currentId].url;
-                      updateSelectedEntry('url', { ...(currentUrl as object), date: val });
+                      updateSelectedEntry('url', { ...currentUrl, date: val });
                     }
                   }}
                 />
@@ -391,8 +384,9 @@
                           date: ''
                         });
                       }
-                    }}>Use as object</button
-                  >
+                    }}
+                    >Use
+                  </button>
                 </div>
                 <input
                   class="input input-bordered"
@@ -401,7 +395,7 @@
                   on:input={(e) => {
                     const currentId = selectedId;
                     if (currentId !== null) {
-                      updateSelectedEntry('url', (e.target as HTMLInputElement).value);
+                      updateSelectedEntry('url', e.target.value);
                     }
                   }}
                 />
@@ -428,12 +422,12 @@
                     placeholder={key.toUpperCase()}
                     value={entries[selectedId]['serial-number'][key]}
                     on:input={(e) => {
-                      const val = (e.target as HTMLInputElement).value;
+                      const val = e.target.value;
                       const currentId = selectedId;
                       if (currentId !== null) {
                         const currentSerialNumber = entries[currentId]['serial-number'];
                         updateSelectedEntry('serial-number', {
-                          ...(currentSerialNumber as object),
+                          ...currentSerialNumber,
                           [key]: val
                         });
                       }
@@ -458,8 +452,9 @@
                           serial: ''
                         });
                       }
-                    }}>Use as object</button
-                  >
+                    }}
+                    >Use
+                  </button>
                 </div>
                 <input
                   class="input input-bordered"
@@ -468,7 +463,7 @@
                   on:input={(e) => {
                     const currentId = selectedId;
                     if (currentId !== null) {
-                      updateSelectedEntry('serial-number', (e.target as HTMLInputElement).value);
+                      updateSelectedEntry('serial-number', e.target.value);
                     }
                   }}
                 />
@@ -479,8 +474,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].volume}
-                on:input={(e) =>
-                  updateSelectedEntry('volume', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('volume', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -488,7 +482,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].issue}
-                on:input={(e) => updateSelectedEntry('issue', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('issue', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -496,8 +490,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId]['page-range']}
-                on:input={(e) =>
-                  updateSelectedEntry('page-range', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('page-range', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -505,8 +498,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId]['page-total']}
-                on:input={(e) =>
-                  updateSelectedEntry('page-total', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('page-total', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -514,8 +506,7 @@
               <textarea
                 class="textarea textarea-bordered"
                 bind:value={entries[selectedId].abstract}
-                on:input={(e) =>
-                  updateSelectedEntry('abstract', (e.target as HTMLTextAreaElement).value)}
+                on:input={(e) => updateSelectedEntry('abstract', e.target.value)}
               ></textarea>
             </label>
             <label class="form-control w-full">
@@ -523,7 +514,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].genre}
-                on:input={(e) => updateSelectedEntry('genre', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('genre', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -531,8 +522,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].organization}
-                on:input={(e) =>
-                  updateSelectedEntry('organization', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('organization', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -540,8 +530,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].location}
-                on:input={(e) =>
-                  updateSelectedEntry('location', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('location', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -549,8 +538,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].archive}
-                on:input={(e) =>
-                  updateSelectedEntry('archive', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('archive', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -558,8 +546,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId]['archive-location']}
-                on:input={(e) =>
-                  updateSelectedEntry('archive-location', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('archive-location', e.target.value)}
               />
             </label>
             <label class="form-control w-full">
@@ -567,7 +554,7 @@
               <input
                 class="input input-bordered"
                 bind:value={entries[selectedId].note}
-                on:input={(e) => updateSelectedEntry('note', (e.target as HTMLInputElement).value)}
+                on:input={(e) => updateSelectedEntry('note', e.target.value)}
               />
             </label>
             {#if entries[selectedId].parent}
