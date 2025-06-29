@@ -1,6 +1,14 @@
 # Hayagriva Manager
 
-A Zotero-like manager for Hayagriva, built with Svelte. It allows you to manage multiple Hayagriva bibliographies locally (in your browser).
+A Zotero-like manager for Hayagriva. It allows you to manage multiple Hayagriva bibliographies locally (in your browser).
+
+## Technologies
+
+- SvelteKit
+- JSDoc
+- Bun
+- DaisyUI/TailwindCSS
+- IndexedDB for local storage
 
 ## Functional Requirements
 
