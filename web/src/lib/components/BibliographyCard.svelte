@@ -1,17 +1,11 @@
 <script lang="ts">
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
-  import { createEventDispatcher } from 'svelte';
 
-  export let metadata: BibliographyMetadata;
-  const dispatch = createEventDispatcher();
-
-  function edit() {
-    dispatch('edit', metadata.id);
-  }
-
-  function del() {
-    dispatch('delete', metadata.id);
-  }
+  let { edit, del, metadata } = $props<{
+    metadata: BibliographyMetadata;
+    edit: (id: string) => void;
+    del: (id: string) => void;
+  }>();
 </script>
 
 <div class="card bg-base-100 shadow-xl">
@@ -23,8 +17,10 @@
     </div>
     <div class="card-actions justify-end">
       <a href="/bibliographies/{metadata.id}" class="btn btn-sm btn-outline btn-primary">Open</a>
-      <button class="btn btn-sm btn-outline" on:click={edit}>Edit</button>
-      <button class="btn btn-sm btn-outline btn-error" on:click={del}>Delete</button>
+      <button class="btn btn-sm btn-outline" onclick={() => edit(metadata.id)}>Edit</button>
+      <button class="btn btn-sm btn-outline btn-error" onclick={() => del(metadata.id)}
+        >Delete</button
+      >
     </div>
   </div>
 </div>
