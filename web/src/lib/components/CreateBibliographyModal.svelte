@@ -1,12 +1,15 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
 
-  export let bibliography: BibliographyMetadata | null = null;
-  const dispatch = createEventDispatcher();
+  const { bibliography, onSave, onClose } = $props<{
+    bibliography: BibliographyMetadata | null;
+    onSave: (metadata: Partial<BibliographyMetadata>) => void;
+    onClose: () => void;
+  }>();
 
-  let title = '';
-  let description = '';
+  let title = $state('');
+  let description = $state('');
 
   onMount(() => {
     if (bibliography) {
@@ -21,7 +24,7 @@
       return;
     }
     const metadata: Partial<BibliographyMetadata> = { ...bibliography, title, description };
-    dispatch('save', metadata);
+    onSave(metadata);
   }
 </script>
 
@@ -48,8 +51,8 @@
       </label>
     </div>
     <div class="modal-action">
-      <button class="btn" on:click={() => dispatch('close')}>Cancel</button>
-      <button class="btn btn-primary" on:click={save}>Save</button>
+      <button class="btn" onclick={onClose}>Cancel</button>
+      <button class="btn btn-primary" onclick={save}>Save</button>
     </div>
   </div>
 </div>

@@ -31,13 +31,16 @@
     showImportModal = true;
   }
 
-  async function handleSave(event: CustomEvent<BibliographyMetadata>) {
-    const metadata = event.detail;
+  async function handleSave(metadata: Partial<BibliographyMetadata>) {
     if (editingBibliography) {
-      const bib = bibliographies.find((b) => b.metadata.id === metadata.id);
-
+      // Merge the partial metadata with the existing one
+      const bib = bibliographies.find((b) => b.metadata.id === editingBibliography?.id);
       if (bib) {
-        bib.metadata = { ...metadata, updatedAt: new Date() };
+        bib.metadata = {
+          ...bib.metadata,
+          ...metadata,
+          updatedAt: new Date()
+        };
         await saveBibliography(bib);
       }
     } else {
@@ -47,12 +50,13 @@
           id: uuidv4(),
           createdAt: new Date(),
           updatedAt: new Date()
-        },
+        } as BibliographyMetadata,
         data: {}
       };
       await saveBibliography(newBib);
-      showCreateModal = false;
     }
+    showCreateModal = false;
+    await loadBibliographies();
   }
 
   async function handleImportSave(
@@ -73,15 +77,15 @@
     showImportModal = false;
   }
 
-  async function handleDelete(event: CustomEvent<string>) {
+  async function handleDelete(id: string) {
     if (confirm('Are you sure you want to delete this bibliography? This cannot be undone.')) {
-      await deleteBibliography(event.detail);
+      await deleteBibliography(id);
       await loadBibliographies();
     }
   }
 
-  function handleEdit(event: CustomEvent<string>) {
-    const bib = bibliographies.find((b) => b.metadata.id === event.detail);
+  function handleEdit(id: string) {
+    const bib = bibliographies.find((b) => b.metadata.id === id);
     if (bib) {
       editingBibliography = bib.metadata;
       showCreateModal = true;
@@ -104,18 +108,18 @@
       <p class="mt-2">Create a new bibliography or import a YAML file to get started.</p>
     </div>
   {:else}
-    <BibliographyList {bibliographies} on:edit={handleEdit} on:delete={handleDelete} />
+    <BibliographyList {bibliographies} edit={handleEdit} del={handleDelete} />
   {/if}
 </main>
 
 {#if showCreateModal}
   <CreateBibliographyModal
     bibliography={editingBibliography}
-    on:close={() => (showCreateModal = false)}
-    on:save={handleSave}
+    onClose={() => (showCreateModal = false)}
+    onSave={handleSave}
   />
 {/if}
 
-{#if showImportModal}
-  <ImportBibliographyModal on:close={() => (showImportModal = false)} on:save={handleImportSave} />
-{/if}
+<!-- {#if showImportModal}
+  <ImportBibliographyModal onSave={handleImportSave} onClose={() => (showImportModal = false)} />
+{/if} -->
