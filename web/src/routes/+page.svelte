@@ -147,13 +147,12 @@
   {/if}
 </main>
 
-{#if showCreateModal}
-  <CreateBibliographyModal
-    bibliography={editingBibliography}
-    onClose={closeCreateModal}
-    onSave={handleSave}
-  />
-{/if}
+<CreateBibliographyModal
+  show={showCreateModal}
+  bibliography={editingBibliography}
+  onClose={closeCreateModal}
+  onSave={handleSave}
+/>
 
 {#if showImportModal}
   <ImportBibliographyModal onClose={closeImportModal} onSave={handleImportSave} />

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
 
-  const { bibliography, onSave, onClose } = $props<{
+  const { show, bibliography, onSave, onClose } = $props<{
+    show: boolean;
     bibliography: BibliographyMetadata | null;
     onSave: (metadata: Partial<BibliographyMetadata>) => void;
     onClose: () => void;
@@ -10,25 +10,45 @@
 
   let title = $state('');
   let description = $state('');
+  let dialog: HTMLDialogElement;
 
-  onMount(() => {
+  // Use an effect to react to prop changes
+  $effect(() => {
     if (bibliography) {
+      // Pre-fill form for editing
       title = bibliography.title;
       description = bibliography.description || '';
+    } else {
+      // Reset form for creating
+      title = '';
+      description = '';
+    }
+  });
+
+  // Use an effect to control the dialog's visibility
+  $effect(() => {
+    if (dialog) {
+      if (show) {
+        dialog.showModal();
+      } else {
+        dialog.close();
+      }
     }
   });
 
   function save() {
-    if (!title) {
+    if (!title.trim()) {
       alert('Title is required');
       return;
     }
-    const metadata: Partial<BibliographyMetadata> = { ...bibliography, title, description };
+    // We only pass back the fields that were edited
+    const metadata: Partial<BibliographyMetadata> = { title: title.trim(), description: description.trim() };
     onSave(metadata);
   }
 </script>
 
-<div class="modal modal-open">
+<!-- Bind the dialog element and listen for its native 'close' event -->
+<dialog bind:this={dialog} onclose={onClose} class="modal">
   <div class="modal-box">
     <h3 class="text-lg font-bold">{bibliography ? 'Edit' : 'Create'} Bibliography</h3>
     <div class="py-4">
@@ -39,6 +59,7 @@
           placeholder="e.g., 'My Research Papers'"
           class="input input-bordered w-full"
           bind:value={title}
+          required
         />
       </label>
       <label class="form-control mt-4 w-full">
@@ -51,8 +72,16 @@
       </label>
     </div>
     <div class="modal-action">
-      <button class="btn" onclick={onClose}>Cancel</button>
-      <button class="btn btn-primary" onclick={save}>Save</button>
+      <!-- This form with method="dialog" allows the button to close the modal automatically -->
+      <form method="dialog" class="flex gap-2">
+        <button class="btn">Cancel</button>
+        <!-- The save button is outside the closing form -->
+      </form>
+      <button class="btn btn-primary" onclick={save} disabled={!title.trim()}>Save</button>
     </div>
   </div>
-</div>
+  <!-- Add a backdrop that also closes the modal -->
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
