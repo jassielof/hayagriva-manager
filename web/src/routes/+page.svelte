@@ -63,19 +63,21 @@
     metadata: Partial<BibliographyMetadata>;
     data: HayagrivaData;
   }) {
-    const { metadata, data } = payload; // Directly use the payload
+    const { metadata, data } = payload;
     const newBib: Bibliography = {
       metadata: {
-        ...(metadata as Omit<BibliographyMetadata, 'id' | 'createdAt' | 'updatedAt'>),
+        // Fix: Spread the metadata properly
+        title: metadata.title || 'Untitled',
+        description: metadata.description || '',
         id: uuidv4(),
         createdAt: new Date(),
         updatedAt: new Date()
-      },
+      } as BibliographyMetadata,
       data: data
     };
+    showImportModal = false;
     await saveBibliography(newBib);
     await loadBibliographies();
-    showImportModal = false;
   }
 
   async function handleDelete(id: string) {
@@ -122,8 +124,5 @@
 {/if}
 
 {#if showImportModal}
-  <ImportBibliographyModal
-    onClose={() => (showImportModal = false)}
-    onSave={(e) => handleImportSave(e)}
-  />
+  <ImportBibliographyModal onClose={() => (showImportModal = false)} onSave={handleImportSave} />
 {/if}

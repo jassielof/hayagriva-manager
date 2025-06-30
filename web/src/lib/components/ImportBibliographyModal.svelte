@@ -1,9 +1,7 @@
-<!-- src/routes/ImportBibliographyModal.svelte -->
 <script lang="ts">
   import type { HayagrivaData } from '$lib/types/hayagriva-data';
   import { parseYaml } from '$lib/hayagriva';
 
-  // --- Props with Callbacks (Svelte 5 way) ---
   const { onClose, onSave } = $props<{
     onClose: () => void;
     onSave: (data: {
@@ -12,8 +10,7 @@
     }) => void;
   }>();
 
-  // --- Component State with Runes ---
-  let fileInput: HTMLInputElement; // For clearing the input
+  let fileInput: HTMLInputElement;
   let file = $state<File | null>(null);
   let fileName = $state('');
   let title = $state('');
@@ -21,8 +18,6 @@
   let parsedData = $state<HayagrivaData | null>(null);
   let error = $state<string | null>(null);
   let isLoading = $state(false);
-
-  // --- Logic ---
 
   function handleFileSelect(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -32,7 +27,6 @@
     }
   }
 
-  // Reactive effect: runs whenever 'file' changes
   $effect(() => {
     if (file) {
       isLoading = true;
@@ -40,11 +34,10 @@
       parsedData = null;
       fileName = file.name;
 
-      // Suggest a title from the filename
       title = file.name
-        .replace(/\.(yml|yaml)$/i, '') // remove extension
-        .replace(/[-_]/g, ' ') // replace separators with spaces
-        .replace(/\b\w/g, (l) => l.toUpperCase()); // capitalize words
+        .replace(/\.(yml|yaml)$/i, '')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, (l) => l.toUpperCase());
 
       const reader = new FileReader();
       reader.onload = (e) => {
