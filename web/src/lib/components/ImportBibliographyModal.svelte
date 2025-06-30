@@ -66,10 +66,17 @@
       error = 'Title is required and file must be parsed successfully.';
       return;
     }
-    onSave({
+
+    const payload = {
       metadata: { title: title.trim(), description: description.trim() },
       data: parsedData
-    });
+    };
+
+    console.log('ImportBibliographyModal: handleSave called with payload:', payload);
+    console.log('Parsed data keys:', Object.keys(parsedData));
+    console.log('Parsed data sample:', JSON.stringify(parsedData, null, 2).substring(0, 500));
+
+    onSave(payload);
   }
 
   function handleCancel() {

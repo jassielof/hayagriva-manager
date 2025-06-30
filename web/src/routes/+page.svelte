@@ -62,20 +62,46 @@
     metadata: Partial<BibliographyMetadata>;
     data: HayagrivaData;
   }) {
-    const { metadata, data } = payload;
-    const newBib: Bibliography = {
-      metadata: {
-        title: metadata.title || 'Untitled',
-        description: metadata.description || '',
-        id: uuidv4(),
-        createdAt: new Date(),
-        updatedAt: new Date()
-      } as BibliographyMetadata,
-      data: data
-    };
-    showImportModal = false;
-    await saveBibliography(newBib);
-    await loadBibliographies();
+    console.log('handleImportSave called with payload:', payload);
+
+    try {
+      // The 'data' from the payload is a Svelte 5 state proxy.
+      // IndexedDB cannot store proxies, so we convert it to a plain object.
+      const plainData = JSON.parse(JSON.stringify(payload.data));
+      const { metadata } = payload;
+      console.log('Extracted metadata:', metadata);
+      console.log('Extracted plain data:', plainData);
+
+      const newBib: Bibliography = {
+        metadata: {
+          title: metadata.title || 'Untitled',
+          description: metadata.description || '',
+          id: uuidv4(),
+          createdAt: new Date(),
+          updatedAt: new Date()
+        } as BibliographyMetadata,
+        data: plainData // Use the plain object here
+      };
+
+      console.log('Created new bibliography object:', newBib);
+
+      // Close modal first to prevent re-triggering
+      showImportModal = false;
+
+      // Save the bibliography
+      console.log('Saving bibliography...');
+      await saveBibliography(newBib);
+      console.log('Bibliography saved successfully');
+
+      // Reload the list
+      console.log('Reloading bibliographies...');
+      await loadBibliographies();
+      console.log('Bibliographies reloaded, current count:', bibliographies.length);
+    } catch (error) {
+      console.error('Error in handleImportSave:', error);
+      // Optionally show an error message to the user
+      alert('Failed to save bibliography: ' + (error as Error).message);
+    }
   }
 
   async function handleDelete(id: string) {
