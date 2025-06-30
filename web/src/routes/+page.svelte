@@ -129,9 +129,11 @@
 </script>
 
 <div class="navbar bg-base-100 px-4 shadow-sm">
-  <a class="btn btn-ghost text-xl" href="/">Hayagriva Manager</a>
-  <div class="flex-1 justify-end">
-    <button class="btn btn-primary mr-2" onclick={handleCreateNew}>New Bibliography</button>
+  <div class="navbar-start">
+    <a class="btn btn-ghost text-xl" href="/">Hayagriva Manager</a>
+  </div>
+  <div class="navbar-end flex items-center gap-2">
+    <button class="btn btn-primary" onclick={handleCreateNew}>New Bibliography</button>
     <button class="btn btn-secondary" onclick={handleImport}>Import from YAML</button>
   </div>
 </div>
