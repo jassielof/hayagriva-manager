@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Bibliography } from '$lib/types/bibliography';
-  import BibliographyCard from './BibliographyCard.svelte';
+  import BibliographyCard from '$lib/components/BibliographyCard.svelte';
 
   const { bibliographies, edit, del } = $props<{
     bibliographies: Bibliography[];

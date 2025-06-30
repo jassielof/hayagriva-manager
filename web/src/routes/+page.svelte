@@ -6,10 +6,9 @@
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
   import type { HayagrivaData } from '$lib/types/hayagriva-data';
   import { onMount } from 'svelte';
-
   import { v4 as uuidv4 } from 'uuid';
 
-  let bibliographies: Bibliography[] = [];
+  let bibliographies: Bibliography  [] = [];
   let showCreateModal = false;
   let showImportModal = false;
   let editingBibliography: BibliographyMetadata | null = null;
@@ -120,6 +119,6 @@
   />
 {/if}
 
-<!-- {#if showImportModal}
+{#if showImportModal}
   <ImportBibliographyModal onSave={handleImportSave} onClose={() => (showImportModal = false)} />
-{/if} -->
+{/if}
