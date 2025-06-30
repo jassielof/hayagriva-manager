@@ -42,45 +42,44 @@
       return;
     }
     // We only pass back the fields that were edited
-    const metadata: Partial<BibliographyMetadata> = { title: title.trim(), description: description.trim() };
+    const metadata: Partial<BibliographyMetadata> = {
+      title: title.trim(),
+      description: description.trim()
+    };
     onSave(metadata);
   }
 </script>
 
-<!-- Bind the dialog element and listen for its native 'close' event -->
 <dialog bind:this={dialog} onclose={onClose} class="modal">
   <div class="modal-box">
-    <h3 class="text-lg font-bold">{bibliography ? 'Edit' : 'Create'} Bibliography</h3>
-    <div class="py-4">
-      <label class="form-control w-full">
-        <div class="label"><span class="label-text">Title</span></div>
-        <input
-          type="text"
-          placeholder="e.g., 'My Research Papers'"
-          class="input input-bordered w-full"
-          bind:value={title}
-          required
-        />
-      </label>
-      <label class="form-control mt-4 w-full">
-        <div class="label"><span class="label-text">Description</span></div>
-        <textarea
-          class="textarea textarea-bordered"
-          placeholder="A short description"
-          bind:value={description}
-        ></textarea>
-      </label>
-    </div>
-    <div class="modal-action">
-      <!-- This form with method="dialog" allows the button to close the modal automatically -->
-      <form method="dialog" class="flex gap-2">
-        <button class="btn">Cancel</button>
-        <!-- The save button is outside the closing form -->
-      </form>
-      <button class="btn btn-primary" onclick={save} disabled={!title.trim()}>Save</button>
-    </div>
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+      <legend class="fieldset-legend text-lg"
+        >{bibliography ? 'Edit' : 'Create'} Bibliography</legend
+      >
+      <label class="label" for="title"> Title </label>
+      <input
+        id="title"
+        type="text"
+        placeholder="e.g., 'My Research Papers'"
+        class="input input-bordered w-full"
+        bind:value={title}
+        required
+      />
+      <label class="label" for="description"> Description </label>
+      <textarea
+        id="description"
+        class="textarea textarea-bordered w-full"
+        placeholder="A short description"
+        bind:value={description}
+      ></textarea>
+      <div class="modal-action">
+        <form method="dialog" class="flex gap-2">
+          <button class="btn">Cancel</button>
+        </form>
+        <button class="btn btn-primary" onclick={save} disabled={!title.trim()}>Save</button>
+      </div>
+    </fieldset>
   </div>
-  <!-- Add a backdrop that also closes the modal -->
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
   </form>
