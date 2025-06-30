@@ -1,6 +1,7 @@
 <script lang="ts">
   import BibliographyList from '$lib/components/BibliographyList.svelte';
   import CreateBibliographyModal from '$lib/components/CreateBibliographyModal.svelte';
+  import ImportBibliographyModal from '$lib/components/ImportBibliographyModal.svelte';
   import { deleteBibliography, getAllBibliographies, saveBibliography } from '$lib/db';
   import type { Bibliography } from '$lib/types/bibliography';
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
@@ -8,7 +9,7 @@
   import { onMount } from 'svelte';
   import { v4 as uuidv4 } from 'uuid';
 
-  let bibliographies: Bibliography  [] = [];
+  let bibliographies: Bibliography[] = [];
   let showCreateModal = false;
   let showImportModal = false;
   let editingBibliography: BibliographyMetadata | null = null;
@@ -58,13 +59,14 @@
     await loadBibliographies();
   }
 
-  async function handleImportSave(
-    event: CustomEvent<{ metadata: BibliographyMetadata; data: HayagrivaData }>
-  ) {
-    const { metadata, data } = event.detail;
+  async function handleImportSave(payload: {
+    metadata: Partial<BibliographyMetadata>;
+    data: HayagrivaData;
+  }) {
+    const { metadata, data } = payload; // Directly use the payload
     const newBib: Bibliography = {
       metadata: {
-        ...metadata,
+        ...(metadata as Omit<BibliographyMetadata, 'id' | 'createdAt' | 'updatedAt'>),
         id: uuidv4(),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -120,5 +122,8 @@
 {/if}
 
 {#if showImportModal}
-  <ImportBibliographyModal onSave={handleImportSave} onClose={() => (showImportModal = false)} />
+  <ImportBibliographyModal
+    onClose={() => (showImportModal = false)}
+    onSave={(e) => handleImportSave(e)}
+  />
 {/if}
