@@ -53,22 +53,20 @@
 <dialog bind:this={dialog} onclose={onClose} class="modal">
   <div class="modal-box">
     <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
-      <legend class="fieldset-legend text-lg"
-        >{bibliography ? 'Edit' : 'Create'} Bibliography</legend
-      >
+      <legend class="fieldset-legend">{bibliography ? 'Edit' : 'Create'} Bibliography</legend>
       <label class="label" for="title"> Title </label>
       <input
         id="title"
         type="text"
         placeholder="e.g., 'My Research Papers'"
-        class="input input-bordered w-full"
+        class="input w-full"
         bind:value={title}
         required
       />
       <label class="label" for="description"> Description </label>
       <textarea
         id="description"
-        class="textarea textarea-bordered w-full"
+        class="textarea w-full"
         placeholder="A short description"
         bind:value={description}
       ></textarea>

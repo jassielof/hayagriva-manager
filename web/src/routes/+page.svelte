@@ -154,6 +154,8 @@
   onSave={handleSave}
 />
 
-{#if showImportModal}
-  <ImportBibliographyModal onClose={closeImportModal} onSave={handleImportSave} />
-{/if}
+<ImportBibliographyModal
+  show={showImportModal}
+  onClose={closeImportModal}
+  onSave={handleImportSave}
+/>

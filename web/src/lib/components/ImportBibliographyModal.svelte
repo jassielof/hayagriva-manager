@@ -2,7 +2,8 @@
   import type { HayagrivaData } from '$lib/types/hayagriva-data';
   import { parseYaml } from '$lib/hayagriva';
 
-  const { onClose, onSave } = $props<{
+  const { show, onClose, onSave } = $props<{
+    show: boolean; // Add show prop
     onClose: () => void;
     onSave: (data: {
       metadata: { title: string; description?: string };
@@ -10,7 +11,8 @@
     }) => void;
   }>();
 
-  let fileInput: HTMLInputElement;
+  let dialog: HTMLDialogElement;
+  let fileInput: HTMLInputElement | null = null;
   let file = $state<File | null>(null);
   let fileName = $state('');
   let title = $state('');
@@ -18,6 +20,22 @@
   let parsedData = $state<HayagrivaData | null>(null);
   let error = $state<string | null>(null);
   let isLoading = $state(false);
+
+  $effect(() => {
+    if (dialog) {
+      if (show) {
+        dialog.showModal();
+      } else {
+        file = null;
+        parsedData = null;
+        error = null;
+        title = '';
+        description = '';
+        if (fileInput) (fileInput as HTMLInputElement).value = '';
+        dialog.close();
+      }
+    }
+  });
 
   function handleFileSelect(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -46,9 +64,8 @@
           parsedData = parseYaml(content);
         } catch (e: any) {
           error = `Failed to parse YAML: ${e.message}`;
-          // Reset on error
           file = null;
-          if (fileInput) fileInput.value = '';
+          if (fileInput) (fileInput as HTMLInputElement).value = '';
         } finally {
           isLoading = false;
         }
@@ -78,33 +95,21 @@
 
     onSave(payload);
   }
-
-  function handleCancel() {
-    file = null;
-    if (fileInput) fileInput.value = '';
-    onClose();
-  }
 </script>
 
-<dialog class="modal modal-open">
+<dialog bind:this={dialog} onclose={onClose} class="modal">
   <div class="modal-box">
-    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onclick={handleCancel}
-      >✕</button
-    >
-    <h3 class="text-lg font-bold">Import Bibliography from YAML</h3>
-
-    <div class="space-y-4 py-4">
-      <label class="form-control w-full">
-        <div class="label"><span class="label-text">Select a Hayagriva YAML file</span></div>
-        <input
-          bind:this={fileInput}
-          type="file"
-          accept=".yml,.yaml"
-          class="file-input file-input-bordered w-full"
-          onchange={handleFileSelect}
-          disabled={isLoading}
-        />
-      </label>
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+      <legend class="fieldset-legend">Import Bibliography from YAML</legend>
+      <label class="label" for="file-input">Select a Hayagriva YAML file</label>
+      <input
+        type="file"
+        class="file-input w-full"
+        id="file-input"
+        accept=".yml,.yaml"
+        onchange={handleFileSelect}
+        disabled={isLoading}
+      />
 
       {#if isLoading}
         <div class="flex items-center gap-2">
@@ -169,17 +174,21 @@
           ></textarea>
         </label>
       {/if}
-    </div>
-
-    <div class="modal-action">
-      <button class="btn" onclick={handleCancel}>Cancel</button>
-      <button
-        class="btn btn-primary"
-        onclick={handleSave}
-        disabled={!parsedData || !title.trim() || isLoading}
-      >
-        Save Bibliography
-      </button>
-    </div>
+      <div class="modal-action">
+        <form method="dialog" class="flex gap-2">
+          <button class="btn">Cancel</button>
+        </form>
+        <button
+          class="btn btn-primary"
+          onclick={handleSave}
+          disabled={!parsedData || !title.trim() || isLoading}
+        >
+          Save Bibliography
+        </button>
+      </div>
+    </fieldset>
   </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
 </dialog>
