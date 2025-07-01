@@ -8,7 +8,7 @@ A Zotero-like manager for Hayagriva. It allows you to manage multiple Hayagriva 
 - TS
 - Bun
 - DaisyUI/TailwindCSS
-- IndexedDB for local storage
+- IndexedDB for local storage (Dexie.js)
 
 ## Functional Requirements
 
