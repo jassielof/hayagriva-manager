@@ -153,6 +153,13 @@
   }
 </script>
 
+{#snippet actions()}
+  <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
+    New Bibliography
+  </button>
+  <button type="button" class="btn btn-secondary" onclick={handleImport}> Import from YAML </button>
+{/snippet}
+
 <header class="navbar bg-base-100 shadow-sm">
   <a href="/" class="btn btn-ghost text-xl">Hayagriva Manager</a>
 </header>
@@ -163,22 +170,12 @@
       <h2 class="text-2xl font-bold">No Bibliographies Found</h2>
       <p class="mb-4 mt-2">Create a new bibliography or import a YAML file to get started.</p>
       <div class="flex flex-wrap justify-center gap-2">
-        <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
-          New Bibliography
-        </button>
-        <button type="button" class="btn btn-secondary" onclick={handleImport}>
-          Import from YAML
-        </button>
+        {@render actions()}
       </div>
     </div>
   {:else}
     <div class="mb-4 flex justify-end gap-2">
-      <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
-        New Bibliography
-      </button>
-      <button type="button" class="btn btn-secondary" onclick={handleImport}>
-        Import from YAML
-      </button>
+      {@render actions()}
     </div>
     <BibliographyList {bibliographies} edit={handleEdit} del={handleDelete} />
   {/if}
