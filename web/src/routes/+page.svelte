@@ -2,6 +2,7 @@
   import BibliographyList from '$lib/components/BibliographyList.svelte';
   import CreateBibliographyModal from '$lib/components/CreateBibliographyModal.svelte';
   import ImportBibliographyModal from '$lib/components/ImportBibliographyModal.svelte';
+  import ConfirmModal from '$lib/components/ConfirmModal.svelte'; // 1. Import the new component
   import { deleteBibliography, getAllBibliographies, saveBibliography } from '$lib/db';
   import type { Bibliography } from '$lib/types/bibliography';
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
@@ -13,6 +14,8 @@
   let showCreateModal = $state(false);
   let showImportModal = $state(false);
   let editingBibliography = $state<BibliographyMetadata | null>(null);
+  let showConfirmModal = $state(false); // 2. Add state for the confirm modal
+  let confirmAction = $state(() => {}); // 3. Add state for the confirm action
 
   onMount(async () => {
     await loadBibliographies();
@@ -105,10 +108,12 @@
   }
 
   async function handleDelete(id: string) {
-    if (confirm('Are you sure you want to delete this bibliography? This cannot be undone.')) {
+    // 4. Replace confirm() with logic to show the modal
+    confirmAction = async () => {
       await deleteBibliography(id);
       await loadBibliographies();
-    }
+    };
+    showConfirmModal = true;
   }
 
   function handleEdit(id: string) {
@@ -125,6 +130,10 @@
 
   function closeImportModal() {
     showImportModal = false;
+  }
+
+  function closeConfirmModal() {
+    showConfirmModal = false;
   }
 </script>
 
@@ -160,4 +169,12 @@
   show={showImportModal}
   onClose={closeImportModal}
   onSave={handleImportSave}
+/>
+
+<ConfirmModal
+  show={showConfirmModal}
+  title="Confirm Deletion"
+  message="Are you sure you want to delete this bibliography? This cannot be undone."
+  onConfirm={confirmAction}
+  onCancel={closeConfirmModal}
 />
