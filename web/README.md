@@ -25,7 +25,7 @@ All operations are performed in the browser; no server-side components.
   - Can be named and managed independently.
   - Can have the following optional metadata, which won't be stored in the YAML file:
     - `title`: Title of the bibliography.
-    - `description`: Description of the bibliography.
+    - `description` (optional): Description of the bibliography.
     - `createdAt`: Timestamp of creation.
     - `updatedAt`: Timestamp of last update.
   - The optional metadata should be editable/displayed in the index page.
