@@ -9,16 +9,28 @@
   import type { HayagrivaData } from '$lib/types/hayagriva-data';
   import { onMount } from 'svelte';
   import { v4 as uuidv4 } from 'uuid';
+  import AlertModal from '$lib/components/AlertModal.svelte';
 
   let bibliographies = $state<Bibliography[]>([]);
   let showCreateModal = $state(false);
   let showImportModal = $state(false);
   let editingBibliography = $state<BibliographyMetadata | null>(null);
-  let showConfirmModal = $state(false); // 2. Add state for the confirm modal
-  let confirmAction = $state(() => {}); // 3. Add state for the confirm action
+  let showConfirmModal = $state(false);
+  let confirmAction = $state(() => {});
+  let showAlertModal = $state(false);
+  let alertTitle = $state('');
+  let alertMessage = $state('');
 
   onMount(async () => {
-    await loadBibliographies();
+    try {
+      await loadBibliographies();
+    } catch (error) {
+      console.error('Error loading bibliographies:', error);
+      // Optionally show an alert modal with the error
+      alertTitle = 'Error';
+      alertMessage = 'Failed to load bibliographies. Please try again later.';
+      showAlertModal = true;
+    }
   });
 
   async function loadBibliographies() {
@@ -135,25 +147,40 @@
   function closeConfirmModal() {
     showConfirmModal = false;
   }
+
+  function closeAlertModal() {
+    showAlertModal = false;
+  }
 </script>
 
-<div class="navbar bg-base-100 px-4 shadow-sm">
-  <div class="navbar-start">
-    <a class="btn btn-ghost text-xl" href="/">Hayagriva Manager</a>
-  </div>
-  <div class="navbar-end flex items-center gap-2">
-    <button class="btn btn-primary" onclick={handleCreateNew}>New Bibliography</button>
-    <button class="btn btn-secondary" onclick={handleImport}>Import from YAML</button>
-  </div>
-</div>
+
+<header class="navbar bg-base-100 shadow-sm">
+  <a href="/" class="btn btn-ghost text-xl">Hayagriva Manager</a>
+</header>
 
 <main class="container mx-auto mt-8 p-4">
   {#if bibliographies.length === 0}
     <div class="text-center">
       <h2 class="text-2xl font-bold">No Bibliographies Found</h2>
-      <p class="mt-2">Create a new bibliography or import a YAML file to get started.</p>
+      <p class="mb-4 mt-2">Create a new bibliography or import a YAML file to get started.</p>
+      <div class="flex flex-wrap justify-center gap-2">
+        <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
+          New Bibliography
+        </button>
+        <button type="button" class="btn btn-secondary" onclick={handleImport}>
+          Import from YAML
+        </button>
+      </div>
     </div>
   {:else}
+    <div class="mb-4 flex justify-end gap-2">
+      <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
+        New Bibliography
+      </button>
+      <button type="button" class="btn btn-secondary" onclick={handleImport}>
+        Import from YAML
+      </button>
+    </div>
     <BibliographyList {bibliographies} edit={handleEdit} del={handleDelete} />
   {/if}
 </main>
@@ -177,4 +204,11 @@
   message="Are you sure you want to delete this bibliography? This cannot be undone."
   onConfirm={confirmAction}
   onCancel={closeConfirmModal}
+/>
+
+<AlertModal
+  show={showAlertModal}
+  title={alertTitle}
+  message={alertMessage}
+  onClose={closeAlertModal}
 />
