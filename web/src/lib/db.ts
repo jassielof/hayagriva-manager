@@ -1,4 +1,3 @@
-import { openDB, type IDBPDatabase } from 'idb';
 import type { Bibliography } from './types/bibliography';
 import Dexie, { type Table } from 'dexie';
 
