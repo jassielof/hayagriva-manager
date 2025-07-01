@@ -160,10 +160,6 @@
   <button type="button" class="btn btn-secondary" onclick={handleImport}> Import from YAML </button>
 {/snippet}
 
-<header class="navbar bg-base-100 shadow-sm">
-  <a href="/" class="btn btn-ghost text-xl">Hayagriva Manager</a>
-</header>
-
 <main class="container mx-auto mt-8 p-4">
   {#if bibliographies.length === 0}
     <div class="text-center">
