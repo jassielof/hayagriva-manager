@@ -32,18 +32,21 @@
   });
 </script>
 
-<main class="container mx-auto p-4">
+<main class="flex h-[calc(100vh-4rem)] flex-col p-4">
   {#if bibliography}
-    <div class="mb-4">
-      <h1 class="text-3xl font-bold">{bibliography.metadata.title}</h1>
-      <p class="opacity-80">{bibliography.metadata.description}</p>
+    <div class="mb-2">
+      <h1 class="truncate text-2xl font-bold">{bibliography.metadata.title}</h1>
+      {#if bibliography.metadata.description}
+        <p class="truncate text-sm opacity-70">{bibliography.metadata.description}</p>
+      {/if}
     </div>
 
-    <div class="flex flex-col gap-4 md:flex-row">
-      <div class="flex-1">
+    <div class="grid flex-grow grid-cols-1 gap-4 overflow-hidden md:grid-cols-3">
+      <div class="flex flex-col overflow-y-auto md:col-span-2">
+        <h2 class="card-title p-2">Entries</h2>
         <EntryList {entries} {selectedId} onSelect={handleSelectEntry} />
       </div>
-      <div class="w-full md:w-96">
+      <div class="overflow-y-auto">
         <EntryDetail entry={selectedEntry} />
       </div>
     </div>
