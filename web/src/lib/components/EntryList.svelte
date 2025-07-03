@@ -11,7 +11,7 @@
     if (!author) return '';
     if (typeof author === 'string') return author;
     if (Array.isArray(author)) {
-      return author.map((a) => (typeof a === 'string' ? a : a.name)).join(', ');
+      return author.map((a) => (typeof a === 'string' ? a : a.name)).join('; ');
     }
     return author.name || '';
   }
@@ -21,6 +21,11 @@
     if (typeof date === 'string') return date.toString();
     if (typeof date === 'string') return date.substring(0, 4);
     return '';
+  }
+
+  function formatEntryType(type: Entry['type']): string {
+    if (!type) return '';
+    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
   }
 </script>
 
@@ -53,7 +58,7 @@
                   {entry.title || ''}
                 </td>
                 <td class="max-w-xs truncate">{formatAuthor(entry.author)}</td>
-                <td>{entry.type}</td>
+                <td>{formatEntryType(entry.type)}</td>
                 <td>{getYear(entry.date)}</td>
               </tr>
             {/each}
