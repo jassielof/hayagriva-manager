@@ -16,16 +16,27 @@
     return author.name || '';
   }
 
-  function getYear(date: Entry['date']): string {
-    if (!date) return '';
-    if (typeof date === 'string') return date.toString();
-    if (typeof date === 'string') return date.substring(0, 4);
-    return '';
-  }
-
   function formatEntryType(type: Entry['type']): string {
     if (!type) return '';
     return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+  }
+
+  function formatEntryDate(date: Entry['date']): string {
+    if (!date) {
+      return '';
+    }
+
+    if (typeof date === 'number') {
+      return date.toString();
+    }
+
+    if (typeof date === 'string') {
+      // The date string can be YYYY, YYYY-MM, YYYY-MM-DD, or a full ISO string.
+      // We only want the date part (YYYY-MM-DD).
+      return date.split('T')[0];
+    }
+
+    return '';
   }
 </script>
 
@@ -59,7 +70,7 @@
                 </td>
                 <td class="max-w-xs truncate">{formatAuthor(entry.author)}</td>
                 <td>{formatEntryType(entry.type)}</td>
-                <td>{getYear(entry.date)}</td>
+                <td>{formatEntryDate(entry.date)}</td>
               </tr>
             {/each}
           </tbody>
