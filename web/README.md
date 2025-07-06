@@ -45,6 +45,7 @@ All operations are performed in the browser; no server-side components.
 
 - Import/export bibliographies in YAML format.
 - Export backup of all bibliographies.
+- On the entry view, it'd be good to have a button to copy the entry in YAML format to the clipboard, as well as importing entries from the clipboard in YAML format, or from a file.
 
 ### Search & Filter
 

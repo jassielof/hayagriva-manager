@@ -1,20 +1,80 @@
 <script lang="ts">
-  import type { HayagrivaData } from '$lib/types/hayagriva-data';
-
-  type Entry = HayagrivaData[string];
+  import type { Entry } from '$lib/types/entry';
+  import { onMount } from 'svelte';
 
   const { entry } = $props<{
     entry: Entry | null;
   }>();
+
+  let entryTypes = $state<string[]>([]);
+
+  onMount(async () => {
+    try {
+      // Fetch the schema to get the list of valid entry types
+      const res = await fetch(
+        'https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json'
+      );
+      if (!res.ok) throw new Error('Failed to fetch schema');
+      const schema = await res.json();
+      const types = schema?.definitions?.entryType?.examples;
+      if (Array.isArray(types)) {
+        entryTypes = types;
+      }
+    } catch (e) {
+      console.error('Could not fetch or parse Hayagriva schema:', e);
+      // Fallback in case of network error
+      entryTypes = ['article', 'book', 'misc', 'web'];
+    }
+  });
+
+  function formatEntryType(type: Entry['type']): string {
+    if (!type) return '';
+    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+  }
 </script>
 
 <div class="card bg-base-100 sticky top-4 shadow-md">
   <div class="card-body">
     <h2 class="card-title mb-2">Entry Details</h2>
     {#if entry}
-      <pre class="whitespace-pre-wrap break-all text-xs">{JSON.stringify(entry, null, 2)}</pre>
+      <form class="flex flex-col gap-4">
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text">Entry Type</span>
+          </div>
+          <select class="select select-bordered" bind:value={entry.type}>
+            {#each entryTypes as type}
+              <option value={type}>{formatEntryType(type)}</option>
+            {/each}
+          </select>
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text">Title</span>
+          </div>
+          <input
+            type="text"
+            placeholder="Title of the work"
+            class="input input-bordered w-full"
+            bind:value={entry.title}
+          />
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text">Date</span>
+          </div>
+          <input
+            type="text"
+            placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
+            class="input input-bordered w-full"
+            bind:value={entry.date}
+          />
+        </label>
+      </form>
     {:else}
-      <div class="p-4 text-center text-gray-500">
+      <div class="text-base-content/60 flex h-full items-center justify-center text-center">
         <p>Select an entry from the list to see its details.</p>
       </div>
     {/if}
