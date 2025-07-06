@@ -13,7 +13,7 @@
     if (typeof title === 'string') {
       return title;
     }
-    return title.value || '';
+    return title.short || title.value || '';
   }
 
   function formatAuthor(author: Entry['author']): string {

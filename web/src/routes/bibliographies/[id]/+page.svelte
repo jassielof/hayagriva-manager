@@ -21,6 +21,17 @@
     }
   });
 
+  $effect(() => {
+    if (bibliography) {
+      const updatedBib = {
+        ...bibliography,
+        data: Object.fromEntries(entries),
+        metadata: { ...bibliography.metadata, updatedAt: new Date() }
+      };
+      saveBibliography(updatedBib);
+    }
+  });
+
   function handleSelectEntry(id: string) {
     selectedId = id;
   }

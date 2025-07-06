@@ -9,18 +9,15 @@
     update: (newValue: FormattableString | undefined) => void;
   }>();
 
-  let showAdvanced = $state(false);
-
   const isObject = $derived(typeof value === 'object' && value !== null);
+  let showAdvanced = $state(typeof value === 'object' && value !== null);
 
   let mainValue = $derived(value ? (isObject ? value.value : value) : '');
   let shortValue = $derived(isObject ? (value.short ?? '') : '');
   let verbatimValue = $derived(isObject ? (value.verbatim ?? false) : false);
 
   $effect(() => {
-    if (isObject) {
-      showAdvanced = true;
-    }
+    showAdvanced = isObject;
   });
 
   function handleUpdate() {
