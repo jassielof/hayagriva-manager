@@ -39,11 +39,9 @@
     <h2 class="card-title mb-2">Entry Details</h2>
     {#if entry}
       <form class="flex flex-col gap-4">
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text">Entry Type</span>
-          </div>
-          <select class="select select-bordered" bind:value={entry.type}>
+        <label class="select">
+          <span class="label">Type</span>
+          <select bind:value={entry.type}>
             {#each entryTypes as type}
               <option value={type}>{formatEntryType(type)}</option>
             {/each}
