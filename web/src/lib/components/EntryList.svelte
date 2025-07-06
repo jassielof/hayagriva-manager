@@ -1,11 +1,20 @@
 <script lang="ts">
   import type { Entry } from '$lib/types/entry';
+  import type { FormattableString } from '$lib/types/hayagriva-definitions';
 
   const { entries, selectedId, onSelect } = $props<{
     entries: [string, Entry][];
     selectedId: string | null;
     onSelect: (id: string) => void;
   }>();
+
+  function formatTitle(title: FormattableString | undefined | null): string {
+    if (!title) return '';
+    if (typeof title === 'string') {
+      return title;
+    }
+    return title.value || '';
+  }
 
   function formatAuthor(author: Entry['author']): string {
     if (!author) return '';
@@ -66,7 +75,7 @@
             >
               <td class="max-w-xs truncate font-mono text-xs">{id}</td>
               <td class="max-w-xs truncate font-semibold">
-                {entry.title || ''}
+                {formatTitle(entry.title)}
               </td>
               <td class="max-w-xs truncate">{formatAuthor(entry.author)}</td>
               <td>{formatEntryType(entry.type)}</td>
