@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Entry } from '$lib/types/entry';
   import { onMount } from 'svelte';
+  import FormattableStringInput from './FormattableStringInput.svelte';
 
   const { entry } = $props<{
     entry: Entry | null;
@@ -49,17 +50,14 @@
           </select>
         </label>
 
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text">Title</span>
-          </div>
-          <input
-            type="text"
-            placeholder="Title of the work"
-            class="input input-bordered w-full"
-            bind:value={entry.title}
-          />
-        </label>
+        <FormattableStringInput
+          label="Title"
+          placeholder="Title of the work"
+          value={entry.title}
+          update={(newValue) => {
+            entry.title = newValue;
+          }}
+        />
 
         <label class="form-control w-full">
           <div class="label">
