@@ -3,8 +3,9 @@
   import { onMount } from 'svelte';
   import FormattableStringInput from './FormattableStringInput.svelte';
 
-  const { entry } = $props<{
+  const { entry, onUpdate } = $props<{
     entry: Entry | null;
+    onUpdate: (updatedEntry: Entry) => void;
   }>();
 
   let entryTypes = $state<string[]>([]);
@@ -28,6 +29,11 @@
     }
   });
 
+  function updateField<K extends keyof Entry>(field: K, value: Entry[K]) {
+    if (!entry) return;
+    onUpdate({ ...entry, [field]: value });
+  }
+
   function formatEntryType(type: Entry['type']): string {
     if (!type) return '';
     return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
@@ -41,7 +47,7 @@
       <form class="flex flex-col gap-4">
         <label class="select w-full">
           <span class="label">Type</span>
-          <select bind:value={entry.type}>
+          <select value={entry.type} onchange={(e) => updateField('type', e.currentTarget.value)}>
             {#each entryTypes as type}
               <option value={type}>{formatEntryType(type)}</option>
             {/each}
@@ -53,7 +59,7 @@
           placeholder="Title of the work"
           value={entry.title}
           update={(newValue) => {
-            entry.title = newValue;
+            updateField('title', newValue);
           }}
         />
 
@@ -65,7 +71,8 @@
             type="text"
             placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
             class="input input-bordered w-full"
-            bind:value={entry.date}
+            value={entry.date}
+            oninput={(e) => updateField('date', e.currentTarget.value)}
           />
         </label>
       </form>

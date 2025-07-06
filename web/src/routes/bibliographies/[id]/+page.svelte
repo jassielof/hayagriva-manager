@@ -28,12 +28,24 @@
         data: Object.fromEntries(entries),
         metadata: { ...bibliography.metadata, updatedAt: new Date() }
       };
-      saveBibliography(updatedBib);
+      // Convert the reactive proxy object into a plain JS object before saving.
+      const plainBib = JSON.parse(JSON.stringify(updatedBib));
+      saveBibliography(plainBib);
     }
   });
 
   function handleSelectEntry(id: string) {
     selectedId = id;
+  }
+
+  function handleEntryUpdate(updatedEntry: HayagrivaData[string]) {
+    if (!selectedId) return;
+
+    const index = entries.findIndex(([id]) => id === selectedId);
+    if (index !== -1) {
+      // Replace the old entry with the updated one to ensure reactivity
+      entries[index] = [selectedId, updatedEntry];
+    }
   }
 
   const selectedEntry = $derived.by(() => {
@@ -58,7 +70,7 @@
         <EntryList {entries} {selectedId} onSelect={handleSelectEntry} />
       </div>
       <div class="overflow-y-auto">
-        <EntryDetail entry={selectedEntry} />
+        <EntryDetail entry={selectedEntry} onUpdate={handleEntryUpdate} />
       </div>
     </div>
   {:else}
