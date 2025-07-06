@@ -39,7 +39,7 @@
     <h2 class="card-title mb-2">Entry Details</h2>
     {#if entry}
       <form class="flex flex-col gap-4">
-        <label class="select">
+        <label class="select w-full">
           <span class="label">Type</span>
           <select bind:value={entry.type}>
             {#each entryTypes as type}

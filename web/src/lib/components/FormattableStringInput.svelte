@@ -37,51 +37,37 @@
 </script>
 
 <div class="form-control w-full">
-  <div class="label">
-    <span class="label-text">{label}</span>
-    <button
-      class="btn btn-xs btn-ghost gap-1"
-      onclick={() => (showAdvanced = !showAdvanced)}
-      title="Toggle advanced options"
-    >
-      Advanced
-      <ChevronsUpDown class="size-3" />
-    </button>
-  </div>
-  <input
-    type="text"
-    {placeholder}
-    class="input input-bordered w-full"
-    bind:value={mainValue}
-    oninput={handleUpdate}
-  />
+  <label class="input w-full">
+    <span class="label">{label}</span>
+    <div class="join w-full">
+      <input type="text join-item" {placeholder} bind:value={mainValue} oninput={handleUpdate} />
+      <button
+        class="btn btn-xs btn-ghost join-item gap-1"
+        onclick={() => (showAdvanced = !showAdvanced)}
+        >Advanced
+        <ChevronsUpDown class="size-3" />
+      </button>
+    </div>
+  </label>
 
   {#if showAdvanced}
-    <div class="border-base-300 bg-base-200/30 mt-2 flex flex-col gap-2 rounded-md border p-2">
-      <label class="form-control w-full">
-        <div class="label pb-1 pt-0">
-          <span class="label-text text-xs">Short Form</span>
-        </div>
-        <input
-          type="text"
-          placeholder="A shorter version for citations"
-          class="input input-sm input-bordered w-full"
-          bind:value={shortValue}
-          oninput={handleUpdate}
-        />
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+      <legend class="fieldset-legend">Advanced {label}</legend>
+
+      <label class="input w-full">
+        <span class="label">Short Form</span>
+        <input type="text" bind:value={shortValue} oninput={handleUpdate} />
       </label>
-      <div class="form-control">
-        <label class="label cursor-pointer py-1">
-          <span class="label-text text-xs">Verbatim</span>
-          <input
-            type="checkbox"
-            class="toggle toggle-sm"
-            bind:checked={verbatimValue}
-            onchange={handleUpdate}
-          />
-        </label>
-        <p class="text-xs opacity-60">Disables automatic case transformations.</p>
-      </div>
-    </div>
+
+      <label class="label w-full">
+        <input
+          type="checkbox"
+          class="toggle"
+          bind:checked={verbatimValue}
+          onchange={handleUpdate}
+        />
+        Verbatim
+      </label>
+    </fieldset>
   {/if}
 </div>
