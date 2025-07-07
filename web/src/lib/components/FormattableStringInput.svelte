@@ -33,7 +33,7 @@
   }
 </script>
 
-<div class="form-control w-full">
+<div class="w-full">
   <label class="input w-full">
     <span class="label">{label}</span>
     <div class="join w-full">
@@ -59,7 +59,7 @@
       <label class="label w-full">
         <input
           type="checkbox"
-          class="toggle"
+          class="checkbox"
           bind:checked={verbatimValue}
           onchange={handleUpdate}
         />

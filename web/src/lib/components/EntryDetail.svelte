@@ -2,6 +2,7 @@
   import type { Entry } from '$lib/types/entry';
   import { onMount } from 'svelte';
   import FormattableStringInput from './FormattableStringInput.svelte';
+  import { getEntryTypes } from '$lib/hayagriva-schema';
 
   const { entry, onUpdate } = $props<{
     entry: Entry | null;
@@ -11,22 +12,7 @@
   let entryTypes = $state<string[]>([]);
 
   onMount(async () => {
-    try {
-      // Fetch the schema to get the list of valid entry types
-      const res = await fetch(
-        'https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json'
-      );
-      if (!res.ok) throw new Error('Failed to fetch schema');
-      const schema = await res.json();
-      const types = schema?.definitions?.entryType?.examples;
-      if (Array.isArray(types)) {
-        entryTypes = types;
-      }
-    } catch (e) {
-      console.error('Could not fetch or parse Hayagriva schema:', e);
-      // Fallback in case of network error
-      entryTypes = ['article', 'book', 'misc', 'web'];
-    }
+    entryTypes = await getEntryTypes();
   });
 
   function updateField<K extends keyof Entry>(field: K, value: Entry[K]) {
@@ -63,14 +49,11 @@
           }}
         />
 
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text">Date</span>
-          </div>
+        <label class="input w-full">
+          <span class="label">Date</span>
           <input
             type="text"
             placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
-            class="input input-bordered w-full"
             value={entry.date}
             oninput={(e) => updateField('date', e.currentTarget.value)}
           />
