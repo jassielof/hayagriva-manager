@@ -6,3 +6,4 @@ export type FormattableStringObject = {
 
 export type FormattableString = string | FormattableStringObject;
 
+export type HayagrivaDate = string | number;

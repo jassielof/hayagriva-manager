@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import FormattableStringInput from './FormattableStringInput.svelte';
   import { getEntryTypes } from '$lib/hayagriva-schema';
+  import DateInput from './DateInput.svelte';
 
   const { entry, onUpdate } = $props<{
     entry: Entry | null;
@@ -49,15 +50,14 @@
           }}
         />
 
-        <label class="input w-full">
-          <span class="label">Date</span>
-          <input
-            type="text"
-            placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
-            value={entry.date}
-            oninput={(e) => updateField('date', e.currentTarget.value)}
-          />
-        </label>
+        <DateInput
+          label="Date"
+          placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
+          value={entry.date}
+          update={(newValue) => {
+            updateField('date', newValue);
+          }}
+        />
       </form>
     {:else}
       <div class="text-base-content/60 flex h-full items-center justify-center text-center">
