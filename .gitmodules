@@ -4,3 +4,6 @@
 [submodule "hayagriva-zotero-translator"]
 	path = hayagriva-zotero-translator
 	url = https://github.com/jassielof/hayagriva-zotero-translator.git
+[submodule "hayagriva"]
+	path = hayagriva
+	url = https://github.com/jassielof/hayagriva.git
