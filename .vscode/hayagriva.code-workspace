@@ -13,10 +13,6 @@
       "name": "JSON Schemas"
     },
     {
-      "path": "../hayagriva-zotero-translator",
-      "name": "Hayagriva Zotero Translator"
-    },
-    {
       "path": "../web/",
       "name": "Web"
     }
