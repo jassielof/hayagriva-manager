@@ -1,23 +1,4 @@
 {
-  "folders": [
-    {
-      "path": "../",
-      "name": "Hayagraiva Manager"
-    },
-    {
-      "path": "../hayagriva",
-      "name": "Typst/Hayagriva"
-    },
-    {
-      "path": "../json-schemas",
-      "name": "JSON Schemas"
-    },
-    {
-      "path": "../web/",
-      "name": "Web"
-    }
-  ],
-  "settings": {
     "cSpell.words": [
       "biblatex",
       "dexie",
@@ -36,4 +17,3 @@
       ]
     }
   }
-}
