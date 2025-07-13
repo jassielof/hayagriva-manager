@@ -59,7 +59,7 @@
       <label class="label w-full">
         <input
           type="checkbox"
-          class="checkbox"
+          class="toggle"
           bind:checked={verbatimValue}
           onchange={handleUpdate}
         />

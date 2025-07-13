@@ -4,6 +4,7 @@
   import FormattableStringInput from './FormattableStringInput.svelte';
   import { getEntryTypes } from '$lib/hayagriva-schema';
   import DateInput from './DateInput.svelte';
+  import LanguageInput from './LanguageInput.svelte';
 
   const { entry, onUpdate } = $props<{
     entry: Entry | null;
@@ -58,6 +59,8 @@
             updateField('date', newValue);
           }}
         />
+
+        <LanguageInput />
       </form>
     {:else}
       <div class="text-base-content/60 flex h-full items-center justify-center text-center">

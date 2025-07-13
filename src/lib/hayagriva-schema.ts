@@ -70,3 +70,15 @@ export async function getEntryTypes(): Promise<string[]> {
   // If no cache, fetch from the network and wait for the result.
   return await fetchAndCacheTypes();
 }
+
+export async function getLanguageRegex(): Promise<RegExp> {
+  try {
+    const schema = await fetch(SCHEMA_URL).then((res) => res.json());
+    const pattern = schema?.definitions?.language?.pattern;
+    return new RegExp(pattern);
+  } catch (e) {
+    console.error('Failed to fetch language regex from schema:', e);
+    // Fallback: match any string
+    return /.*/;
+  }
+}
