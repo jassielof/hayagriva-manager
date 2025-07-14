@@ -9,19 +9,20 @@
     update: (newValue: Date | undefined) => void;
   }>();
 
-  // Regex from the Hayagriva schema to validate date strings.
-  const DATE_REGEX = /^([+-~]?\d{4,})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/;
-  const YEAR_ONLY_REGEX = /^\d{4,}$/;
-
   let inputValue = $state(value?.toString() ?? '');
   let isValid = $state(true);
   let isFocused = $state(false);
 
+  // Helper: is this a year-only string (for number conversion)?
+  function isYearOnly(val: string) {
+    // Accepts optional +, -, ~, then 4+ digits, and nothing else
+    return /^([+-~]?\d{4,})$/.test(val);
+  }
+
   $effect(() => {
-    // Only sync from the external prop if the user is not currently editing the input.
     if (!isFocused) {
       inputValue = value?.toString() ?? '';
-      isValidDate(inputValue);
+      isValid = isValidDate(inputValue);
     }
   });
 
@@ -34,15 +35,14 @@
     if (isValid) {
       if (currentValue === '') {
         update(undefined);
-      } else if (YEAR_ONLY_REGEX.test(currentValue)) {
-        // If it's just a year, store it as a number per the schema.
-        update(parseInt(currentValue, 10));
+      } else if (isYearOnly(currentValue)) {
+        // Store as number if possible
+        const yearNum = Number(currentValue);
+        update(Number.isNaN(yearNum) ? currentValue : yearNum);
       } else {
         update(currentValue);
       }
     } else {
-      // If the input is invalid, we still need to inform the parent
-      // so the data is cleared, preventing it from reverting.
       update(undefined);
     }
   }
