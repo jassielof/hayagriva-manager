@@ -1,19 +1,21 @@
 {
-    "cSpell.words": [
-      "biblatex",
-      "dexie",
-      "Dexie",
-      "hayagriva",
-      "Hayagriva",
-      "IDBP",
-      "serde",
-      "Zotero"
-    ],
-    "yaml.schemas": {
-      "https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json": [
-        "*.[hay,haya,hayagriva].[yml,yaml]",
-        "*.[hay,haya,hayagriva]",
-        "file:///home/jassielof/GitHub/jassielof/hayagriva-manager/data/hayagriva/hayagriva.yml"
-      ]
-    }
+  "cSpell.words": [
+    "biblatex",
+    "dexie",
+    "Dexie",
+    "hayagriva",
+    "Hayagriva",
+    "IDBP",
+    "PMCID",
+    "PMID",
+    "serde",
+    "Zotero"
+  ],
+  "yaml.schemas": {
+    "https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json": [
+      "*.[hay,haya,hayagriva].[yml,yaml]",
+      "*.[hay,haya,hayagriva]",
+      "file:///home/jassielof/GitHub/jassielof/hayagriva-manager/data/hayagriva/hayagriva.yml"
+    ]
   }
+}
