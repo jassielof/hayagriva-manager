@@ -5,6 +5,7 @@
   import LanguageInput from './schema-definitions/LanguageInput.svelte';
   import type { BibliographyEntry } from '$lib/types/hayagriva';
   import { ENTRY_TYPES } from '$lib/validators/entry-type';
+  import EntryTypeInput from './schema-definitions/EntryTypeInput.svelte';
 
   const { entry, onUpdate } = $props<{
     entry: BibliographyEntry | null;
@@ -33,14 +34,10 @@
     <h2 class="card-title mb-2">Entry Details</h2>
     {#if entry}
       <form class="flex flex-col gap-4">
-        <label class="select w-full">
-          <span class="label">Type</span>
-          <select value={entry.type} onchange={(e) => updateField('type', e.currentTarget.value)}>
-            {#each entryTypes as type}
-              <option value={type}>{formatEntryType(type)}</option>
-            {/each}
-          </select>
-        </label>
+        <EntryTypeInput
+          value={entry.type ?? ''}
+          onUpdate={(newValue) => updateField('type', newValue ?? '')}
+        />
 
         <FormattableStringInput
           label="Title"
