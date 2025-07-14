@@ -67,7 +67,10 @@
           }}
         />
 
-        <LanguageInput />
+        <LanguageInput
+          value={entry.language ?? ''}
+          onUpdate={(newValue) => updateField('language', newValue)}
+        />
       </form>
     {:else}
       <div class="text-base-content/60 flex h-full items-center justify-center text-center">

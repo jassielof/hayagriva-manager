@@ -48,10 +48,11 @@
   }
 </script>
 
-<label class="input w-full">
-  <span class="label">{label}</span>
+<label class="input">
+  <span class="label validator">{label}</span>
   <input
     type="text"
+    class=""
     {placeholder}
     class:input-error={!isValid && inputValue !== ''}
     value={inputValue}
@@ -61,5 +62,5 @@
   />
 </label>
 {#if !isValid && inputValue !== ''}
-  <p class="label">Invalid format. Use YYYY, YYYY-MM, or YYYY-MM-DD.</p>
+  <p class="validator-hint">Invalid format. Use YYYY, YYYY-MM, or YYYY-MM-DD.</p>
 {/if}
