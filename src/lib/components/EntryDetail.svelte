@@ -48,6 +48,16 @@
           }}
         />
 
+        <FormattableStringInput
+          label="Abstract"
+          placeholder="Abstract or summary of the entry"
+          value={entry.abstract}
+          update={(newValue) => {
+            updateField('abstract', newValue);
+          }}
+          multiline={true}
+        />
+
         <DateInput
           label="Date"
           placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"

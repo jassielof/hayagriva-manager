@@ -2,11 +2,18 @@
   import type { FormattableString } from '$lib/types/formattable-string';
   import { ChevronsUpDown } from '@lucide/svelte';
 
-  const { value, label, placeholder, update } = $props<{
+  const {
+    value,
+    label,
+    placeholder,
+    update,
+    multiline = false
+  } = $props<{
     value: FormattableString | undefined | null;
     label: string;
     placeholder: string;
     update: (newValue: FormattableString | undefined) => void;
+    multiline?: boolean;
   }>();
 
   const isObject = $derived(typeof value === 'object' && value !== null);
@@ -37,11 +44,29 @@
   <label class="input w-full">
     <span class="label">{label}</span>
     <div class="join w-full">
-      <input type="text join-item" {placeholder} bind:value={mainValue} oninput={handleUpdate} />
+      {#if multiline}
+        <textarea
+          class="textarea join-item"
+          {placeholder}
+          bind:value={mainValue}
+          rows="4"
+          oninput={handleUpdate}
+        ></textarea>
+      {:else}
+        <input
+          type="text"
+          class="join-item"
+          {placeholder}
+          bind:value={mainValue}
+          oninput={handleUpdate}
+        />
+      {/if}
       <button
         class="btn btn-xs btn-ghost join-item gap-1"
+        type="button"
         onclick={() => (showAdvanced = !showAdvanced)}
-        >Advanced
+      >
+        Advanced
         <ChevronsUpDown class="size-3" />
       </button>
     </div>
