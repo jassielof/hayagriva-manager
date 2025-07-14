@@ -41,18 +41,30 @@
 </script>
 
 <div class="w-full">
-  <label class="input w-full">
-    <span class="label">{label}</span>
-    <div class="join w-full">
-      {#if multiline}
-        <textarea
-          class="textarea join-item"
-          {placeholder}
-          bind:value={mainValue}
-          rows="4"
-          oninput={handleUpdate}
-        ></textarea>
-      {:else}
+  {#if multiline}
+    <fieldset class="fieldset w-full">
+      <legend class="fieldset-legend">{label}</legend>
+      <textarea
+        class="textarea join-item w-full"
+        {placeholder}
+        bind:value={mainValue}
+        rows="4"
+        oninput={handleUpdate}
+      ></textarea>
+      <div class="label">Optional</div>
+      <button
+        class="btn btn-xs btn-ghost mt-2 gap-1"
+        type="button"
+        onclick={() => (showAdvanced = !showAdvanced)}
+      >
+        Advanced
+        <ChevronsUpDown class="size-3" />
+      </button>
+    </fieldset>
+  {:else}
+    <label class="input w-full">
+      <span class="label">{label}</span>
+      <div class="join w-full">
         <input
           type="text"
           class="join-item"
@@ -60,27 +72,25 @@
           bind:value={mainValue}
           oninput={handleUpdate}
         />
-      {/if}
-      <button
-        class="btn btn-xs btn-ghost join-item gap-1"
-        type="button"
-        onclick={() => (showAdvanced = !showAdvanced)}
-      >
-        Advanced
-        <ChevronsUpDown class="size-3" />
-      </button>
-    </div>
-  </label>
+        <button
+          class="btn btn-xs btn-ghost join-item gap-1"
+          type="button"
+          onclick={() => (showAdvanced = !showAdvanced)}
+        >
+          Advanced
+          <ChevronsUpDown class="size-3" />
+        </button>
+      </div>
+    </label>
+  {/if}
 
   {#if showAdvanced}
-    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box mt-2 w-full border p-4">
       <legend class="fieldset-legend">Advanced {label}</legend>
-
       <label class="input w-full">
         <span class="label">Short Form</span>
         <input type="text" bind:value={shortValue} oninput={handleUpdate} />
       </label>
-
       <label class="label w-full">
         <input
           type="checkbox"

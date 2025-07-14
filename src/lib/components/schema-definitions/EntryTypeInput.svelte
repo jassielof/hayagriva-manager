@@ -12,12 +12,12 @@
   }
 </script>
 
-<label class="select w-full">
-  <span class="label">Type</span>
-  <select class="select" bind:value onchange={handleChange}>
+<fieldset class="fieldset">
+  <legend class="fieldset-legend">Type</legend>
+  <select class="select w-full" bind:value onchange={handleChange}>
     <option disabled selected>Select an entry type</option>
     {#each ENTRY_TYPES as type}
       <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}</option>
     {/each}
   </select>
-</label>
+</fieldset>
