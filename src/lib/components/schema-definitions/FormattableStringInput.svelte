@@ -1,6 +1,10 @@
 <script lang="ts">
-  import type { FormattableString } from '$lib/types/hayagriva-definitions';
+  import type { ShortForm, Value, Verbatim } from '$lib/types/hayagriva';
   import { ChevronsUpDown } from '@lucide/svelte';
+
+  export type FormattableString =
+    | string
+    | { value: Value; shortForm?: ShortForm; verbatim?: Verbatim };
 
   const { value, label, placeholder, update } = $props<{
     value: FormattableString | undefined | null;

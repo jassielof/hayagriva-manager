@@ -1,7 +1,10 @@
 import type { BibliographyMetadata } from './bibliography-metadata';
-import type { HayagrivaData } from './hayagriva-data';
+import type { Hayagriva } from './hayagriva';
 
+/**
+ * Represents a Hayagriva bibliography along with its metadata.
+ */
 export interface Bibliography {
   metadata: BibliographyMetadata;
-  data: HayagrivaData;
+  data: Hayagriva;
 }

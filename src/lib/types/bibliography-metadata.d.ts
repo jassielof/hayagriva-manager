@@ -1,3 +1,6 @@
+/**
+ * Bibliography Metadata Interface
+ */
 export interface BibliographyMetadata {
   id: string;
   title: string;
@@ -5,4 +8,3 @@ export interface BibliographyMetadata {
   createdAt: Date;
   updatedAt: Date;
 }
-

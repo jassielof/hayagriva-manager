@@ -1,11 +1,12 @@
 <script lang="ts">
-  import type { HayagrivaDate } from '$lib/types/hayagriva-definitions';
+  import type { Date } from '$lib/types/hayagriva';
+  import { isValidDate } from '$lib/validators/date';
 
   const { value, label, placeholder, update } = $props<{
-    value: HayagrivaDate | undefined | null;
+    value: Date | undefined | null;
     label: string;
     placeholder?: string;
-    update: (newValue: HayagrivaDate | undefined) => void;
+    update: (newValue: Date | undefined) => void;
   }>();
 
   // Regex from the Hayagriva schema to validate date strings.
@@ -20,23 +21,15 @@
     // Only sync from the external prop if the user is not currently editing the input.
     if (!isFocused) {
       inputValue = value?.toString() ?? '';
-      validate(inputValue);
+      isValidDate(inputValue);
     }
   });
-
-  function validate(currentValue: string) {
-    if (currentValue === '') {
-      isValid = true;
-      return;
-    }
-    isValid = DATE_REGEX.test(currentValue);
-  }
 
   function handleInput(e: Event) {
     const target = e.currentTarget as HTMLInputElement;
     const currentValue = target.value;
     inputValue = currentValue;
-    validate(currentValue);
+    isValid = isValidDate(currentValue);
 
     if (isValid) {
       if (currentValue === '') {

@@ -6,10 +6,10 @@
   import { deleteBibliography, getAllBibliographies, saveBibliography } from '$lib/db';
   import type { Bibliography } from '$lib/types/bibliography';
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
-  import type { HayagrivaData } from '$lib/types/hayagriva-data';
   import { onMount } from 'svelte';
   import { v4 as uuidv4 } from 'uuid';
   import AlertModal from '$lib/components/AlertModal.svelte';
+  import type { Hayagriva } from '$lib/types/hayagriva';
 
   let bibliographies = $state<Bibliography[]>([]);
   let showCreateModal = $state(false);
@@ -75,7 +75,7 @@
 
   async function handleImportSave(payload: {
     metadata: Partial<BibliographyMetadata>;
-    data: HayagrivaData;
+    data: Hayagriva;
   }) {
     console.log('handleImportSave called with payload:', payload);
 
@@ -164,7 +164,7 @@
   {#if bibliographies.length === 0}
     <div class="text-center">
       <h2 class="text-2xl font-bold">No Bibliographies Found</h2>
-      <p class="mb-4 mt-2">Create a new bibliography or import a YAML file to get started.</p>
+      <p class="mt-2 mb-4">Create a new bibliography or import a YAML file to get started.</p>
       <div class="flex flex-wrap justify-center gap-2">
         {@render actions()}
       </div>

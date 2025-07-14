@@ -1,28 +1,28 @@
 <script lang="ts">
-  import type { Entry } from '$lib/types/entry';
   import { onMount } from 'svelte';
-  import FormattableStringInput from './FormattableStringInput.svelte';
-  import { getEntryTypes } from '$lib/hayagriva-schema';
-  import DateInput from './DateInput.svelte';
-  import LanguageInput from './LanguageInput.svelte';
+  import FormattableStringInput from './schema-definitions/FormattableStringInput.svelte';
+  import DateInput from './schema-definitions/DateInput.svelte';
+  import LanguageInput from './schema-definitions/LanguageInput.svelte';
+  import type { BibliographyEntry } from '$lib/types/hayagriva';
+  import { ENTRY_TYPES } from '$lib/validators/entry-type';
 
   const { entry, onUpdate } = $props<{
-    entry: Entry | null;
-    onUpdate: (updatedEntry: Entry) => void;
+    entry: BibliographyEntry | null;
+    onUpdate: (updatedEntry: BibliographyEntry) => void;
   }>();
 
   let entryTypes = $state<string[]>([]);
 
   onMount(async () => {
-    entryTypes = await getEntryTypes();
+    entryTypes = ENTRY_TYPES;
   });
 
-  function updateField<K extends keyof Entry>(field: K, value: Entry[K]) {
+  function updateField<K extends keyof BibliographyEntry>(field: K, value: BibliographyEntry[K]) {
     if (!entry) return;
     onUpdate({ ...entry, [field]: value });
   }
 
-  function formatEntryType(type: Entry['type']): string {
+  function formatEntryType(type: BibliographyEntry['type']): string {
     if (!type) return '';
     return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
   }
