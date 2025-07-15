@@ -7,10 +7,13 @@
   import { ENTRY_TYPES } from '$lib/validators/entry-type';
   import EntryTypeInput from './schema-definitions/EntryTypeInput.svelte';
 
-  const { entry, onUpdate } = $props<{
+  let {
+    entry,
+    onUpdate
+  }: {
     entry: BibliographyEntry | null;
     onUpdate: (updatedEntry: BibliographyEntry) => void;
-  }>();
+  } = $props();
 
   let entryTypes = $state<string[]>([]);
 
@@ -22,7 +25,6 @@
     if (!entry) return;
     onUpdate({ ...entry, [field]: value });
   }
-
 </script>
 
 <div class="card bg-base-100 sticky top-4 shadow-md">
@@ -52,6 +54,24 @@
             updateField('abstract', newValue);
           }}
           multiline={true}
+        />
+
+        <FormattableStringInput
+          label="Genre"
+          placeholder="Class or subtype of the item"
+          value={entry.genre}
+          update={(newValue) => {
+            updateField('genre', newValue);
+          }}
+        />
+
+        <FormattableStringInput
+          label="Call number"
+          placeholder="Number of the item in the library"
+          value={entry['call-number']}
+          update={(newValue) => {
+            updateField('call-number', newValue);
+          }}
         />
 
         <DateInput
