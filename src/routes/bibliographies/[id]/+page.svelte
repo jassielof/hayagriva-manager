@@ -5,10 +5,10 @@
   import type { PageProps } from './$types';
   import EntryList from '$lib/components/EntryList.svelte';
   import EntryDetail from '$lib/components/EntryDetail.svelte';
-  import type { HayagrivaData } from '$lib/types/hayagriva-data';
+  import type { Hayagriva, BibliographyEntry } from '$lib/types/hayagriva';
 
   let bibliography = $state<Bibliography | null>(null);
-  let entries = $state<[string, HayagrivaData[string]][]>([]);
+  let entries = $state<[string, BibliographyEntry][]>([]);
   let selectedId = $state<string | null>(null);
 
   let { data: pageData }: PageProps = $props();
@@ -17,7 +17,7 @@
     const bib = await getBibliography(pageData.id);
     if (bib) {
       bibliography = bib;
-      entries = Object.entries(bib.data);
+      entries = Object.entries(bib.data as Hayagriva);
     }
   });
 
@@ -38,7 +38,7 @@
     selectedId = id;
   }
 
-  function handleEntryUpdate(updatedEntry: HayagrivaData[string]) {
+  function handleEntryUpdate(updatedEntry: BibliographyEntry) {
     if (!selectedId) return;
 
     const index = entries.findIndex(([id]) => id === selectedId);
