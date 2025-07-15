@@ -23,10 +23,6 @@
     onUpdate({ ...entry, [field]: value });
   }
 
-  function formatEntryType(type: BibliographyEntry['type']): string {
-    if (!type) return '';
-    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
-  }
 </script>
 
 <div class="card bg-base-100 sticky top-4 shadow-md">
