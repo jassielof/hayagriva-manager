@@ -1,15 +1,26 @@
 <script lang="ts">
   import type { Bibliography } from '$lib/types/bibliography';
-  import { Book, Pencil, Trash } from '@lucide/svelte';
+  import {
+    Book,
+    BookOpen,
+    Copy,
+    Download,
+    Pencil,
+    Trash
+  } from '@lucide/svelte';
 
-  const { bibliographies, edit, del } = $props<{
+  const {
+    bibliographies,
+    edit,
+    del
+  }: {
     bibliographies: Bibliography[];
     edit: (id: string) => void;
     del: (id: string) => void;
-  }>();
+  } = $props();
 
   function formatDate(date: Date) {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat(undefined, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -21,35 +32,58 @@
   <ul class="list bg-base-100 rounded-box shadow-md">
     {#each bibliographies as bib (bib.metadata.id)}
       <li class="list-row">
-        <div>
-          <Book class="size-6 opacity-60" />
+        <div class="flex h-full items-center justify-center">
+          <Book />
         </div>
-        <div>
+        <div class="list-col-grow flex flex-col items-start justify-center">
           <h6 class="font-semibold">{bib.metadata.title}</h6>
-          <time class="text-xs opacity-60">Updated: {formatDate(bib.metadata.updatedAt)}</time>
+          <time class="text-xs opacity-60">
+            Updated: {formatDate(bib.metadata.updatedAt)}
+          </time>
           <p class="mt-1 text-sm opacity-80">
             {bib.metadata.description || 'No description provided.'}
           </p>
         </div>
-        <a href={`/bibliographies/${bib.metadata.id}`} class="btn btn-sm btn-primary">Open</a>
 
-        <button
-          class="btn btn-sm btn-square btn-ghost"
-          onclick={() => edit(bib.metadata.id)}
-          title="Edit Bibliography Metadata"
-          aria-label="Edit Bibliography Metadata"
+        <div
+          class="join lg:join-horizontal join-vertical flex items-center justify-end"
         >
-          <Pencil class="size-4" />
-        </button>
+          <a
+            href={`/bibliographies/${bib.metadata.id}`}
+            class="btn btn-soft join-item"
+            title="View"
+          >
+            <BookOpen />
+          </a>
+          <button
+            class="btn btn-soft join-item"
+            onclick={() => edit(bib.metadata.id)}
+            title="Edit metadata"
+            aria-label="Edit metadata"
+          >
+            <Pencil />
+          </button>
 
-        <button
-          class="btn btn-sm btn-square btn-ghost text-error"
-          onclick={() => del(bib.metadata.id)}
-          title="Delete Bibliography"
-          aria-label="Delete Bibliography"
-        >
-          <Trash class="size-4" />
-        </button>
+          <button class="btn btn-soft join-item" title="Download as YAML file">
+            <Download />
+          </button>
+
+          <button
+            class="btn btn-soft join-item"
+            title="Copy to clipboard as YAML"
+          >
+            <Copy />
+          </button>
+
+          <button
+            class="btn btn-md btn-soft btn-error join-item"
+            onclick={() => del(bib.metadata.id)}
+            title="Delete Bibliography"
+            aria-label="Delete Bibliography"
+          >
+            <Trash />
+          </button>
+        </div>
       </li>
     {/each}
   </ul>

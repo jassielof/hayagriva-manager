@@ -26,7 +26,6 @@
       await loadBibliographies();
     } catch (error) {
       console.error('Error loading bibliographies:', error);
-      // Optionally show an alert modal with the error
       alertTitle = 'Error';
       alertMessage = 'Failed to load bibliographies. Please try again later.';
       showAlertModal = true;
@@ -159,12 +158,22 @@
 </script>
 
 {#snippet actions()}
-  <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
-    New Bibliography
-  </button>
-  <button type="button" class="btn btn-secondary" onclick={handleImport}>
-    Import from YAML
-  </button>
+  <div class="join">
+    <button
+      type="button"
+      class="btn join-item btn-primary btn-soft"
+      onclick={handleCreateNew}
+    >
+      New Bibliography
+    </button>
+    <button
+      type="button"
+      class="btn join-item btn-secondary btn-soft"
+      onclick={handleImport}
+    >
+      Import from YAML
+    </button>
+  </div>
 {/snippet}
 
 <main class="container mx-auto mt-8 p-4">
