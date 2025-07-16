@@ -6,13 +6,17 @@
   import type { BibliographyEntry } from '$lib/types/hayagriva';
   import { ENTRY_TYPES } from '$lib/validators/entry-type';
   import EntryTypeInput from './schema-definitions/EntryTypeInput.svelte';
+  import { saveBibliography, saveBibliographyEntry } from '$lib/db';
+  import type { Bibliography } from '$lib/types/bibliography';
 
   let {
     entry,
-    onUpdate
+    entryId,
+    bibliography
   }: {
     entry: BibliographyEntry | null;
-    onUpdate: (updatedEntry: BibliographyEntry) => void;
+    entryId: string | null;
+    bibliography: Bibliography | null;
   } = $props();
 
   let entryTypes = $state<string[]>([]);
@@ -21,9 +25,13 @@
     entryTypes = ENTRY_TYPES;
   });
 
-  function updateField<K extends keyof BibliographyEntry>(field: K, value: BibliographyEntry[K]) {
-    if (!entry) return;
-    onUpdate({ ...entry, [field]: value });
+  async function updateField(
+    field: keyof BibliographyEntry,
+    value: BibliographyEntry[keyof BibliographyEntry]
+  ) {
+    if (!entry || !bibliography || !entryId) return;
+    const updatedEntry = { ...entry, [field]: value };
+    await saveBibliographyEntry(bibliography, entryId, updatedEntry);
   }
 </script>
 
@@ -74,6 +82,33 @@
           }}
         />
 
+        <FormattableStringInput
+          label="Location"
+          placeholder="Physical location/place of the item"
+          value={entry.location}
+          update={(newValue) => {
+            updateField('location', newValue);
+          }}
+        />
+
+        <FormattableStringInput
+          label="Organization"
+          placeholder="Organization at/for which the entry was produced"
+          value={entry.organization}
+          update={(newValue) => {
+            updateField('organization', newValue);
+          }}
+        />
+
+        <label class="input">
+          <span class="label">Volume total</span>
+          <input
+            type="number"
+            placeholder="Total number of volumes, parts, seasons, etc."
+            bind:value={entry['volume-total']}
+          />
+        </label>
+
         <DateInput
           label="Date"
           placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
@@ -89,7 +124,9 @@
         />
       </form>
     {:else}
-      <div class="text-base-content/60 flex h-full items-center justify-center text-center">
+      <div
+        class="text-base-content/60 flex h-full items-center justify-center text-center"
+      >
         <p>Select an entry from the list to see its details.</p>
       </div>
     {/if}

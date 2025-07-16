@@ -60,23 +60,30 @@
     <div class="mb-2">
       <h1 class="truncate text-2xl font-bold">{bibliography.metadata.title}</h1>
       {#if bibliography.metadata.description}
-        <p class="truncate text-sm opacity-70">{bibliography.metadata.description}</p>
+        <p class="truncate text-sm opacity-70">
+          {bibliography.metadata.description}
+        </p>
       {/if}
     </div>
 
-    <div class="grid flex-grow grid-cols-1 gap-4 overflow-hidden md:grid-cols-3">
+    <div
+      class="grid flex-grow grid-cols-1 gap-4 overflow-hidden md:grid-cols-3"
+    >
       <div class="flex flex-col overflow-y-auto md:col-span-2">
         <h2 class="card-title p-2">Entries</h2>
         <EntryList {entries} {selectedId} onSelect={handleSelectEntry} />
       </div>
       <div class="overflow-y-auto">
-        <EntryDetail entry={selectedEntry} onUpdate={handleEntryUpdate} />
+        <EntryDetail
+          entry={selectedEntry}
+          {bibliography}
+          entryId={selectedId}
+        />
       </div>
     </div>
   {:else}
-    <div class="text-center">
-      <span class="loading loading-lg loading-spinner"></span>
-      <p>Loading bibliography...</p>
+    <div class="flex flex-grow flex-col items-center justify-center">
+      <span class="loading loading-spinner loading-xl"></span>
     </div>
   {/if}
 </main>
