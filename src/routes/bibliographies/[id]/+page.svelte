@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { getBibliography, saveBibliography } from '$lib/db';
   import type { Bibliography } from '$lib/types/bibliography';
   import { onMount } from 'svelte';
   import type { PageProps } from './$types';
   import EntryList from '$lib/components/EntryList.svelte';
   import EntryDetail from '$lib/components/EntryDetail.svelte';
   import type { Hayagriva, BibliographyEntry } from '$lib/types/hayagriva';
+  import { db } from '$lib/db';
 
   let bibliography = $state<Bibliography | null>(null);
   let entries = $state<[string, BibliographyEntry][]>([]);
@@ -14,7 +14,7 @@
   let { data: pageData }: PageProps = $props();
 
   onMount(async () => {
-    const bib = await getBibliography(pageData.id);
+    const bib = await db.getBibliography(pageData.id);
     if (bib) {
       bibliography = bib;
       entries = Object.entries(bib.data as Hayagriva);
@@ -30,7 +30,7 @@
       };
       // Convert the reactive proxy object into a plain JS object before saving.
       const plainBib = JSON.parse(JSON.stringify(updatedBib));
-      saveBibliography(plainBib);
+      db.saveBibliography(plainBib);
     }
   });
 

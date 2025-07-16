@@ -3,13 +3,13 @@
   import CreateBibliographyModal from '$lib/components/CreateBibliographyModal.svelte';
   import ImportBibliographyModal from '$lib/components/ImportBibliographyModal.svelte';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte'; // 1. Import the new component
-  import { deleteBibliography, getAllBibliographies, saveBibliography } from '$lib/db';
   import type { Bibliography } from '$lib/types/bibliography';
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
   import { onMount } from 'svelte';
   import { v4 as uuidv4 } from 'uuid';
   import AlertModal from '$lib/components/AlertModal.svelte';
   import type { Hayagriva } from '$lib/types/hayagriva';
+  import { db } from '$lib/db';
 
   let bibliographies = $state<Bibliography[]>([]);
   let showCreateModal = $state(false);
@@ -34,7 +34,7 @@
   });
 
   async function loadBibliographies() {
-    bibliographies = await getAllBibliographies();
+    bibliographies = await db.getAllBibliographies();
   }
 
   function handleCreateNew() {
@@ -48,14 +48,16 @@
 
   async function handleSave(metadata: Partial<BibliographyMetadata>) {
     if (editingBibliography) {
-      const bib = bibliographies.find((b) => b.metadata.id === editingBibliography?.id);
+      const bib = bibliographies.find(
+        (b) => b.metadata.id === editingBibliography?.id
+      );
       if (bib) {
         bib.metadata = {
           ...bib.metadata,
           ...metadata,
           updatedAt: new Date()
         };
-        await saveBibliography(bib);
+        await db.saveBibliography(bib);
       }
     } else {
       const newBib: Bibliography = {
@@ -67,7 +69,7 @@
         } as BibliographyMetadata,
         data: {}
       };
-      await saveBibliography(newBib);
+      await db.saveBibliography(newBib);
     }
     showCreateModal = false;
     await loadBibliographies();
@@ -105,13 +107,16 @@
 
       // Save the bibliography
       console.log('Saving bibliography...');
-      await saveBibliography(newBib);
+      await db.saveBibliography(newBib);
       console.log('Bibliography saved successfully');
 
       // Reload the list
       console.log('Reloading bibliographies...');
       await loadBibliographies();
-      console.log('Bibliographies reloaded, current count:', bibliographies.length);
+      console.log(
+        'Bibliographies reloaded, current count:',
+        bibliographies.length
+      );
     } catch (error) {
       console.error('Error in handleImportSave:', error);
       // Optionally show an error message to the user
@@ -122,7 +127,7 @@
   async function handleDelete(id: string) {
     // 4. Replace confirm() with logic to show the modal
     confirmAction = async () => {
-      await deleteBibliography(id);
+      await db.deleteBibliography(id);
       await loadBibliographies();
     };
     showConfirmModal = true;
@@ -157,14 +162,18 @@
   <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
     New Bibliography
   </button>
-  <button type="button" class="btn btn-secondary" onclick={handleImport}> Import from YAML </button>
+  <button type="button" class="btn btn-secondary" onclick={handleImport}>
+    Import from YAML
+  </button>
 {/snippet}
 
 <main class="container mx-auto mt-8 p-4">
   {#if bibliographies.length === 0}
     <div class="text-center">
       <h2 class="text-2xl font-bold">No Bibliographies Found</h2>
-      <p class="mt-2 mb-4">Create a new bibliography or import a YAML file to get started.</p>
+      <p class="mt-2 mb-4">
+        Create a new bibliography or import a YAML file to get started.
+      </p>
       <div class="flex flex-wrap justify-center gap-2">
         {@render actions()}
       </div>

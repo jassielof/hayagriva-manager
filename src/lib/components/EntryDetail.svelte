@@ -6,8 +6,8 @@
   import type { BibliographyEntry } from '$lib/types/hayagriva';
   import { ENTRY_TYPES } from '$lib/validators/entry-type';
   import EntryTypeInput from './schema-definitions/EntryTypeInput.svelte';
-  import { saveBibliography, saveBibliographyEntry } from '$lib/db';
   import type { Bibliography } from '$lib/types/bibliography';
+  import { db } from '$lib/db';
 
   let {
     entry,
@@ -31,7 +31,7 @@
   ) {
     if (!entry || !bibliography || !entryId) return;
     const updatedEntry = { ...entry, [field]: value };
-    await saveBibliographyEntry(bibliography, entryId, updatedEntry);
+    await db.saveBibliographyEntry(bibliography, entryId, updatedEntry);
   }
 </script>
 

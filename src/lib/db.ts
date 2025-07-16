@@ -2,15 +2,16 @@ import type { Bibliography } from './types/bibliography';
 import Dexie, { type Table } from 'dexie';
 import type { BibliographyEntry } from './types/hayagriva';
 
-const DB_NAME = 'hayagriva-manager';
-const DB_VERSION = 1;
-
+/**
+ * HayagrivaManagerDB is a Dexie database for managing bibliographies.
+ * It provides CRUD operations for bibliographies and their entries.
+ */
 export class HayagrivaManagerDB extends Dexie {
   bibliographies!: Table<Bibliography, string>;
 
-  constructor() {
-    super(DB_NAME);
-    this.version(DB_VERSION).stores({
+  constructor(dbName: string = 'hayagriva-manager', dbVersion: number = 1) {
+    super(dbName);
+    this.version(dbVersion).stores({
       bibliographies: 'metadata.id'
     });
   }
