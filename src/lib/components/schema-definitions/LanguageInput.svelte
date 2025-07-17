@@ -26,6 +26,7 @@
 <label class="label" for="entry-language"> Language </label>
 <input
   type="text"
+  id="entry-language"
   placeholder="en-US"
   class="input"
   class:input-error={!isValid && inputValue !== ''}
