@@ -86,8 +86,14 @@
       return;
     }
 
-    const payload = {
-      metadata: { title: title.trim(), description: description.trim() },
+    const payload: Bibliography = {
+      metadata: {
+        id: crypto.randomUUID(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        title: title.trim(),
+        description: description.trim()
+      },
       data: parsedData
     };
 
