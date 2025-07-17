@@ -1,12 +1,17 @@
 <script lang="ts">
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
 
-  const { show, bibliography, onSave, onClose } = $props<{
+  let {
+    show,
+    bibliography,
+    onSave,
+    onClose
+  }: {
     show: boolean;
     bibliography: BibliographyMetadata | null;
     onSave: (metadata: Partial<BibliographyMetadata>) => void;
     onClose: () => void;
-  }>();
+  } = $props();
 
   let title = $state('');
   let description = $state('');
@@ -52,8 +57,12 @@
 
 <dialog bind:this={dialog} onclose={onClose} class="modal">
   <div class="modal-box">
-    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
-      <legend class="fieldset-legend">{bibliography ? 'Edit' : 'Create'} Bibliography</legend>
+    <fieldset
+      class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4"
+    >
+      <legend class="fieldset-legend"
+        >{bibliography ? 'Edit' : 'Create'} Bibliography</legend
+      >
       <label class="label" for="title"> Title </label>
       <input
         id="title"
@@ -74,7 +83,9 @@
         <form method="dialog" class="flex gap-2">
           <button class="btn">Cancel</button>
         </form>
-        <button class="btn btn-primary" onclick={save} disabled={!title.trim()}>Save</button>
+        <button class="btn btn-primary" onclick={save} disabled={!title.trim()}
+          >Save</button
+        >
       </div>
     </fieldset>
   </div>
