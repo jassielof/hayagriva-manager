@@ -188,7 +188,9 @@
       </div>
     </div>
   {:else}
-    {@render actions()}
+    <div class="mb-4 flex justify-end">
+      {@render actions()}
+    </div>
     <BibliographyList {bibliographies} edit={handleEdit} del={handleDelete} />
   {/if}
 </main>

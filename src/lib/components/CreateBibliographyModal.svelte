@@ -60,15 +60,15 @@
     <fieldset
       class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4"
     >
-      <legend class="fieldset-legend"
-        >{bibliography ? 'Edit' : 'Create'} Bibliography</legend
-      >
+      <legend class="fieldset-legend">
+        {bibliography ? 'Edit' : 'Create'} Bibliography
+      </legend>
       <label class="label" for="title"> Title </label>
       <input
         id="title"
         type="text"
         placeholder="e.g., 'My Research Papers'"
-        class="input w-full"
+        class="input validator w-full"
         bind:value={title}
         required
       />
@@ -83,9 +83,9 @@
         <form method="dialog" class="flex gap-2">
           <button class="btn">Cancel</button>
         </form>
-        <button class="btn btn-primary" onclick={save} disabled={!title.trim()}
-          >Save</button
-        >
+        <button class="btn btn-primary" onclick={save} disabled={!title.trim()}>
+          Save
+        </button>
       </div>
     </fieldset>
   </div>

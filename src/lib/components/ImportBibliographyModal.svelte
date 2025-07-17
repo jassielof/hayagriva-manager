@@ -1,15 +1,16 @@
 <script lang="ts">
-  import type { HayagrivaData } from '$lib/types/hayagriva-data';
   import { parseYaml } from '$lib/hayagriva';
+  import type { Bibliography } from '$lib/types/bibliography';
 
-  const { show, onClose, onSave } = $props<{
-    show: boolean; // Add show prop
+  const {
+    show,
+    onClose,
+    onSave
+  }: {
+    show: boolean;
     onClose: () => void;
-    onSave: (data: {
-      metadata: { title: string; description?: string };
-      data: HayagrivaData;
-    }) => void;
-  }>();
+    onSave: (data: Bibliography) => void;
+  } = $props();
 
   let dialog: HTMLDialogElement;
   let fileInput: HTMLInputElement | null = null;
@@ -89,9 +90,15 @@
       data: parsedData
     };
 
-    console.log('ImportBibliographyModal: handleSave called with payload:', payload);
+    console.log(
+      'ImportBibliographyModal: handleSave called with payload:',
+      payload
+    );
     console.log('Parsed data keys:', Object.keys(parsedData));
-    console.log('Parsed data sample:', JSON.stringify(parsedData, null, 2).substring(0, 500));
+    console.log(
+      'Parsed data sample:',
+      JSON.stringify(parsedData, null, 2).substring(0, 500)
+    );
 
     onSave(payload);
   }
@@ -99,7 +106,9 @@
 
 <dialog bind:this={dialog} onclose={onClose} class="modal">
   <div class="modal-box">
-    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+    <fieldset
+      class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4"
+    >
       <legend class="fieldset-legend">Import Bibliography from YAML</legend>
       <label class="label" for="file-input">Select a Hayagriva YAML file</label>
       <input
@@ -151,12 +160,15 @@
             /></svg
           >
           <span
-            >Successfully parsed '{fileName}'. Please provide a title for this new bibliography.</span
+            >Successfully parsed '{fileName}'. Please provide a title for this
+            new bibliography.</span
           >
         </div>
 
         <label class="form-control w-full">
-          <div class="label"><span class="label-text">Bibliography Title</span></div>
+          <div class="label">
+            <span class="label-text">Bibliography Title</span>
+          </div>
           <input
             type="text"
             placeholder="e.g., 'My Quantum Physics Papers'"
@@ -166,7 +178,9 @@
         </label>
 
         <label class="form-control w-full">
-          <div class="label"><span class="label-text">Description (Optional)</span></div>
+          <div class="label">
+            <span class="label-text">Description (Optional)</span>
+          </div>
           <textarea
             class="textarea textarea-bordered"
             placeholder="A short description of this collection"
