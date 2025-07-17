@@ -17,11 +17,11 @@ export class HayagrivaManagerDB extends Dexie {
   }
 
   async getAllBibliographies(): Promise<Bibliography[]> {
-    return db.bibliographies.toArray();
+    return await db.bibliographies.toArray();
   }
 
   async getBibliography(id: string): Promise<Bibliography | undefined> {
-    return db.bibliographies.get(id);
+    return await db.bibliographies.get(id);
   }
 
   async saveBibliography(bibliography: Bibliography): Promise<void> {
