@@ -12,12 +12,12 @@
   }
 </script>
 
-<label class="select">
-  <span class="label">Type</span>
-  <select bind:value onchange={handleChange}>
-    <option disabled selected>Select an entry type</option>
-    {#each ENTRY_TYPES as type}
-      <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}</option>
-    {/each}
-  </select>
-</label>
+<label for="entry-type" class="label">Type </label>
+<select id="entry-type" class="select" bind:value onchange={handleChange}>
+  <option disabled selected>Select an entry type</option>
+  {#each ENTRY_TYPES as type}
+    <option value={type}
+      >{type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}</option
+    >
+  {/each}
+</select>

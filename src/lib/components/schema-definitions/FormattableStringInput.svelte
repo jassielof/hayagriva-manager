@@ -41,7 +41,7 @@
 </script>
 
 {#if multiline}
-  <label for="textarea-entry">{label}</label>
+  <label class="label" for="textarea-entry">{label}</label>
   <textarea
     id="textarea-entry"
     class="textarea"
@@ -51,10 +51,15 @@
     oninput={handleUpdate}
   ></textarea>
 {:else}
-  <label class="input">
-    <span class="label">{label}</span>
-    <input type="text" {placeholder} bind:value={mainValue} oninput={handleUpdate} />
-  </label>
+  <label for="main-value" class="label">{label}</label>
+  <input
+    id="main-value"
+    type="text"
+    class="input"
+    {placeholder}
+    bind:value={mainValue}
+    oninput={handleUpdate}
+  />
 {/if}
 <label class="label">
   <input type="checkbox" class="checkbox" bind:checked={showAdvanced} />
@@ -62,12 +67,18 @@
 </label>
 
 {#if showAdvanced}
-  <fieldset class="fieldset">
+  <fieldset
+    class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
+  >
     <legend class="fieldset-legend">Advanced {label}</legend>
-    <label class="input">
-      <span class="label">Short Form</span>
-      <input type="text" bind:value={shortValue} oninput={handleUpdate} />
-    </label>
+    <label for="short-form" class="label">Short Form</label>
+    <input
+      id="short-form"
+      type="text"
+      class="input"
+      bind:value={shortValue}
+      oninput={handleUpdate}
+    />
     <label class="label">
       <input
         type="checkbox"
