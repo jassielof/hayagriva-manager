@@ -158,19 +158,11 @@
 </script>
 
 {#snippet actions()}
-  <div class="join">
-    <button
-      type="button"
-      class="btn join-item btn-primary btn-soft"
-      onclick={handleCreateNew}
-    >
+  <div class="gap-4">
+    <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
       New Bibliography
     </button>
-    <button
-      type="button"
-      class="btn join-item btn-secondary btn-soft"
-      onclick={handleImport}
-    >
+    <button type="button" class="btn btn-secondary" onclick={handleImport}>
       Import from YAML
     </button>
   </div>

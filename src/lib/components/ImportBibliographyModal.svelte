@@ -1,6 +1,7 @@
 <script lang="ts">
   import { parseYaml } from '$lib/hayagriva';
   import type { Bibliography } from '$lib/types/bibliography';
+  import type { Hayagriva } from '$lib/types/hayagriva';
 
   const {
     show,
@@ -18,7 +19,7 @@
   let fileName = $state('');
   let title = $state('');
   let description = $state('');
-  let parsedData = $state<HayagrivaData | null>(null);
+  let parsedData = $state<Hayagriva | null>(null);
   let error = $state<string | null>(null);
   let isLoading = $state(false);
 
