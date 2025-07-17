@@ -23,16 +23,15 @@
   }
 </script>
 
-<label class="input">
-  <span class="label">Language</span>
-  <input
-    type="text"
-    placeholder="en-US"
-    class:input-error={!isValid && inputValue !== ''}
-    bind:value={inputValue}
-    oninput={handleInput}
-  />
-</label>
+<label class="label" for="entry-language"> Language </label>
+<input
+  type="text"
+  placeholder="en-US"
+  class="input"
+  class:input-error={!isValid && inputValue !== ''}
+  bind:value={inputValue}
+  oninput={handleInput}
+/>
 {#if !isValid && inputValue !== ''}
   <div class="label text-error">Invalid language code.</div>
 {/if}

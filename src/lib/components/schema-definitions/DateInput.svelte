@@ -2,12 +2,17 @@
   import type { Date } from '$lib/types/hayagriva';
   import { isValidDate } from '$lib/validators/date';
 
-  const { value, label, placeholder, update } = $props<{
+  const {
+    value,
+    label,
+    placeholder,
+    update
+  }: {
     value: Date | undefined | null;
     label: string;
     placeholder?: string;
     update: (newValue: Date | undefined) => void;
-  }>();
+  } = $props();
 
   let inputValue = $state(value?.toString() ?? '');
   let isValid = $state(true);
@@ -48,19 +53,19 @@
   }
 </script>
 
-<label class="input">
-  <span class="label validator">{label}</span>
-  <input
-    type="text"
-    class=""
-    {placeholder}
-    class:input-error={!isValid && inputValue !== ''}
-    value={inputValue}
-    oninput={handleInput}
-    onfocus={() => (isFocused = true)}
-    onblur={() => (isFocused = false)}
-  />
-</label>
+<label class="label" for="entry-date">{label} </label>
+<input
+  id="entry-date"
+  type="text"
+  class="input validator"
+  {placeholder}
+  value={inputValue}
+  oninput={handleInput}
+  onfocus={() => (isFocused = true)}
+  onblur={() => (isFocused = false)}
+/>
 {#if !isValid && inputValue !== ''}
-  <p class="validator-hint">Invalid format. Use YYYY, YYYY-MM, or YYYY-MM-DD.</p>
+  <p class="validator-hint">
+    Invalid format. Use YYYY, YYYY-MM, or YYYY-MM-DD.
+  </p>
 {/if}

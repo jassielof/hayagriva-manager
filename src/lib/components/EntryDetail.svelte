@@ -100,14 +100,14 @@
           }}
         />
 
-        <label class="input">
-          <span class="label">Volume total</span>
-          <input
-            type="number"
-            placeholder="Total number of volumes, parts, seasons, etc."
-            bind:value={entry['volume-total']}
-          />
-        </label>
+        <label class="label" for="volume-total">Volume total </label>
+        <input
+          id="volume-total"
+          type="number"
+          class="input"
+          placeholder="Total number of volumes, parts, seasons, etc."
+          bind:value={entry['volume-total']}
+        />
 
         <DateInput
           label="Date"
