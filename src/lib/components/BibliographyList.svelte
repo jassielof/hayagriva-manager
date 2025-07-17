@@ -29,14 +29,14 @@
 </script>
 
 <div class="overflow-x-auto">
-  <ul class="list bg-base-100 rounded-box shadow-md">
+  <ul class="list">
     {#each bibliographies as bib (bib.metadata.id)}
       <li class="list-row">
         <div class="flex h-full items-center justify-center">
           <Book />
         </div>
         <div class="list-col-grow flex flex-col items-start justify-center">
-          <h6 class="font-semibold">{bib.metadata.title}</h6>
+          <h6 class="font-bold">{bib.metadata.title}</h6>
           <time class="text-xs opacity-60">
             Updated: {formatDate(bib.metadata.updatedAt)}
           </time>
@@ -51,11 +51,11 @@
           <a
             href={`/bibliographies/${bib.metadata.id}`}
             class="btn btn-soft join-item"
-            title="View"
+            title="Open"
           >
             <BookOpen />
           </a>
-          
+
           <button
             class="btn btn-soft join-item"
             onclick={() => edit(bib.metadata.id)}
@@ -77,7 +77,7 @@
           </button>
 
           <button
-            class="btn btn-md btn-soft btn-error join-item"
+            class="btn btn-soft btn-error join-item"
             onclick={() => del(bib.metadata.id)}
             title="Delete Bibliography"
             aria-label="Delete Bibliography"

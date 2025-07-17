@@ -176,7 +176,7 @@
   </div>
 {/snippet}
 
-<main class="container mx-auto mt-8 p-4">
+<main class="container mx-auto mt-8 max-w-5xl p-4">
   {#if bibliographies.length === 0}
     <div class="text-center">
       <h2 class="text-2xl font-bold">No Bibliographies Found</h2>
@@ -188,9 +188,7 @@
       </div>
     </div>
   {:else}
-    <div class="mb-4 flex justify-end gap-2">
-      {@render actions()}
-    </div>
+    {@render actions()}
     <BibliographyList {bibliographies} edit={handleEdit} del={handleDelete} />
   {/if}
 </main>
