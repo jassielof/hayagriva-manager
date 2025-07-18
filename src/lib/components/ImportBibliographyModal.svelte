@@ -2,6 +2,8 @@
   import { parseYaml } from '$lib/hayagriva';
   import type { Bibliography } from '$lib/types/bibliography';
   import type { Hayagriva } from '$lib/types/hayagriva';
+  import { Check, CircleX } from '@lucide/svelte';
+  import BibliographyMetadataForm from './BibliographyMetadataForm.svelte';
 
   const {
     show,
@@ -15,6 +17,7 @@
 
   let dialog: HTMLDialogElement;
   let fileInput: HTMLInputElement | null = null;
+  let metadataForm = $state<BibliographyMetadataForm>();
   let file = $state<File | null>(null);
   let fileName = $state('');
   let title = $state('');
@@ -28,11 +31,13 @@
       if (show) {
         dialog.showModal();
       } else {
+        // Reset all state when closing
         file = null;
         parsedData = null;
         error = null;
         title = '';
         description = '';
+        fileName = '';
         if (fileInput) (fileInput as HTMLInputElement).value = '';
         dialog.close();
       }
@@ -54,10 +59,13 @@
       parsedData = null;
       fileName = file.name;
 
-      title = file.name
+      // Auto-generate title from filename
+      const autoTitle = file.name
         .replace(/\.(yml|yaml)$/i, '')
         .replace(/[-_]/g, ' ')
         .replace(/\b\w/g, (l) => l.toUpperCase());
+
+      title = autoTitle;
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -81,18 +89,19 @@
   });
 
   function handleSave() {
-    if (!title.trim() || !parsedData) {
+    if (!metadataForm?.isValid() || !parsedData) {
       error = 'Title is required and file must be parsed successfully.';
       return;
     }
 
+    const metadata = metadataForm.getFormData();
     const payload: Bibliography = {
       metadata: {
         id: crypto.randomUUID(),
         createdAt: new Date(),
         updatedAt: new Date(),
-        title: title.trim(),
-        description: description.trim()
+        title: metadata.title!,
+        description: metadata.description || ''
       },
       data: parsedData
     };
@@ -117,93 +126,58 @@
       class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4"
     >
       <legend class="fieldset-legend">Import Bibliography from YAML</legend>
-      <label class="label" for="file-input">Select a Hayagriva YAML file</label>
+
+      <label for="hayagriva-file" class="label"
+        >Select a Hayagriva YAML file</label
+      >
       <input
         type="file"
         class="file-input w-full"
         id="file-input"
         accept=".yml,.yaml"
+        bind:this={fileInput}
         onchange={handleFileSelect}
         disabled={isLoading}
       />
 
       {#if isLoading}
-        <div class="flex items-center gap-2">
-          <span class="loading loading-spinner"></span>
+        <div class="mt-4 flex items-center gap-2">
+          <span class="loading loading-spinner loading-sm"></span>
           <span>Parsing {fileName}...</span>
         </div>
       {/if}
 
       {#if error}
-        <div role="alert" class="alert alert-error">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 shrink-0 stroke-current"
-            fill="none"
-            viewBox="0 0 24 24"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            /></svg
-          >
+        <div role="alert" class="alert alert-error mt-4">
+          <CircleX class="h-6 w-6 shrink-0 stroke-current" />
           <span>{error}</span>
         </div>
       {/if}
 
       {#if parsedData && !error}
-        <div role="alert" class="alert alert-success">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 shrink-0 stroke-current"
-            fill="none"
-            viewBox="0 0 24 24"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            /></svg
-          >
-          <span
-            >Successfully parsed '{fileName}'. Please provide a title for this
-            new bibliography.</span
-          >
+        <div role="alert" class="alert alert-success mt-4">
+          <Check class="h-6 w-6 shrink-0 stroke-current" />
+          <span>
+            Successfully parsed '{fileName}'. Please provide a title for this
+            new bibliography.
+          </span>
         </div>
 
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text">Bibliography Title</span>
-          </div>
-          <input
-            type="text"
-            placeholder="e.g., 'My Quantum Physics Papers'"
-            class="input input-bordered w-full"
-            bind:value={title}
+        <div class="mt-4">
+          <BibliographyMetadataForm
+            bind:this={metadataForm}
+            bind:title
+            bind:description
+            showValidation={true}
           />
-        </label>
-
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text">Description (Optional)</span>
-          </div>
-          <textarea
-            class="textarea textarea-bordered"
-            placeholder="A short description of this collection"
-            bind:value={description}
-          ></textarea>
-        </label>
+        </div>
       {/if}
+
       <div class="modal-action">
         <form method="dialog" class="flex gap-2">
           <button class="btn">Cancel</button>
         </form>
-        <button
-          class="btn btn-primary"
-          onclick={handleSave}
-          disabled={!parsedData || !title.trim() || isLoading}
-        >
+        <button class="btn btn-primary" onclick={handleSave}>
           Save Bibliography
         </button>
       </div>

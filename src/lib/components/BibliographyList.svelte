@@ -38,6 +38,9 @@
         <div class="list-col-grow flex flex-col items-start justify-center">
           <h6 class="font-bold">{bib.metadata.title}</h6>
           <time class="text-xs opacity-60">
+            Created: {formatDate(bib.metadata.createdAt)}
+          </time>
+          <time class="text-xs opacity-60">
             Updated: {formatDate(bib.metadata.updatedAt)}
           </time>
           <p class="mt-1 text-sm opacity-80">

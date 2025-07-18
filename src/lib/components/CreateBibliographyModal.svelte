@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
+  import BibliographyMetadataForm from './BibliographyMetadataForm.svelte';
 
   let {
     show,
@@ -16,19 +17,7 @@
   let title = $state('');
   let description = $state('');
   let dialog: HTMLDialogElement;
-
-  // Use an effect to react to prop changes
-  $effect(() => {
-    if (bibliography) {
-      // Pre-fill form for editing
-      title = bibliography.title;
-      description = bibliography.description || '';
-    } else {
-      // Reset form for creating
-      title = '';
-      description = '';
-    }
-  });
+  let metadataForm = $state<BibliographyMetadataForm>();
 
   // Use an effect to control the dialog's visibility
   $effect(() => {
@@ -36,21 +25,20 @@
       if (show) {
         dialog.showModal();
       } else {
+        // Reset form when closing
+        title = '';
+        description = '';
         dialog.close();
       }
     }
   });
 
   function save() {
-    if (!title.trim()) {
-      alert('Title is required');
+    if (!metadataForm?.isValid()) {
       return;
     }
-    // We only pass back the fields that were edited
-    const metadata: Partial<BibliographyMetadata> = {
-      title: title.trim(),
-      description: description.trim()
-    };
+
+    const metadata = metadataForm.getFormData();
     onSave(metadata);
   }
 </script>
@@ -63,29 +51,19 @@
       <legend class="fieldset-legend">
         {bibliography ? 'Edit' : 'Create'} Bibliography
       </legend>
-      <label class="label" for="title"> Title </label>
-      <input
-        id="title"
-        type="text"
-        placeholder="e.g., 'My Research Papers'"
-        class="input validator w-full"
-        bind:value={title}
-        required
+
+      <BibliographyMetadataForm
+        bind:this={metadataForm}
+        bind:title
+        bind:description
+        {bibliography}
       />
-      <label class="label" for="description"> Description </label>
-      <textarea
-        id="description"
-        class="textarea w-full"
-        placeholder="A short description"
-        bind:value={description}
-      ></textarea>
+
       <div class="modal-action">
         <form method="dialog" class="flex gap-2">
           <button class="btn">Cancel</button>
         </form>
-        <button class="btn btn-primary" onclick={save} disabled={!title.trim()}>
-          Save
-        </button>
+        <button class="btn btn-primary" onclick={save}>Save</button>
       </div>
     </fieldset>
   </div>
