@@ -57,6 +57,7 @@
   });
 </script>
 
+<!-- TODO: Just the table with actions, such as copy entry, edit, delete. -->
 <main class="flex h-[calc(100vh-4rem)] flex-col p-4">
   {#if bibliography}
     <div class="mb-2">

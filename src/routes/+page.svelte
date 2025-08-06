@@ -11,6 +11,7 @@
   import type { Hayagriva } from '$lib/types/hayagriva';
   import { db } from '$lib/db';
 
+  // FIXME: states type safety is let foo: type = $state(initialValue)
   let bibliographies = $state<Bibliography[]>([]);
   let showCreateModal = $state(false);
   let showImportModal = $state(false);
@@ -98,7 +99,6 @@
         } as BibliographyMetadata,
         data: plainData // Use the plain object here
       };
-
 
       // Close modal first to prevent re-triggering
       showImportModal = false;

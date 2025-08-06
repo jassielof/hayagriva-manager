@@ -1,22 +1,26 @@
 <script lang="ts">
-  import type { Entry } from '$lib/types/entry';
-  import type { FormattableString } from '$lib/types/hayagriva-definitions';
+  import type { FormattableString } from '$lib/types/formattable-string';
+  import type { BibliographyEntry } from '$lib/types/hayagriva';
 
-  const { entries, selectedId, onSelect } = $props<{
-    entries: [string, Entry][];
+  const {
+    entries,
+    selectedId,
+    onSelect
+  }: {
+    entries: [string, BibliographyEntry][];
     selectedId: string | null;
     onSelect: (id: string) => void;
-  }>();
+  } = $props();
 
   function formatTitle(title: FormattableString | undefined | null): string {
     if (!title) return '';
     if (typeof title === 'string') {
       return title;
     }
-    return title.short || title.value || '';
+    return title.shortForm || title.value || '';
   }
 
-  function formatAuthor(author: Entry['author']): string {
+  function formatAuthor(author: BibliographyEntry['author']): string {
     if (!author) return '';
     if (typeof author === 'string') return author;
     if (Array.isArray(author)) {
@@ -25,12 +29,12 @@
     return author.name || '';
   }
 
-  function formatEntryType(type: Entry['type']): string {
+  function formatEntryType(type: BibliographyEntry['type']): string {
     if (!type) return '';
     return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
   }
 
-  function formatEntryDate(date: Entry['date']): string {
+  function formatEntryDate(date: BibliographyEntry['date']): string {
     if (!date) {
       return '';
     }
