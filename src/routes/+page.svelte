@@ -59,6 +59,11 @@
         await db.saveBibliography(bib);
       }
     } else {
+      // TODO: UUID is too much, specially since the UUID becomes the URL slug.
+      // It should be considered to just use the bibliography title or a slug of it.
+      // For example, "UPSA 550" could become "upsa-550". Or use "UPSA 550" itself depending on the user preference.
+      // It should support titles in other languages (it's up to the browser if it doesn't support unicode URLs).
+
       const newBib: Bibliography = {
         metadata: {
           ...metadata,
@@ -78,16 +83,11 @@
     metadata: Partial<BibliographyMetadata>;
     data: Hayagriva;
   }) {
-    console.log('handleImportSave called with payload:', payload);
-
     try {
       // The 'data' from the payload is a Svelte 5 state proxy.
       // IndexedDB cannot store proxies, so we convert it to a plain object.
       const plainData = JSON.parse(JSON.stringify(payload.data));
       const { metadata } = payload;
-      console.log('Extracted metadata:', metadata);
-      console.log('Extracted plain data:', plainData);
-
       const newBib: Bibliography = {
         metadata: {
           title: metadata.title || 'Untitled',
@@ -99,23 +99,15 @@
         data: plainData // Use the plain object here
       };
 
-      console.log('Created new bibliography object:', newBib);
 
       // Close modal first to prevent re-triggering
       showImportModal = false;
 
       // Save the bibliography
-      console.log('Saving bibliography...');
       await db.saveBibliography(newBib);
-      console.log('Bibliography saved successfully');
 
       // Reload the list
-      console.log('Reloading bibliographies...');
       await loadBibliographies();
-      console.log(
-        'Bibliographies reloaded, current count:',
-        bibliographies.length
-      );
     } catch (error) {
       console.error('Error in handleImportSave:', error);
       // Optionally show an error message to the user

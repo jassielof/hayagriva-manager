@@ -68,10 +68,12 @@
             <Pencil />
           </button>
 
+          <!-- TODO: Implement download functionality -->
           <button class="btn btn-soft join-item" title="Download as YAML file">
             <Download />
           </button>
 
+          <!-- TODO: Implement copy to clipboard functionality -->
           <button
             class="btn btn-soft join-item"
             title="Copy to clipboard as YAML"

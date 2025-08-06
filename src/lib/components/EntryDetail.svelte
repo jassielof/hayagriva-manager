@@ -40,6 +40,9 @@
     <h2 class="card-title mb-2">Entry Details</h2>
     {#if entry}
       <form class="flex flex-col gap-4">
+        <label for="entry-id" class="label">ID</label>
+        <input id="entry-id" class="input font-mono" type="text" bind:value={entryId} />
+
         <EntryTypeInput
           value={entry.type ?? ''}
           onUpdate={(newValue) => updateField('type', newValue ?? '')}

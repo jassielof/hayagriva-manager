@@ -8,7 +8,7 @@ import type { BibliographyEntry } from './types/hayagriva';
  */
 export class HayagrivaManagerDB extends Dexie {
   bibliographies!: Table<Bibliography, string>;
-
+  // TODO: Check if there's a need to explicitly enable persistency.
   constructor(dbName: string = 'hayagriva-manager', dbVersion: number = 1) {
     super(dbName);
     this.version(dbVersion).stores({

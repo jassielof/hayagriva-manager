@@ -24,6 +24,7 @@
 		"@tailwindcss/forms": "^0.5.10",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.1.11",
+		"@vite-pwa/sveltekit": "^1.0.0",
 		"daisyui": "^5.0.46",
 		"eslint": "^9.31.0",
 		"eslint-config-prettier": "^10.1.5",
