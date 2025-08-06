@@ -12,7 +12,6 @@
   let entries = $state<[string, BibliographyEntry][]>([]);
   let selectedId = $state<string | null>(null);
 
-  // FIXME: Rename /bibliographies/[id] to /bibliography/[id]
   let { data: pageData }: PageProps = $props();
 
   onMount(async () => {

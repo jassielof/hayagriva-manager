@@ -52,7 +52,7 @@
           class="join lg:join-horizontal join-vertical flex items-center justify-end"
         >
           <a
-            href={`/bibliographies/${bib.metadata.id}`}
+            href={`/bibliography/${bib.metadata.id}`}
             class="btn btn-soft join-item"
             title="Open"
           >
