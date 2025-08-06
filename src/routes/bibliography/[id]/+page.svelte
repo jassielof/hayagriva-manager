@@ -55,8 +55,7 @@
   });
 </script>
 
-<!-- TODO: Just the table with actions, such as copy entry, edit, delete. -->
-<main class="flex h-[calc(100vh-4rem)] flex-col p-4">
+<main class="flex flex-col p-4">
   {#if bibliography}
     <div class="mb-2">
       <h1 class="truncate text-2xl font-bold">{bibliography.metadata.title}</h1>
@@ -67,24 +66,12 @@
       {/if}
     </div>
 
-    <div
-      class="grid flex-grow grid-cols-1 gap-4 overflow-hidden md:grid-cols-3"
-    >
-      <div class="flex flex-col overflow-y-auto md:col-span-2">
-        <h2 class="card-title p-2">Entries</h2>
-        <EntryList {entries} {selectedId} onSelect={handleSelectEntry} />
-      </div>
-      <div class="overflow-y-auto">
-        <EntryDetail
-          entry={selectedEntry}
-          {bibliography}
-          entryId={selectedId}
-        />
-      </div>
-    </div>
+    <EntryList {entries} {selectedId} onSelect={handleSelectEntry} />
   {:else}
     <div class="flex flex-grow flex-col items-center justify-center">
       <span class="loading loading-spinner loading-xl"></span>
     </div>
   {/if}
 </main>
+
+<!-- TODO: For each entry add copy, delete, update actions -->
