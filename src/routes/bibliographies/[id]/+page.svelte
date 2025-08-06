@@ -7,10 +7,12 @@
   import type { Hayagriva, BibliographyEntry } from '$lib/types/hayagriva';
   import { db } from '$lib/db';
 
+  // FIXME: states type safety is let foo: type = $state(initialValue)
   let bibliography = $state<Bibliography | null>(null);
   let entries = $state<[string, BibliographyEntry][]>([]);
   let selectedId = $state<string | null>(null);
 
+  // FIXME: Rename /bibliographies/[id] to /bibliography/[id]
   let { data: pageData }: PageProps = $props();
 
   onMount(async () => {

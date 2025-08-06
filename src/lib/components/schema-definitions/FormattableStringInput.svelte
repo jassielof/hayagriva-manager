@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { FormattableString } from '$lib/types/formattable-string';
   import { ChevronsUpDown } from '@lucide/svelte';
-
+  // FIXME: Type safety is not const {} = props<{}> but const {}: {} = $props()
   const {
     value,
     label,

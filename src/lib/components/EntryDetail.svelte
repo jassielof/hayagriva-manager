@@ -38,10 +38,16 @@
 <div class="card bg-base-100 sticky top-4 shadow-md">
   <div class="card-body">
     <h2 class="card-title mb-2">Entry Details</h2>
+    <!-- FIXME: Top entries must have a type, parent entries can omit it and default it to miscellaneous type -->
     {#if entry}
       <form class="flex flex-col gap-4">
         <label for="entry-id" class="label">ID</label>
-        <input id="entry-id" class="input font-mono" type="text" bind:value={entryId} />
+        <input
+          id="entry-id"
+          class="input font-mono"
+          type="text"
+          bind:value={entryId}
+        />
 
         <EntryTypeInput
           value={entry.type ?? ''}
@@ -56,6 +62,8 @@
             updateField('title', newValue);
           }}
         />
+
+        <!-- TODO: Add author -->
 
         <FormattableStringInput
           label="Abstract"
@@ -94,6 +102,8 @@
           }}
         />
 
+        <!-- TODO: Add publisher (as publisher) -->
+
         <FormattableStringInput
           label="Organization"
           placeholder="Organization at/for which the entry was produced"
@@ -103,6 +113,8 @@
           }}
         />
 
+        <!-- TODO: Add volume (as numeric or string) -->
+
         <label class="label" for="volume-total">Volume total </label>
         <input
           id="volume-total"
@@ -111,6 +123,11 @@
           placeholder="Total number of volumes, parts, seasons, etc."
           bind:value={entry['volume-total']}
         />
+
+        <!-- TODO: Add entry edition (as numeric or string) -->
+
+        <!-- TODO: Add editor (as person or list) -->
+        <!-- TODO: Add affiliated (as affiliated list) -->
 
         <DateInput
           label="Date"
@@ -125,6 +142,49 @@
           value={entry.language ?? ''}
           onUpdate={(newValue) => updateField('language', newValue)}
         />
+
+        <!-- TODO: Add entry issue (as numeric or string) -->
+
+        <!-- TODO: Add page range (as numeric or string) -->
+        <label class="label" for="page-total">Page total</label>
+        <input
+          id="page-total"
+          type="number"
+          class="input"
+          placeholder="Total number of pages in the entry"
+          bind:value={entry['page-total']}
+        />
+        <!-- TODO: Add time range (as timestamp range) -->
+        <!-- TODO: Add runtime (as timestamp) -->
+        <!-- TODO: Add URL (as url) -->
+        <!-- TODO: Add serial number (as serial number) -->
+        <FormattableStringInput
+          label="Archive"
+          placeholder="Archive where the entry is stored"
+          value={entry.archive}
+          update={(newValue) => {
+            updateField('archive', newValue);
+          }}
+        />
+
+        <FormattableStringInput
+          label="Archive location"
+          placeholder="Location in the archive"
+          value={entry['archive-location']}
+          update={(newValue) => {
+            updateField('archive-location', newValue);
+          }}
+        />
+
+        <FormattableStringInput
+          label="Note"
+          placeholder="Additional notes or comments about the entry"
+          value={entry.note}
+          update={(newValue) => {
+            updateField('note', newValue);
+          }}
+        />
+        <!-- TODO: Add parent entry (as an entry) -->
       </form>
     {:else}
       <div
