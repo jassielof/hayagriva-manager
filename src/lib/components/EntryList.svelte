@@ -2,6 +2,7 @@
   import type { FormattableString } from '$lib/types/formattable-string';
   import type { BibliographyEntry } from '$lib/types/hayagriva';
   import {
+    Book,
     BookOpen,
     BookType,
     Calendar,
@@ -23,8 +24,10 @@
     Music,
     Newspaper,
     Palette,
+    Pencil,
     PenLine,
     Star,
+    Trash,
     Type,
     User,
     Users,
@@ -33,16 +36,11 @@
 
   let {
     entries,
-    selectedId,
-    onSelect
+    bibliographyId
   }: {
     entries: [string, BibliographyEntry][];
-    selectedId: string | null;
-    onSelect: (id: string) => void;
+    bibliographyId: string;
   } = $props();
-
-  let bibliographyId = $state('');
-  let entryId = $state('');
 
   function formatTitle(title: FormattableString | undefined | null): string {
     if (!title) return '';
@@ -84,7 +82,7 @@
     performance: Music,
     periodical: BookType,
     proceedings: Layers,
-    book: BookOpen,
+    book: Book,
     blog: Globe,
     reference: ClipboardList,
     conference: Users,
@@ -137,11 +135,10 @@
       {#each entries as [id, entry] (id)}
         {@const { label, Icon } = formatEntryType(entry.type)}
         <li class="list-row">
-          <div class="flex min-w-[6rem] flex-col items-center justify-center">
-            <Icon />
-            <span class="font-semibold">
-              {label}
-            </span>
+          <div class="flex flex-col items-center justify-center">
+            <div class="tooltip tooltip-right" data-tip={label}>
+              <Icon />
+            </div>
           </div>
           <div>
             <span class="font-mono text-sm">
@@ -181,14 +178,29 @@
               id={`popover-${id}`}
               style={`position-anchor: --anchor-${id};`}
             >
-              <li><button onclick={() => {}}>View</button></li>
               <li>
-                <a
-                  href={`/bibliography/${bibliographyId}/entry/${entryId}/edit`}
-                  >Edit</a
+                <!-- TODO: View entry -->
+                <button onclick={() => {}}>
+                  <Eye class="inline-block h-5 w-5" />
+                  View</button
                 >
               </li>
-              <li><button onclick={() => {}}>Delete</button></li>
+              <li>
+                <a href={`/bibliography/${bibliographyId}/entry/${id}/edit`}>
+                  <Pencil class="inline-block h-5 w-5" />
+                  Edit</a
+                >
+              </li>
+              <li>
+                <button
+                  class="btn btn-error btn-sm btn-soft"
+                  onclick={() => {}}
+                >
+                  <!-- TODO: Delete entry -->
+                  <Trash class="inline-block h-5 w-5" />
+                  Delete</button
+                >
+              </li>
             </ul>
           </div>
         </li>

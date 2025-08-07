@@ -9,7 +9,6 @@
 
   let bibliography: Bibliography | null = $state(null);
   let entries: [string, BibliographyEntry][] = $state([]);
-  let selectedId: string | null = $state(null);
 
   let { data: pageData }: PageProps = $props();
 
@@ -34,31 +33,11 @@
       db.saveBibliography(plainBib);
     }
   });
-
-  function handleSelectEntry(id: string) {
-    selectedId = id;
-  }
-
-  function handleEntryUpdate(updatedEntry: BibliographyEntry) {
-    if (!selectedId) return;
-
-    const index = entries.findIndex(([id]) => id === selectedId);
-    if (index !== -1) {
-      // Replace the old entry with the updated one to ensure reactivity
-      entries[index] = [selectedId, updatedEntry];
-    }
-  }
-
-  const selectedEntry = $derived.by(() => {
-    if (!selectedId) return null;
-    const entryTuple = entries.find(([id]) => id === selectedId);
-    return entryTuple ? entryTuple[1] : null;
-  });
 </script>
 
 <main class="mx-auto flex w-full max-w-5xl flex-col p-4">
   {#if bibliography}
-    <div class="flex flex-row">
+    <div class="flex flex-col gap-2 md:flex-row">
       <div class="mb-2 flex-auto">
         <h1 class="truncate text-2xl font-bold">
           {bibliography.metadata.title}
@@ -69,15 +48,14 @@
           </p>
         {/if}
       </div>
-      <div class="flex flex-auto justify-end">
+      <div class="flex flex-auto items-end justify-end md:items-start">
         <button class="btn btn-primary">
           <BookPlus />
           New entry
         </button>
       </div>
     </div>
-
-    <EntryList {entries} {selectedId} onSelect={handleSelectEntry} />
+    <EntryList {entries} bibliographyId={bibliography.metadata.id} />
   {:else}
     <div class="flex flex-grow flex-col items-center justify-center">
       <span class="loading loading-spinner loading-xl"></span>
