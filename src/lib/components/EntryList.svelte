@@ -5,10 +5,29 @@
     BookOpen,
     BookType,
     Calendar,
+    ClipboardList,
+    Copyright,
     Ellipsis,
+    Eye,
+    FileArchive,
+    FileAudio,
+    FileText,
+    Film,
+    FolderOpen,
+    Globe,
+    GraduationCap,
     Hash,
-    Type,
-    User
+    Landmark,
+    Layers,
+    MessageCircle,
+    Music,
+    Newspaper,
+    Palette,
+    PenLine,
+    Star,
+    User,
+    Users,
+    Video
   } from '@lucide/svelte';
 
   let {
@@ -26,9 +45,11 @@
 
   function formatTitle(title: FormattableString | undefined | null): string {
     if (!title) return '';
+
     if (typeof title === 'string') {
       return title;
     }
+
     return title.shortForm || title.value || '';
   }
 
@@ -41,9 +62,49 @@
     return author.name || '';
   }
 
-  function formatEntryType(type: BibliographyEntry['type']): string {
-    if (!type) return '';
-    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+  const entryTypeIcons: Record<string, typeof BookOpen> = {
+    article: FileText,
+    chapter: FileText,
+    entry: FileText,
+    anthos: Layers,
+    report: ClipboardList,
+    thesis: GraduationCap,
+    web: Globe,
+    scene: Film,
+    artwork: Palette,
+    patent: Copyright,
+    case: Landmark,
+    newspaper: Newspaper,
+    legislation: Landmark,
+    manuscript: PenLine,
+    original: Star,
+    post: MessageCircle,
+    misc: FileArchive,
+    performance: Music,
+    periodical: BookType,
+    proceedings: Layers,
+    book: BookOpen,
+    blog: Globe,
+    reference: ClipboardList,
+    conference: Users,
+    anthology: Layers,
+    repository: FolderOpen,
+    thread: MessageCircle,
+    video: Video,
+    audio: FileAudio,
+    exhibition: Eye
+  };
+
+  function formatEntryType(type: BibliographyEntry['type']): {
+    label: string;
+    Icon: typeof BookOpen;
+  } {
+    if (!type) return { label: '', Icon: FileArchive };
+    const normalized =
+      type.charAt(0).toLowerCase() + type.slice(1).toLowerCase();
+    const Icon = entryTypeIcons[normalized] || FileArchive;
+    const label = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+    return { label, Icon };
   }
 
   function formatEntryDate(date: BibliographyEntry['date']): string {
@@ -100,17 +161,31 @@
         </thead>
         <tbody>
           {#each entries as [id, entry] (id)}
+            {@const { label, Icon } = formatEntryType(entry.type)}
             <tr
               class="cursor-pointer hover:bg-gray-100"
               class:active={selectedId === id}
               onclick={() => onSelect(id)}
             >
               <td class="max-w-xs truncate font-mono">{id}</td>
-              <td class="max-w-xs truncate font-semibold">
-                {formatTitle(entry.title)}
+              <td class="max-w-xs">
+                <span class="badge badge-outline badge-info badge-sm font-mono">
+                  {id}
+                </span>
+                <br />
+                <span class="font-bold">
+                  {formatTitle(entry.title)}
+                </span>
+                <br />
+                <span class="font-serif italic">
+                  {formatAuthor(entry.author)}
+                </span>
               </td>
-              <td class="max-w-xs truncate">{formatAuthor(entry.author)}</td>
-              <td class="max-w-xs">{formatEntryType(entry.type)}</td>
+              <td class="max-w-xs truncate"> {formatAuthor(entry.author)}</td>
+              <td class="flex items-center gap-2">
+                <Icon class="h-4 w-4" />
+                {label}
+              </td>
               <td class="">{formatEntryDate(entry.date)}</td>
               <td>
                 <!-- TODO: For each entry add copy, delete, update actions -->

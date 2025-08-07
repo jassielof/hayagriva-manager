@@ -3,7 +3,6 @@
   import { onMount } from 'svelte';
   import type { PageProps } from './$types';
   import EntryList from '$lib/components/EntryList.svelte';
-  import EntryDetail from '$lib/components/EntryDetail.svelte';
   import type { Hayagriva, BibliographyEntry } from '$lib/types/hayagriva';
   import { db } from '$lib/db';
   import { BookPlus, FilePlus } from '@lucide/svelte';
