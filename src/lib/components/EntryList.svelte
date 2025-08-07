@@ -126,95 +126,67 @@
   }
 </script>
 
-<div class="card bg-base-100 flex-grow shadow-md">
+<div class="card mt-4 shadow-md">
   {#if entries.length === 0}
     <div class="card-body">
       <p class="text-center text-gray-500">This bibliography has no entries.</p>
     </div>
   {:else}
-    <div class="overflow-x-auto">
-      <table class="table-zebra table">
-        <thead>
-          <tr>
-            <th>
-              <Hash class="mr-1 inline-block" /> ID
-            </th>
-            <th>
-              <BookOpen class="mr-1 inline-block" />
-              Title
-            </th>
-
-            <th>
-              <User class="mr-1 inline-block" />
-              Author/s
-            </th>
-            <th>
-              <BookType class="mr-1 inline-block" />
-              Type
-            </th>
-            <th>
-              <Calendar class="mr-1 inline-block" />
-              Date
-            </th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each entries as [id, entry] (id)}
-            {@const { label, Icon } = formatEntryType(entry.type)}
-            <tr
-              class="cursor-pointer hover:bg-gray-100"
-              class:active={selectedId === id}
-              onclick={() => onSelect(id)}
-            >
-              <td class="max-w-xs truncate font-mono">{id}</td>
-              <td class="max-w-xs">
-                <span class="badge badge-outline badge-info badge-sm font-mono">
-                  {id}
-                </span>
-                <br />
-                <span class="font-bold">
-                  {formatTitle(entry.title)}
-                </span>
-                <br />
-                <span class="font-serif italic">
-                  {formatAuthor(entry.author)}
-                </span>
-              </td>
-              <td class="max-w-xs truncate"> {formatAuthor(entry.author)}</td>
-              <td class="flex items-center gap-2">
-                <Icon class="h-4 w-4" />
-                {label}
-              </td>
-              <td class="">{formatEntryDate(entry.date)}</td>
-              <td>
-                <!-- TODO: For each entry add copy, delete, update actions -->
-                <details class="dropdown dropdown-left">
-                  <summary class="btn m-1">
-                    <Ellipsis class="inline-block" />
-                  </summary>
-                  <ul
-                    class="menu dropdown-content bg-base-100 rounded-box z-1 w-min p-2 shadow-sm"
+    <ul class="list bg-base-200 rounded-box shadow-md">
+      {#each entries as [id, entry] (id)}
+        {@const { label, Icon } = formatEntryType(entry.type)}
+        <li class="list-row">
+          <div class="flex min-w-[6rem] flex-col items-center justify-center">
+            <Icon />
+            <span class="font-semibold">
+              {label}
+            </span>
+          </div>
+          <div>
+            <span class="badge badge-outline badge-sm font-mono">
+              {id}
+            </span>
+            <br />
+            <span class="text-lg font-semibold">
+              {formatTitle(entry.title)}
+            </span>
+            <br />
+            <span class="font-serif italic">
+              {formatAuthor(entry.author)}
+            </span>
+            {#if entry.date}
+              <br />
+              <span class="text-xs">
+                <Calendar class="inline-block h-5 w-5" />
+                {formatEntryDate(entry.date)}
+              </span>
+            {/if}
+          </div>
+          <div class="flex min-w-[6rem] flex-col items-center justify-center">
+            <details class="dropdown dropdown-left">
+              <summary class="btn m-1">
+                <Ellipsis class="inline-block" />
+              </summary>
+              <ul
+                class="menu dropdown-content bg-base-100 rounded-box z-1 w-min p-2 shadow-sm"
+              >
+                <!-- TODO: View is a card dialog -->
+                <!-- TODO: The card should have an option to copy the content of that single entry -->
+                <li><button onclick={() => {}}>View</button></li>
+                <!-- TODO: Edit goes to /bibliography/[id]/entry/[entryId]/edit -->
+                <li>
+                  <a
+                    href={`/bibliography/${bibliographyId}/entry/${entryId}/edit`}
+                    >Edit</a
                   >
-                    <!-- TODO: View is a card dialog -->
-                    <!-- TODO: The card should have an option to copy the content of that single entry -->
-                    <li><button onclick={() => {}}>View</button></li>
-                    <!-- TODO: Edit goes to /bibliography/[id]/entry/[entryId]/edit -->
-                    <li>
-                      <a
-                        href={`/bibliography/${bibliographyId}/entry/${entryId}/edit`}
-                        >Edit</a
-                      >
-                    </li>
-                    <!-- TODO: Delete uses a confirmation dialog -->
-                    <li><button onclick={() => {}}>Delete</button></li>
-                  </ul>
-                </details>
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
+                </li>
+                <!-- TODO: Delete uses a confirmation dialog -->
+                <li><button onclick={() => {}}>Delete</button></li>
+              </ul>
+            </details>
+          </div>
+        </li>
+      {/each}
+    </ul>
   {/if}
 </div>

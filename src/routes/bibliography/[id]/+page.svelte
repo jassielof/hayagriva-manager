@@ -56,7 +56,7 @@
   });
 </script>
 
-<main class="flex flex-col p-4">
+<main class="mx-auto flex w-full max-w-5xl flex-col p-4">
   {#if bibliography}
     <div class="flex flex-row">
       <div class="mb-2 flex-auto">
@@ -84,4 +84,3 @@
     </div>
   {/if}
 </main>
-
