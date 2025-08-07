@@ -179,11 +179,10 @@
               style={`position-anchor: --anchor-${id};`}
             >
               <li>
-                <!-- TODO: View entry -->
-                <button onclick={() => {}}>
+                <a href={`/bibliography/${bibliographyId}/entry/${id}`}>
                   <Eye class="inline-block h-5 w-5" />
-                  View</button
-                >
+                  View
+                </a>
               </li>
               <li>
                 <a href={`/bibliography/${bibliographyId}/entry/${id}/edit`}>
