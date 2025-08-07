@@ -58,7 +58,7 @@
           >
             <BookOpen />
           </a>
-
+          <!-- TODO: Use /bibliography/[id]/edit instead -->
           <button
             class="btn btn-soft join-item"
             onclick={() => edit(bib.metadata.id)}
