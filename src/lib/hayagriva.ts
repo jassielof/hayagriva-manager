@@ -18,13 +18,6 @@ export function parseYaml(content: string): Hayagriva {
   return data as Hayagriva;
 }
 
-/**
- * Export a Hayagriva bibliography object to YAML format.
- */
-export function exportYaml(data: Hayagriva): string {
-  return yaml.dump(data);
-}
-
 let schemaPromise: Promise<any> | null = null;
 
 /**

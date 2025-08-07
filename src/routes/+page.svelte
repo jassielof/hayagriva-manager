@@ -1,16 +1,16 @@
 <script lang="ts">
-  import BibliographyList from '$lib/components/BibliographyList.svelte';
+  import yaml from 'js-yaml';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
   import type { Bibliography } from '$lib/types/bibliography';
-  import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
   import { onMount } from 'svelte';
   import AlertModal from '$lib/components/AlertModal.svelte';
   import { db } from '$lib/db';
-  import { goto } from '$app/navigation';
   import {
     BookOpen,
+    BookPlus,
     Copy,
     Download,
+    FilePlus,
     Library,
     Pencil,
     Trash
@@ -36,22 +36,10 @@
 
   async function handleDelete(id: string) {
     confirmAction = async () => {
-      await db.deleteBibliography(id);
+      await db.bibliographies.delete(id);
       bibliographies = await db.bibliographies.toArray();
     };
     showConfirmModal = true;
-  }
-
-  function handleEdit(id: string) {
-    goto(`/bibliography/${id}/edit`);
-  }
-
-  function closeConfirmModal() {
-    showConfirmModal = false;
-  }
-
-  function closeAlertModal() {
-    showAlertModal = false;
   }
 
   function formatDate(date: Date) {
@@ -65,9 +53,23 @@
 
 {#snippet actions()}
   <div class="gap-4">
-    <a href="/bibliography/new" class="btn btn-primary"> New Bibliography </a>
-    <a href="/bibliography/import" class="btn btn-secondary">
-      Import from YAML
+    <a
+      href="/bibliography/new"
+      class="btn btn-primary"
+      title="Create a new bibliography"
+      aria-label="Create a new bibliography"
+    >
+      <BookPlus />
+      New
+    </a>
+    <a
+      href="/bibliography/import"
+      class="btn btn-secondary"
+      title="Import from YAML file"
+      aria-label="Import from YAML file"
+    >
+      <FilePlus />
+      Import
     </a>
   </div>
 {/snippet}
@@ -88,9 +90,8 @@
       {@render actions()}
     </div>
 
-    <!-- <BibliographyList {bibliographies} edit={handleEdit} del={handleDelete} /> -->
     <div class="overflow-x-auto">
-      <ul class="list">
+      <ul class="list rounded-box bg-base-200 shadow-md">
         {#each bibliographies as bib (bib.metadata.id)}
           <li class="list-row">
             <div class="flex h-full items-center justify-center">
@@ -120,27 +121,40 @@
               >
                 <BookOpen />
               </a>
-              <button
+              <a
                 class="btn btn-soft join-item"
-                onclick={() => goto(`/bibliography/${bib.metadata.id}/edit`)}
+                href={`/bibliography/${bib.metadata.id}/edit`}
                 title="Edit metadata"
                 aria-label="Edit metadata"
               >
                 <Pencil />
-              </button>
+              </a>
 
-              <!-- TODO: Implement download functionality -->
-              <button
+              <a
                 class="btn btn-soft join-item"
                 title="Download as YAML file"
+                aria-label="Download as YAML file"
+                href={URL.createObjectURL(
+                  new Blob([yaml.dump(bib.data)], {
+                    type: 'application/x-yaml'
+                  })
+                )}
+                download={`${bib.metadata.id}.yaml`}
+                onclick={(event) => {
+                  setTimeout(() => {
+                    URL.revokeObjectURL(event?.currentTarget.href);
+                  }, 1000);
+                }}
               >
                 <Download />
-              </button>
+              </a>
 
-              <!-- TODO: Implement copy to clipboard functionality -->
               <button
                 class="btn btn-soft join-item"
                 title="Copy to clipboard as YAML"
+                aria-label="Copy to clipboard as YAML"
+                onclick={() =>
+                  navigator.clipboard.writeText(yaml.dump(bib.data))}
               >
                 <Copy />
               </button>
@@ -166,12 +180,12 @@
   title="Confirm Deletion"
   message="Are you sure you want to delete this bibliography? This cannot be undone."
   onConfirm={confirmAction}
-  onCancel={closeConfirmModal}
+  onCancel={() => (showConfirmModal = false)}
 />
 
 <AlertModal
   show={showAlertModal}
   title={alertTitle}
   message={alertMessage}
-  onClose={closeAlertModal}
+  onClose={() => (showAlertModal = false)}
 />

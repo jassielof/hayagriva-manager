@@ -1,11 +1,17 @@
 <script lang="ts">
-  const { show, title, message, onConfirm, onCancel } = $props<{
+  let {
+    show,
+    title,
+    message,
+    onConfirm,
+    onCancel
+  }: {
     show: boolean;
     title: string;
     message: string;
     onConfirm: () => void;
     onCancel: () => void;
-  }>();
+  } = $props();
 
   let dialog: HTMLDialogElement;
 
@@ -21,7 +27,7 @@
 
   function handleConfirm() {
     onConfirm();
-    onCancel(); // Close modal after confirmation
+    onCancel();
   }
 </script>
 
