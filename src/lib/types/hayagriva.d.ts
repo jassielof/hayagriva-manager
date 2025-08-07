@@ -5,6 +5,9 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+export type TopLevelEntry = BibliographyEntry & {
+  [k: string]: unknown;
+};
 /**
  * The media type of the entry. Often determines the structure of references.
  */
@@ -302,13 +305,13 @@ export type Note =
  * A bibliography management format for the modern age.
  */
 export interface Hayagriva {
-  [k: string]: BibliographyEntry;
+  [k: string]: TopLevelEntry;
 }
 /**
  * A single bibliography entry.
  */
 export interface BibliographyEntry {
-  type: Type;
+  type?: Type;
   title?: Title;
   author?: Author;
   date?: Date;

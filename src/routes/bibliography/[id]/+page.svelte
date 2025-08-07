@@ -49,10 +49,10 @@
         {/if}
       </div>
       <div class="flex flex-auto items-end justify-end md:items-start">
-        <button class="btn btn-primary">
+        <a class="btn btn-primary" href={`/bibliography/${bibliography.metadata.id}/entry/`}>
           <BookPlus />
           New entry
-        </button>
+        </a>
       </div>
     </div>
     <EntryList {entries} bibliographyId={bibliography.metadata.id} />
