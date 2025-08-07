@@ -1,8 +1,17 @@
 <script lang="ts">
   import type { FormattableString } from '$lib/types/formattable-string';
   import type { BibliographyEntry } from '$lib/types/hayagriva';
+  import {
+    BookOpen,
+    BookType,
+    Calendar,
+    Ellipsis,
+    Hash,
+    Type,
+    User
+  } from '@lucide/svelte';
 
-  const {
+  let {
     entries,
     selectedId,
     onSelect
@@ -11,6 +20,9 @@
     selectedId: string | null;
     onSelect: (id: string) => void;
   } = $props();
+
+  let bibliographyId = $state('');
+  let entryId = $state('');
 
   function formatTitle(title: FormattableString | undefined | null): string {
     if (!title) return '';
@@ -63,11 +75,27 @@
       <table class="table-zebra table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Type</th>
-            <th>Date</th>
+            <th>
+              <Hash class="mr-1 inline-block" /> ID
+            </th>
+            <th>
+              <BookOpen class="mr-1 inline-block" />
+              Title
+            </th>
+
+            <th>
+              <User class="mr-1 inline-block" />
+              Author/s
+            </th>
+            <th>
+              <BookType class="mr-1 inline-block" />
+              Type
+            </th>
+            <th>
+              <Calendar class="mr-1 inline-block" />
+              Date
+            </th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -77,13 +105,37 @@
               class:active={selectedId === id}
               onclick={() => onSelect(id)}
             >
-              <td class="max-w-xs truncate font-mono text-xs">{id}</td>
+              <td class="max-w-xs truncate font-mono">{id}</td>
               <td class="max-w-xs truncate font-semibold">
                 {formatTitle(entry.title)}
               </td>
               <td class="max-w-xs truncate">{formatAuthor(entry.author)}</td>
-              <td>{formatEntryType(entry.type)}</td>
-              <td>{formatEntryDate(entry.date)}</td>
+              <td class="max-w-xs">{formatEntryType(entry.type)}</td>
+              <td class="">{formatEntryDate(entry.date)}</td>
+              <td>
+                <!-- TODO: For each entry add copy, delete, update actions -->
+                <details class="dropdown dropdown-left">
+                  <summary class="btn m-1">
+                    <Ellipsis class="inline-block" />
+                  </summary>
+                  <ul
+                    class="menu dropdown-content bg-base-100 rounded-box z-1 w-min p-2 shadow-sm"
+                  >
+                    <!-- TODO: View is a card dialog -->
+                    <!-- TODO: The card should have an option to copy the content of that single entry -->
+                    <li><button onclick={() => {}}>View</button></li>
+                    <!-- TODO: Edit goes to /bibliography/[id]/entry/[entryId]/edit -->
+                    <li>
+                      <a
+                        href={`/bibliography/${bibliographyId}/entry/${entryId}/edit`}
+                        >Edit</a
+                      >
+                    </li>
+                    <!-- TODO: Delete uses a confirmation dialog -->
+                    <li><button onclick={() => {}}>Delete</button></li>
+                  </ul>
+                </details>
+              </td>
             </tr>
           {/each}
         </tbody>

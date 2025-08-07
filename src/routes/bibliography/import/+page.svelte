@@ -96,7 +96,7 @@
   }
 </script>
 
-<form class="bg-base-100 mx-auto w-full max-w-md p-6" onsubmit={handleSubmit}>
+<form class="mx-auto w-full max-w-md p-6" onsubmit={handleSubmit}>
   <fieldset
     class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4"
   >

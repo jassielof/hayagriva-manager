@@ -1,4 +1,6 @@
 <!-- TODO: Form for editing bibliographic entry, live edit isn't good -->
+<!-- TODO: /bibliography/[id]/entry/ is for new entries-->
+<!-- TODO: /bibliography/[id]/entry/[id]/ is for editing entries -->
 <script lang="ts">
   import type { Bibliography } from '$lib/types/bibliography';
   import { onMount } from 'svelte';
@@ -14,5 +16,5 @@
 </svelte:head>
 
 <div class="container">
-    <!-- TODO: Add form -->
+  <!-- TODO: Add form -->
 </div>

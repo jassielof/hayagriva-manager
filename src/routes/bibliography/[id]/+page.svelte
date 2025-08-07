@@ -6,7 +6,7 @@
   import EntryDetail from '$lib/components/EntryDetail.svelte';
   import type { Hayagriva, BibliographyEntry } from '$lib/types/hayagriva';
   import { db } from '$lib/db';
-  import { FilePlus } from '@lucide/svelte';
+  import { BookPlus, FilePlus } from '@lucide/svelte';
 
   let bibliography: Bibliography | null = $state(null);
   let entries: [string, BibliographyEntry][] = $state([]);
@@ -16,6 +16,7 @@
 
   onMount(async () => {
     const bib = await db.getBibliography(pageData.id);
+
     if (bib) {
       bibliography = bib;
       entries = Object.entries(bib.data as Hayagriva);
@@ -71,7 +72,7 @@
       </div>
       <div class="flex flex-auto justify-end">
         <button class="btn btn-primary">
-          <FilePlus />
+          <BookPlus />
           New entry
         </button>
       </div>
@@ -85,4 +86,3 @@
   {/if}
 </main>
 
-<!-- TODO: For each entry add copy, delete, update actions -->

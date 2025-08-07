@@ -1,4 +1,5 @@
 <script lang="ts">
+  // FIXME: bad props type safety
   const { show, title, message, onClose } = $props<{
     show: boolean;
     title: string;
