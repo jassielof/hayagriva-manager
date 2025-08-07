@@ -2,17 +2,20 @@
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
 
   let {
+    id = $bindable(''),
     title = $bindable(''),
     description = $bindable(''),
     bibliography = null,
     showValidation = false
   }: {
+    id: string;
     title: string;
     description: string;
     bibliography?: BibliographyMetadata | null;
     showValidation?: boolean;
   } = $props();
 
+  let idError = $state('');
   let titleError = $state('');
   let hasInteracted = $state(false);
 
@@ -54,6 +57,16 @@
   }
 </script>
 
+<label for="bibliography-id" class="label">ID</label>
+<input
+  id="bibliography-id"
+  type="text"
+  placeholder="my-research-papers"
+  class="input validator w-full font-mono"
+  bind:value={id}
+  required
+/>
+
 <label for="bibliography-title" class="label">Title</label>
 <input
   id="bibliography-title"
@@ -65,12 +78,11 @@
   oninput={handleTitleInput}
   required
 />
-<p class="validaotor-hint">{titleError}</p>
 
 <label for="bibliography-description" class="label"> Description </label>
 <textarea
   id="bibliography-description"
   class="textarea w-full"
-  placeholder="A short description of this collection"
+  placeholder="Research papers on various topics"
   bind:value={description}
 ></textarea>

@@ -6,6 +6,7 @@
   import EntryDetail from '$lib/components/EntryDetail.svelte';
   import type { Hayagriva, BibliographyEntry } from '$lib/types/hayagriva';
   import { db } from '$lib/db';
+  import { FilePlus } from '@lucide/svelte';
 
   let bibliography: Bibliography | null = $state(null);
   let entries: [string, BibliographyEntry][] = $state([]);
@@ -57,13 +58,23 @@
 
 <main class="flex flex-col p-4">
   {#if bibliography}
-    <div class="mb-2">
-      <h1 class="truncate text-2xl font-bold">{bibliography.metadata.title}</h1>
-      {#if bibliography.metadata.description}
-        <p class="truncate text-sm opacity-70">
-          {bibliography.metadata.description}
-        </p>
-      {/if}
+    <div class="flex flex-row">
+      <div class="mb-2 flex-auto">
+        <h1 class="truncate text-2xl font-bold">
+          {bibliography.metadata.title}
+        </h1>
+        {#if bibliography.metadata.description}
+          <p class="truncate text-sm opacity-70">
+            {bibliography.metadata.description}
+          </p>
+        {/if}
+      </div>
+      <div class="flex flex-auto justify-end">
+        <button class="btn btn-primary">
+          <FilePlus />
+          New entry
+        </button>
+      </div>
     </div>
 
     <EntryList {entries} {selectedId} onSelect={handleSelectEntry} />

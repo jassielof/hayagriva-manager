@@ -1,6 +1,5 @@
 <script lang="ts">
   import BibliographyList from '$lib/components/BibliographyList.svelte';
-  import CreateBibliographyModal from '$lib/components/CreateBibliographyModal.svelte';
   import ImportBibliographyModal from '$lib/components/ImportBibliographyModal.svelte';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte'; // 1. Import the new component
   import type { Bibliography } from '$lib/types/bibliography';
@@ -51,6 +50,7 @@
       const bib = bibliographies.find(
         (b) => b.metadata.id === editingBibliography?.id
       );
+
       if (bib) {
         bib.metadata = {
           ...bib.metadata,
@@ -74,8 +74,10 @@
         } as BibliographyMetadata,
         data: {}
       };
+
       await db.saveBibliography(newBib);
     }
+
     showCreateModal = false;
     await loadBibliographies();
   }
@@ -151,14 +153,14 @@
 
 {#snippet actions()}
   <div class="gap-4">
-    <button type="button" class="btn btn-primary" onclick={handleCreateNew}>
-      New Bibliography
-    </button>
-    <button type="button" class="btn btn-secondary" onclick={handleImport}>
+    <a href="/bibliography/new" class="btn btn-primary"> New Bibliography </a>
+    <a href="/bibliography/import" class="btn btn-secondary">
       Import from YAML
-    </button>
+    </a>
   </div>
 {/snippet}
+
+<!-- TODO: Move import bibliography to /bibliography/import -->
 
 <main class="container mx-auto mt-8 max-w-5xl p-4">
   {#if bibliographies.length === 0}
@@ -178,13 +180,6 @@
     <BibliographyList {bibliographies} edit={handleEdit} del={handleDelete} />
   {/if}
 </main>
-
-<CreateBibliographyModal
-  show={showCreateModal}
-  bibliography={editingBibliography}
-  onClose={closeCreateModal}
-  onSave={handleSave}
-/>
 
 <ImportBibliographyModal
   show={showImportModal}

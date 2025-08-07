@@ -25,7 +25,7 @@ export class HayagrivaManagerDB extends Dexie {
   }
 
   async saveBibliography(bibliography: Bibliography): Promise<void> {
-    await db.bibliographies.put(bibliography);
+    await db.bibliographies.add(bibliography);
   }
 
   async deleteBibliography(id: string): Promise<void> {

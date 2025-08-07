@@ -40,6 +40,6 @@ export async function getHayagrivaSchema(): Promise<any> {
       return response.json();
     });
   }
-  
+
   return schemaPromise;
 }

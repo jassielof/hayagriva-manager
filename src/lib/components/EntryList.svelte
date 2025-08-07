@@ -60,7 +60,7 @@
     </div>
   {:else}
     <div class="overflow-x-auto">
-      <table class="table-zebra table w-full">
+      <table class="table-zebra table">
         <thead>
           <tr>
             <th>ID</th>
@@ -73,7 +73,7 @@
         <tbody>
           {#each entries as [id, entry] (id)}
             <tr
-              class="cursor-pointer"
+              class="cursor-pointer hover:bg-gray-100"
               class:active={selectedId === id}
               onclick={() => onSelect(id)}
             >
