@@ -25,6 +25,7 @@
     Palette,
     PenLine,
     Star,
+    Type,
     User,
     Users,
     Video
@@ -143,17 +144,21 @@
             </span>
           </div>
           <div>
-            <span class="badge badge-outline badge-sm font-mono">
+            <span class="font-mono text-sm">
+              <Hash class="inline-block h-5 w-5" />
               {id}
             </span>
             <br />
             <span class="text-lg font-semibold">
               {formatTitle(entry.title)}
             </span>
-            <br />
-            <span class="font-serif italic">
-              {formatAuthor(entry.author)}
-            </span>
+            {#if entry.author}
+              <br />
+              <span class="font-serif italic">
+                <User class="inline-block h-5 w-5" />
+                {formatAuthor(entry.author)}
+              </span>
+            {/if}
             {#if entry.date}
               <br />
               <span class="text-xs">
@@ -162,28 +167,29 @@
               </span>
             {/if}
           </div>
-          <div class="flex min-w-[6rem] flex-col items-center justify-center">
-            <details class="dropdown dropdown-left">
-              <summary class="btn m-1">
-                <Ellipsis class="inline-block" />
-              </summary>
-              <ul
-                class="menu dropdown-content bg-base-100 rounded-box z-1 w-min p-2 shadow-sm"
-              >
-                <!-- TODO: View is a card dialog -->
-                <!-- TODO: The card should have an option to copy the content of that single entry -->
-                <li><button onclick={() => {}}>View</button></li>
-                <!-- TODO: Edit goes to /bibliography/[id]/entry/[entryId]/edit -->
-                <li>
-                  <a
-                    href={`/bibliography/${bibliographyId}/entry/${entryId}/edit`}
-                    >Edit</a
-                  >
-                </li>
-                <!-- TODO: Delete uses a confirmation dialog -->
-                <li><button onclick={() => {}}>Delete</button></li>
-              </ul>
-            </details>
+          <div class="flex flex-col items-center justify-center">
+            <button
+              class="btn m-1"
+              popovertarget={`popover-${id}`}
+              style={`anchor-name: --anchor-${id};`}
+            >
+              <Ellipsis class="inline-block" />
+            </button>
+            <ul
+              class="dropdown dropdown-left menu rounded-box bg-base-100 w-max shadow-sm"
+              popover
+              id={`popover-${id}`}
+              style={`position-anchor: --anchor-${id};`}
+            >
+              <li><button onclick={() => {}}>View</button></li>
+              <li>
+                <a
+                  href={`/bibliography/${bibliographyId}/entry/${entryId}/edit`}
+                  >Edit</a
+                >
+              </li>
+              <li><button onclick={() => {}}>Delete</button></li>
+            </ul>
           </div>
         </li>
       {/each}
