@@ -67,19 +67,37 @@
 {/if}
 
 <label class="label mt-4">
-  <input type="checkbox" class="checkbox" bind:checked={showAdvanced} onchange={updateValue} />
-  Advanced {label}
+  <input
+    type="checkbox"
+    class="checkbox"
+    bind:checked={showAdvanced}
+    onchange={updateValue}
+  />
+  Detailed {label}
 </label>
 
 {#if showAdvanced}
-  <fieldset class="fieldset bg-base-300 border-base-300 rounded-box border p-4">
-    <legend class="fieldset-legend">Advanced {label}</legend>
+  <fieldset
+    class="fieldset bg-base-300/50 border-base-content/20 rounded-box gap-2 border p-4"
+  >
+    <legend class="fieldset-legend">Detailed {label}</legend>
 
     <label for="short-form" class="label">Short form</label>
-    <input id="short-form" type="text" class="input" bind:value={shortValue} oninput={updateValue} />
+    <input
+      id="short-form"
+      type="text"
+      class="input input-sm w-full"
+      bind:value={shortValue}
+      oninput={updateValue}
+    />
 
-    <label class="label mt-4">
-      <input type="checkbox" class="checkbox" bind:checked={verbatimValue} onchange={updateValue} />
+    <label class="label">
+      <input
+        type="checkbox"
+        class="checkbox checkbox-sm"
+        bind:checked={verbatimValue}
+        onchange={updateValue}
+      />
       Verbatim
     </label>
   </fieldset>

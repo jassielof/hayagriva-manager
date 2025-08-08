@@ -4,6 +4,7 @@
   import EntryTypeInput from '$lib/components/schema-definitions/EntryTypeInput.svelte';
   import FormattableStringInput from '$lib/components/schema-definitions/FormattableStringInput.svelte';
   import { Plus, X } from '@lucide/svelte';
+  import PeopleInput from './schema-definitions/PeopleInput.svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
@@ -69,7 +70,8 @@
     bind:value={entryData.title!}
   />
 
-  <!-- TODO: Add Author input -->
+  <PeopleInput label="Author" bind:value={entryData.author} />
+
   <!-- TODO: Add Date input -->
   <!-- TODO: Add ParentEntry input -->
 
@@ -141,7 +143,11 @@
     <h3 class="text-secondary mt-4 text-lg">
       Parent entry of
       <span class="font-semibold italic">
-        {entryData.title}
+        {#if typeof entryData.title == 'string'}
+          {entryData.title}
+        {:else if typeof entryData.title === 'object' && entryData.title.value}
+          {entryData.title.value}
+        {/if}
       </span>
     </h3>
     <EntryForm bind:entryData={entryData.parent} />
