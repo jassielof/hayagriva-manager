@@ -2,7 +2,6 @@
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
   import type { Type } from '$lib/types/hayagriva';
   import { ENTRY_TYPES } from '$lib/validators/entry-type';
-  import { BookPlus } from '@lucide/svelte';
 
   let {
     value = $bindable()
