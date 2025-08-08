@@ -8,10 +8,8 @@
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
-  // Helper state to manage the UI for the parent type
   let parentType: 'none' | 'single' | 'list' = $state('none');
 
-  // Sync the `parentType` state with the actual data structure of `entry.parent`
   $effect(() => {
     if (entryData.parent === undefined || entryData.parent === null) {
       parentType = 'none';
@@ -22,7 +20,6 @@
     }
   });
 
-  // Function to change the parent structure based on user selection
   function handleParentTypeChange(e: Event) {
     const target = e.target as HTMLSelectElement;
     const newType = target.value;
@@ -33,7 +30,7 @@
         break;
       case 'single':
         if (!entryData.parent || Array.isArray(entryData.parent)) {
-          entryData.parent = { type: 'Misc' }; // Start with a default empty entry
+          entryData.parent = { type: 'Misc' };
         }
         break;
       case 'list':
@@ -72,8 +69,21 @@
 
   <PeopleInput label="Author" bind:value={entryData.author} />
 
-  <!-- TODO: Add Date input -->
-  <!-- TODO: Add ParentEntry input -->
+  <!-- TODO: Add Date as date -->
+  <!-- TODO: Add Editor as person or list -->
+  <!-- TODO: Add affiliated as affiliated list-->
+  <!-- TODO: Add publisher as publisher -->
+  <!-- TODO: Add issue as numeric or string -->
+  <!-- TODO: Add volume as numeric or string -->
+  <!-- TODO: Add volume total as integer -->
+  <!-- TODO: Add edition as numeric or string -->
+  <!-- TODO: Add page range as numeric or string -->
+  <!-- TODO: Add page total as integer -->
+  <!-- TODO: Add time range as timestamp range -->
+  <!-- TODO: Add runtime as timestamp -->
+  <!-- TODO: Add url as url -->
+  <!-- TODO: Add serial number as serial number -->
+  <!-- TODO: Add language as language -->
 
   <FormattableStringInput
     label="Abstract"

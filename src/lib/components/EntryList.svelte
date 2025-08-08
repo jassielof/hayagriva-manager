@@ -28,7 +28,6 @@
     PenLine,
     Star,
     Trash,
-    Type,
     User,
     Users,
     Video
@@ -116,8 +115,6 @@
     }
 
     if (typeof date === 'string') {
-      // The date string can be YYYY, YYYY-MM, YYYY-MM-DD, or a full ISO string.
-      // We only want the date part (YYYY-MM-DD).
       return date.split('T')[0];
     }
 
