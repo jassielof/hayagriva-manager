@@ -1,91 +1,93 @@
 <script lang="ts">
   import type { FormattableString } from '$lib/types/formattable-string';
-  import { ChevronsUpDown } from '@lucide/svelte';
-  // FIXME: Type safety is not const {} = props<{}> but const {}: {} = $props()
-  const {
-    value,
+  let {
+    value = $bindable(),
     label,
     placeholder,
-    update,
     multiline = false
-  } = $props<{
-    value: FormattableString | undefined | null;
+  }: {
+    value: FormattableString;
     label: string;
     placeholder: string;
-    update: (newValue: FormattableString | undefined) => void;
     multiline?: boolean;
-  }>();
+  } = $props();
 
-  const isObject = $derived(typeof value === 'object' && value !== null);
   let showAdvanced = $state(typeof value === 'object' && value !== null);
 
-  let mainValue = $derived(value ? (isObject ? value.value : value) : '');
-  let shortValue = $derived(isObject ? (value.short ?? '') : '');
-  let verbatimValue = $derived(isObject ? (value.verbatim ?? false) : false);
+  let mainValue = $state('');
+  let shortValue = $state('');
+  let verbatimValue = $state(false);
 
   $effect(() => {
-    showAdvanced = isObject;
+    if (typeof value === 'string') {
+      mainValue = value;
+      shortValue = '';
+      verbatimValue = false;
+    } else if (value && typeof value === 'object') {
+      mainValue = value.value || '';
+      shortValue = value.shortForm || '';
+      verbatimValue = value.verbatim || false;
+    }
   });
 
-  function handleUpdate() {
-    if (shortValue === '' && !verbatimValue) {
-      update(mainValue || undefined);
+  $effect(() => {
+    if (showAdvanced) {
+      value = {
+        value: mainValue,
+        ...(shortValue && { shortForm: shortValue }),
+        ...(verbatimValue && { verbatim: verbatimValue })
+      };
     } else {
-      update({
-        value: mainValue || '',
-        short: shortValue || undefined,
-        verbatim: verbatimValue || undefined
-      });
+      value = mainValue;
     }
-  }
+  });
+
+  $effect(() => {
+    if (showAdvanced) {
+      value = {
+        value: mainValue,
+        ...(shortValue && { shortForm: shortValue }),
+        ...(verbatimValue && { verbatim: verbatimValue })
+      };
+    } else {
+      value = mainValue;
+    }
+  });
 </script>
 
 {#if multiline}
   <label class="label" for="textarea-entry">{label}</label>
   <textarea
     id="textarea-entry"
-    class="textarea"
+    class="textarea w-full"
     {placeholder}
     bind:value={mainValue}
-    rows="4"
-    oninput={handleUpdate}
   ></textarea>
 {:else}
   <label for="main-value" class="label">{label}</label>
   <input
     id="main-value"
     type="text"
-    class="input"
+    class="input w-full"
     {placeholder}
     bind:value={mainValue}
-    oninput={handleUpdate}
   />
 {/if}
-<label class="label">
+
+<label class="label mt-4">
   <input type="checkbox" class="checkbox" bind:checked={showAdvanced} />
-  Advanced
+  Advanced {label}
 </label>
 
 {#if showAdvanced}
-  <fieldset
-    class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
-  >
+  <fieldset class="fieldset bg-base-300 border-base-300 rounded-box border p-4">
     <legend class="fieldset-legend">Advanced {label}</legend>
-    <label for="short-form" class="label">Short Form</label>
-    <input
-      id="short-form"
-      type="text"
-      class="input"
-      bind:value={shortValue}
-      oninput={handleUpdate}
-    />
-    <label class="label">
-      <input
-        type="checkbox"
-        class="checkbox"
-        bind:checked={verbatimValue}
-        onchange={handleUpdate}
-      />
+
+    <label for="short-form" class="label">Short form</label>
+    <input id="short-form" type="text" class="input" bind:value={shortValue} />
+
+    <label class="label mt-4">
+      <input type="checkbox" class="checkbox" bind:checked={verbatimValue} />
       Verbatim
     </label>
   </fieldset>

@@ -1,23 +1,23 @@
 <script lang="ts">
+  import { formatEntryType } from '$lib/formatters/entry-type-formatter';
+  import type { Type } from '$lib/types/hayagriva';
   import { ENTRY_TYPES } from '$lib/validators/entry-type';
+  import { BookPlus } from '@lucide/svelte';
 
-  let { value, onUpdate } = $props<{
-    value: string | undefined;
-    onUpdate: (value: string | undefined) => void;
-  }>();
-
-  function handleChange(e: Event) {
-    const target = e.currentTarget as HTMLSelectElement;
-    if (target.value) onUpdate(target.value);
-  }
+  let {
+    value = $bindable()
+  }: {
+    value: Type;
+  } = $props();
 </script>
 
 <label for="entry-type" class="label">Type </label>
-<select id="entry-type" class="select" bind:value onchange={handleChange}>
+<select id="entry-type" class="select w-full" bind:value>
   <option disabled selected>Select an entry type</option>
   {#each ENTRY_TYPES as type}
-    <option value={type}
-      >{type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}</option
-    >
+    {@const { label } = formatEntryType(type)}
+    <option value={type}>
+      {label}
+    </option>
   {/each}
 </select>
