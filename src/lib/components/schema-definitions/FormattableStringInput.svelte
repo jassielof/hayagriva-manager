@@ -23,32 +23,23 @@
       mainValue = value;
       shortValue = '';
       verbatimValue = false;
+      showAdvanced = false;
     } else if (value && typeof value === 'object') {
       mainValue = value.value || '';
       shortValue = value.short || '';
       verbatimValue = value.verbatim || false;
+      showAdvanced = true;
     }
   });
 
   $effect(() => {
     if (showAdvanced) {
-      value = {
-        value: mainValue,
-        ...(shortValue && { short: shortValue }),
-        ...(verbatimValue && { verbatim: verbatimValue })
+      const newValue: any = {
+        value: mainValue
       };
-    } else {
-      value = mainValue;
-    }
-  });
-
-  $effect(() => {
-    if (showAdvanced) {
-      value = {
-        value: mainValue,
-        ...(shortValue && { short: shortValue }),
-        ...(verbatimValue && { verbatim: verbatimValue })
-      };
+      if (shortValue) newValue.short = shortValue;
+      if (verbatimValue) newValue.verbatim = verbatimValue;
+      value = newValue;
     } else {
       value = mainValue;
     }

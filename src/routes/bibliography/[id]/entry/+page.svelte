@@ -9,9 +9,6 @@
   let newEntryId: string = $state('');
   let newEntryData: TopLevelEntry = $state({});
 
-  $inspect('The data ID is not: ', newEntryId);
-  $inspect('The data is now: ', newEntryData);
-
   function handleSubmit() {}
 </script>
 
