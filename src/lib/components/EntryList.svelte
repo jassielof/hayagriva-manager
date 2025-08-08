@@ -49,7 +49,7 @@
       return title;
     }
 
-    return title.shortForm || title.value || '';
+    return title.short || title.value || '';
   }
 
   function formatAuthor(author: BibliographyEntry['author']): string {

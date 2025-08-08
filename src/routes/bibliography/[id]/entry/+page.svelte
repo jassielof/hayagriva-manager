@@ -1,12 +1,7 @@
 <script lang="ts">
+  import yaml from 'js-yaml';
   import EntryForm from '$lib/components/EntryForm.svelte';
-  import EntryTypeInput from '$lib/components/schema-definitions/EntryTypeInput.svelte';
-  import FormattableStringInput from '$lib/components/schema-definitions/FormattableStringInput.svelte';
-  import type {
-    BibliographyEntry,
-    Hayagriva,
-    TopLevelEntry
-  } from '$lib/types/hayagriva';
+  import type { Hayagriva, TopLevelEntry } from '$lib/types/hayagriva';
   import type { PageProps } from './$types';
 
   let { data, params }: PageProps = $props();
@@ -14,11 +9,17 @@
   let newEntryId: string = $state('');
   let newEntryData: TopLevelEntry = $state({});
 
+  $inspect('The data ID is not: ', newEntryId);
+  $inspect('The data is now: ', newEntryData);
+
   function handleSubmit() {}
 </script>
 
+<!-- TODO: Add paste button to read the content from the clipboard, it should be a valid Hayagriva key. -->
 <form onsubmit={handleSubmit} class="mx-auto w-full max-w-2xl p-6">
-  <fieldset class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4">
+  <fieldset
+    class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+  >
     <legend class="fieldset-legend text-xl">New entry</legend>
 
     <label for="entry-id" class="label">ID</label>
@@ -33,6 +34,20 @@
     <EntryForm bind:entryData={newEntryData} />
 
     <button class="btn btn-primary mt-4">Add</button>
-    <a href={`/bibliography/${params.id}/`} class="btn btn-secondary">Cancel</a>
+    <button
+      class="btn btn-secondary"
+      onclick={() => {
+        navigator.clipboard.readText().then((text) => {
+          const data = yaml.load(text);
+          if (typeof data === 'object' && data !== null) {
+            newEntryId = Object.keys(data as Hayagriva).at(0)!;
+            newEntryData = (data as Hayagriva)[newEntryId];
+          } else {
+            alert('Invalid YAML format');
+          }
+        });
+      }}>Paste</button
+    >
+    <a href={`/bibliography/${params.id}/`} class="btn btn-error">Cancel</a>
   </fieldset>
 </form>

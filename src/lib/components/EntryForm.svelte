@@ -3,7 +3,7 @@
   import EntryForm from './EntryForm.svelte';
   import EntryTypeInput from '$lib/components/schema-definitions/EntryTypeInput.svelte';
   import FormattableStringInput from '$lib/components/schema-definitions/FormattableStringInput.svelte';
-  import { Plus } from '@lucide/svelte';
+  import { Plus, X } from '@lucide/svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
@@ -138,29 +138,39 @@
   </select>
 
   {#if parentType === 'single' && entryData.parent && !Array.isArray(entryData.parent)}
-    <h3 class="text-secondary text-lg font-bold">
-      Parent entry of {entryData.title}
+    <h3 class="text-secondary mt-4 text-lg">
+      Parent entry of
+      <span class="font-semibold italic">
+        {entryData.title}
+      </span>
     </h3>
     <EntryForm bind:entryData={entryData.parent} />
   {/if}
 
   {#if parentType === 'list' && Array.isArray(entryData.parent)}
     {#each entryData.parent as _, i}
-      <div class=" relative mt-4">
-        <h3 class="text-secondary text-lg font-bold">
-          Parent entry #{i + 1} of {entryData.title}
-        </h3>
+      <div class="mt-4 flex">
+        <div class="flex-1">
+          <h3 class="text-secondary text-lg">
+            Parent entry #{i + 1} of
+            <span class="font-semibold italic">
+              {entryData.title}
+            </span>
+          </h3>
+        </div>
 
-        <button
-          type="button"
-          class="btn btn-sm btn-circle btn-outline btn-error absolute top-0 right-0"
-          onclick={() => removeParent(i)}
-        >
-          &times;
-        </button>
-
-        <EntryForm bind:entryData={entryData.parent[i]} />
+        <div class="flex items-center">
+          <button
+            type="button"
+            class="btn btn-sm btn-circle btn-outline btn-error"
+            onclick={() => removeParent(i)}
+          >
+            <X class="h-4 w-4" />
+          </button>
+        </div>
       </div>
+
+      <EntryForm bind:entryData={entryData.parent[i]} />
     {/each}
 
     <button

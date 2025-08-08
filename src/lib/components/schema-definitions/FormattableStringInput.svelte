@@ -25,7 +25,7 @@
       verbatimValue = false;
     } else if (value && typeof value === 'object') {
       mainValue = value.value || '';
-      shortValue = value.shortForm || '';
+      shortValue = value.short || '';
       verbatimValue = value.verbatim || false;
     }
   });
@@ -34,7 +34,7 @@
     if (showAdvanced) {
       value = {
         value: mainValue,
-        ...(shortValue && { shortForm: shortValue }),
+        ...(shortValue && { short: shortValue }),
         ...(verbatimValue && { verbatim: verbatimValue })
       };
     } else {
@@ -46,7 +46,7 @@
     if (showAdvanced) {
       value = {
         value: mainValue,
-        ...(shortValue && { shortForm: shortValue }),
+        ...(shortValue && { short: shortValue }),
         ...(verbatimValue && { verbatim: verbatimValue })
       };
     } else {
@@ -86,7 +86,7 @@
     <label for="short-form" class="label">Short form</label>
     <input id="short-form" type="text" class="input" bind:value={shortValue} />
 
-    <label class="label mt-4">
+    <label class="label mt-">
       <input type="checkbox" class="checkbox" bind:checked={verbatimValue} />
       Verbatim
     </label>
