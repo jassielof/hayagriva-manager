@@ -1,11 +1,15 @@
 <script lang="ts">
-  // FIXME: bad props type safety
-  const { show, title, message, onClose } = $props<{
+  const {
+    show,
+    title,
+    message,
+    onClose
+  }: {
     show: boolean;
     title: string;
     message: string;
     onClose: () => void;
-  }>();
+  } = $props();
 
   let dialog: HTMLDialogElement;
 

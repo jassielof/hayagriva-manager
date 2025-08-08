@@ -13,7 +13,6 @@
   } = $props();
 
   let showAdvanced = $state(typeof value === 'object' && value !== null);
-
   let mainValue = $state('');
   let shortValue = $state('');
   let verbatimValue = $state(false);
@@ -32,7 +31,7 @@
     }
   });
 
-  $effect(() => {
+  function updateValue() {
     if (showAdvanced) {
       const newValue: any = {
         value: mainValue
@@ -43,7 +42,7 @@
     } else {
       value = mainValue;
     }
-  });
+  }
 </script>
 
 {#if multiline}
@@ -53,6 +52,7 @@
     class="textarea w-full"
     {placeholder}
     bind:value={mainValue}
+    oninput={updateValue}
   ></textarea>
 {:else}
   <label for="main-value" class="label">{label}</label>
@@ -62,11 +62,12 @@
     class="input w-full"
     {placeholder}
     bind:value={mainValue}
+    oninput={updateValue}
   />
 {/if}
 
 <label class="label mt-4">
-  <input type="checkbox" class="checkbox" bind:checked={showAdvanced} />
+  <input type="checkbox" class="checkbox" bind:checked={showAdvanced} onchange={updateValue} />
   Advanced {label}
 </label>
 
@@ -75,10 +76,10 @@
     <legend class="fieldset-legend">Advanced {label}</legend>
 
     <label for="short-form" class="label">Short form</label>
-    <input id="short-form" type="text" class="input" bind:value={shortValue} />
+    <input id="short-form" type="text" class="input" bind:value={shortValue} oninput={updateValue} />
 
-    <label class="label mt-">
-      <input type="checkbox" class="checkbox" bind:checked={verbatimValue} />
+    <label class="label mt-4">
+      <input type="checkbox" class="checkbox" bind:checked={verbatimValue} onchange={updateValue} />
       Verbatim
     </label>
   </fieldset>
