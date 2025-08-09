@@ -5,6 +5,7 @@
   import FormattableStringInput from '$lib/components/schema-definitions/FormattableStringInput.svelte';
   import { Plus, X } from '@lucide/svelte';
   import PeopleInput from './schema-definitions/PeopleInput.svelte';
+  import DateInput from './schema-definitions/DateInput.svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
@@ -70,7 +71,14 @@
   <PeopleInput label="Author" bind:value={entryData.author} />
 
   <!-- TODO: Add Date as date -->
-  <!-- TODO: Add Editor as person or list -->
+  <DateInput
+    label="Date"
+    bind:value={entryData.date}
+    placeholder="2025, 2020-12, or 2010-12-30"
+  />
+
+  <PeopleInput label="Editor" bind:value={entryData.editor} />
+
   <!-- TODO: Add affiliated as affiliated list-->
   <!-- TODO: Add publisher as publisher -->
   <!-- TODO: Add issue as numeric or string -->

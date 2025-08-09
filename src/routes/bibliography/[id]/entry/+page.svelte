@@ -48,8 +48,8 @@
 
     <button class="btn btn-success mt-4">
       <Save class="inline-block" />
-      Add</button
-    >
+      Add
+    </button>
     <a href={`/bibliography/${params.id}/`} class="btn btn-error">
       <X />
       Cancel</a

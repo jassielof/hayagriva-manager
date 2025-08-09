@@ -1,13 +1,14 @@
 import { getHayagrivaSchema } from '$lib/hayagriva';
 import type { Date } from '$lib/types/hayagriva';
+
 const hayagrivaSchema = await getHayagrivaSchema();
-const datePattern: string =
+export const datePattern: string =
   hayagrivaSchema.definitions.date.anyOf.find((d: any) => d.pattern)?.pattern ??
   (() => {
     throw new Error('No date pattern found in schema');
   })();
 
-const DATE_REGEX = new RegExp(datePattern);
+export const DATE_REGEX = new RegExp(datePattern);
 
 export function isValidDate(date: Date): boolean {
   if (date === undefined || date === null) return false;
