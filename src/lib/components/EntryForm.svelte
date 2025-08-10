@@ -6,6 +6,8 @@
   import { Plus, X } from '@lucide/svelte';
   import PeopleInput from './schema-definitions/PeopleInput.svelte';
   import DateInput from './schema-definitions/DateInput.svelte';
+  import LanguageInput from './schema-definitions/LanguageInput.svelte';
+  import UrlInput from './schema-definitions/UrlInput.svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
@@ -70,12 +72,7 @@
 
   <PeopleInput label="Author" bind:value={entryData.author} />
 
-  <!-- TODO: Add Date as date -->
-  <DateInput
-    label="Date"
-    bind:value={entryData.date}
-    placeholder="2025, 2020-12, or 2010-12-30"
-  />
+  <DateInput bind:value={entryData.date} />
 
   <PeopleInput label="Editor" bind:value={entryData.editor} />
 
@@ -89,9 +86,12 @@
   <!-- TODO: Add page total as integer -->
   <!-- TODO: Add time range as timestamp range -->
   <!-- TODO: Add runtime as timestamp -->
-  <!-- TODO: Add url as url -->
+
+  <UrlInput bind:value={entryData.url} />
+
   <!-- TODO: Add serial number as serial number -->
-  <!-- TODO: Add language as language -->
+
+  <LanguageInput bind:value={entryData.language} />
 
   <FormattableStringInput
     label="Abstract"

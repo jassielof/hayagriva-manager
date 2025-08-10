@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
   import { db } from '$lib/db';
-  import { parseYaml } from '$lib/hayagriva';
+  import { loadHayagrivaYaml } from '$lib/hayagriva';
   import type { Hayagriva } from '$lib/types/hayagriva';
   import { CircleX } from '@lucide/svelte';
 
@@ -35,7 +35,7 @@
       reader.onload = (e) => {
         try {
           const content = e.target?.result as string;
-          parsedData = parseYaml(content);
+          parsedData = loadHayagrivaYaml(content);
         } catch (e: any) {
           error = 'Failed to parse YAML';
           file = null;

@@ -4,6 +4,7 @@
   import type { Hayagriva, TopLevelEntry } from '$lib/types/hayagriva';
   import type { PageProps } from './$types';
   import { Clipboard, ClipboardPaste, Save, X } from '@lucide/svelte';
+  import { loadHayagrivaYaml } from '$lib/hayagriva';
 
   let { data, params }: PageProps = $props();
 
@@ -20,21 +21,19 @@
     <legend class="fieldset-legend text-xl">New entry</legend>
     <button
       class="btn btn-dash btn-info"
+      type="button"
       onclick={() => {
         navigator.clipboard.readText().then((text) => {
-          const data = yaml.load(text);
-          if (typeof data === 'object' && data !== null) {
-            newEntryId = Object.keys(data as Hayagriva).at(0)!;
-            newEntryData = (data as Hayagriva)[newEntryId];
-          } else {
-            alert('Invalid YAML format');
-          }
+          const data = loadHayagrivaYaml(text);
+
+          // throw alert if the data is a 
         });
       }}
     >
       <ClipboardPaste class="inline-block" />
       Paste from clipboard
     </button>
+
     <label for="entry-id" class="label">ID</label>
     <input
       id="entry-id"
@@ -50,9 +49,9 @@
       <Save class="inline-block" />
       Add
     </button>
-    <a href={`/bibliography/${params.id}/`} class="btn btn-error">
-      <X />
-      Cancel</a
-    >
+    <a href={`/bibliography/${params.id}/`} class="btn btn-error" type="button">
+      <X class="inline-block" />
+      Cancel
+    </a>
   </fieldset>
 </form>

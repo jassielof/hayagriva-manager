@@ -45,6 +45,7 @@
   }
 </script>
 
+<!-- FIXME: Improve the design of this input, just make it show all, without a detailed checkbox. -->
 {#if multiline}
   <label class="label" for="textarea-entry">{label}</label>
   <textarea

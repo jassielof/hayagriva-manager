@@ -4,19 +4,25 @@
 
   let {
     value = $bindable(),
-    label,
-    placeholder
+    label = 'Date',
+    placeholder = '2025, 2020-12, or 2010-12-30'
   }: {
     value: BibliographyEntry['date'];
-    label: string;
+    label?: string;
     placeholder?: string;
   } = $props();
+
+  $effect(() => {
+    if (typeof value === 'string' && /^-?\d+$/.test(value)) {
+      value = parseInt(value);
+    }
+  });
 </script>
 
-<label class="label" for="entry-date">{label} </label>
+<label class="label" for="entry-date">{label}</label>
 <input
   pattern={datePattern}
-  title="Date must match the format: YYYY, YYYY-MM, or YYYY-MM-DD"
+  title="Date must match the format: YYYY, YYYY-MM, or YYYY-MM-DD."
   bind:value
   id="entry-date"
   type="text"

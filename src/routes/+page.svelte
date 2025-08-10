@@ -10,7 +10,7 @@
     BookPlus,
     Copy,
     Download,
-    FilePlus,
+    Import,
     Library,
     Pencil,
     Trash
@@ -59,16 +59,16 @@
       title="Create a new bibliography"
       aria-label="Create a new bibliography"
     >
-      <BookPlus />
+      <BookPlus class="inline-block" />
       New
     </a>
     <a
       href="/bibliography/import"
       class="btn btn-secondary"
-      title="Import from YAML file"
-      aria-label="Import from YAML file"
+      title="Import from a YAML file"
+      aria-label="Import from a YAML file"
     >
-      <FilePlus />
+      <Import class="inline-block" />
       Import
     </a>
   </div>
@@ -76,15 +76,13 @@
 
 <main class="container mx-auto mt-8 max-w-5xl p-4">
   {#if bibliographies.length === 0}
-    <div class="text-center">
-      <h2 class="text-2xl font-bold">No Bibliographies Found</h2>
-      <p class="mt-2 mb-4">
-        Create a new bibliography or import a YAML file to get started.
-      </p>
+    <section class="grid min-h-[60vh] place-content-center text-center">
+      <h2 class="text-2xl font-bold">No bibliographies found</h2>
+      <p class="mt-2 mb-4">Create a new one or import it from a YAML file.</p>
       <div class="flex flex-wrap justify-center gap-2">
         {@render actions()}
       </div>
-    </div>
+    </section>
   {:else}
     <div class="mb-4 flex justify-end">
       {@render actions()}
