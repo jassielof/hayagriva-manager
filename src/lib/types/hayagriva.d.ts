@@ -6,6 +6,7 @@
  */
 
 export type TopLevelEntry = BibliographyEntry & {
+  type: EntryType;
   [k: string]: unknown;
 };
 /**
@@ -228,7 +229,8 @@ export type AccessDate = number | string;
  * Any serial number, including article numbers, associated with the entry. If you have serial numbers of well-known schemes like `doi`, you should put them into the serial number as a dictionary. Hayagriva will recognize and specially treat `doi`, `isbn`, `issn`, `pmid`, `pmcid`, and `arxiv`. You can also include `serial` for the serial number when you provide other formats as well.
  */
 export type SerialNumber =
-  | (string | number)
+  | string
+  | number
   | {
       doi?: DOI;
       isbn?: ISBN;
@@ -300,6 +302,10 @@ export type Note =
       verbatim?: Verbatim;
       short?: ShortForm;
     };
+/**
+ * The media type of the entry. Often determines the structure of references.
+ */
+export type EntryType = string;
 
 /**
  * A bibliography management format for the modern age.
