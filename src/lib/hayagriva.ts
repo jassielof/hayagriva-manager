@@ -1,5 +1,5 @@
 import yaml from 'js-yaml';
-import type { Hayagriva } from './types/hayagriva';
+import type { Hayagriva, TopLevelEntry } from './types/hayagriva';
 
 const SCHEMA_URL =
   'https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json';
@@ -7,32 +7,39 @@ const SCHEMA_URL =
 /**
  * Parse YAML content into a Hayagriva bibliography object.
  */
-export function parseYaml(content: string): Hayagriva {
-  const data = yaml.load(content);
-  if (typeof data !== 'object' || data === null || Array.isArray(data)) {
-    throw new Error(
-      'Invalid YAML content: The root of a Hayagriva must be an object.'
-    );
-  }
+export function loadHayagrivaYaml(content: string): Hayagriva {
+  const data = yaml.load(content, { schema: yaml.CORE_SCHEMA });
 
   return data as Hayagriva;
 }
 
+export function loadSingleHayagriva(content: string) {
+  const data = yaml.load(content, { schema: yaml.CORE_SCHEMA });
+
+  return data as TopLevelEntry;
+}
+
+export function dumpHayagrivaYaml(content: Hayagriva) {
+  const data = yaml.dump(content, { schema: yaml.CORE_SCHEMA });
+
+  return data;
+}
+
+let schemaCache: any = null;
 let schemaPromise: Promise<any> | null = null;
 
-/**
- * Fetch the Hayagriva schema from the specified URL.
- * Returns a promise that resolves to the schema object.
- */
 export async function getHayagrivaSchema(): Promise<any> {
-  if (!schemaPromise) {
-    schemaPromise = await fetch(SCHEMA_URL).then((response) => {
-      if (!response.ok) {
-        throw new Error(`Failed to fetch schema: ${response.statusText}`);
-      }
-      return response.json();
+  if (schemaCache) return schemaCache;
+
+  if (schemaPromise) return schemaPromise;
+
+  schemaPromise = fetch(SCHEMA_URL)
+    .then((response) => response.json())
+    .then((schema) => {
+      schemaCache = schema;
+      schemaPromise = null;
+      return schema;
     });
-  }
 
   return schemaPromise;
 }
