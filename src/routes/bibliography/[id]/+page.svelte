@@ -10,10 +10,10 @@
   let bibliography: Bibliography | null = $state(null);
   let entries: [string, BibliographyEntry][] = $state([]);
 
-  let { data: pageData }: PageProps = $props();
+  let { data, params }: PageProps = $props();
 
   onMount(async () => {
-    const bib = await db.getBibliography(pageData.id);
+    const bib = await db.getBibliography(params.id);
 
     if (bib) {
       bibliography = bib;
@@ -49,7 +49,10 @@
         {/if}
       </div>
       <div class="flex flex-auto items-end justify-end md:items-start">
-        <a class="btn btn-primary" href={`/bibliography/${bibliography.metadata.id}/entry/`}>
+        <a
+          class="btn btn-primary"
+          href={`/bibliography/${bibliography.metadata.id}/entry/`}
+        >
           <BookPlus />
           New entry
         </a>

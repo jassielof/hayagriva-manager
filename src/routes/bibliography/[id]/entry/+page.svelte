@@ -1,15 +1,22 @@
 <script lang="ts">
   import yaml from 'js-yaml';
   import EntryForm from '$lib/components/EntryForm.svelte';
-  import type { Hayagriva, TopLevelEntry } from '$lib/types/hayagriva';
+  import type {
+    BibliographyEntry,
+    Hayagriva,
+    TopLevelEntry
+  } from '$lib/types/hayagriva';
   import type { PageProps } from './$types';
   import { Clipboard, ClipboardPaste, Save, X } from '@lucide/svelte';
   import { loadHayagrivaYaml } from '$lib/hayagriva';
+  import { ENTRY_TYPES } from '$lib/validators/entry-type';
 
   let { data, params }: PageProps = $props();
 
   let newEntryId: string = $state('');
-  let newEntryData: TopLevelEntry = $state({});
+  let newEntryData: TopLevelEntry = $state({
+    type: 'misc'
+  });
 
   function handleSubmit() {}
 </script>
@@ -26,7 +33,7 @@
         navigator.clipboard.readText().then((text) => {
           const data = loadHayagrivaYaml(text);
 
-          // throw alert if the data is a 
+          // throw alert if the data is a
         });
       }}
     >

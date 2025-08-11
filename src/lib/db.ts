@@ -1,6 +1,6 @@
 import type { Bibliography } from './types/bibliography';
 import Dexie, { type Table } from 'dexie';
-import type { BibliographyEntry } from './types/hayagriva';
+import type { BibliographyEntry, TopLevelEntry } from './types/hayagriva';
 
 /**
  * HayagrivaManagerDB is a Dexie database for managing bibliographies.
@@ -39,7 +39,7 @@ export class HayagrivaManagerDB extends Dexie {
   async saveBibliographyEntry(
     bibliography: Bibliography,
     entryId: string,
-    updateEntry: BibliographyEntry
+    updateEntry: TopLevelEntry
   ): Promise<void> {
     bibliography.data[entryId] = updateEntry;
     await this.saveBibliography(bibliography);

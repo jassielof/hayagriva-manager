@@ -67,6 +67,7 @@
   <FormattableStringInput
     label="Title"
     placeholder="UML & Patterns"
+    shortPlaceholder="UML"
     bind:value={entryData.title!}
   />
 
