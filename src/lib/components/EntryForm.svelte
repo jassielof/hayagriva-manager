@@ -12,6 +12,7 @@
   import IntegerInput from './schema-definitions/IntegerInput.svelte';
   import PublisherInput from './schema-definitions/PublisherInput.svelte';
   import SerialNumberInput from './schema-definitions/SerialNumberInput.svelte';
+  import AffiliatedListInput from './schema-definitions/AffiliatedListInput.svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
@@ -81,10 +82,9 @@
 
   <PeopleInput label="Editor" bind:value={entryData.editor} />
 
-  <!-- TODO: Add affiliated as affiliated list-->
-  
+  <AffiliatedListInput bind:value={entryData.affiliated} />
 
-  <PublisherInput value={entryData.publisher} />
+  <PublisherInput bind:value={entryData.publisher} />
 
   <NumericOrStringInput
     label="Issue"

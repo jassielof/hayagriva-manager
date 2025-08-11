@@ -21,7 +21,7 @@
   function handleSubmit() {}
 </script>
 
-<form onsubmit={handleSubmit} class="mx-auto w-full max-w-2xl p-6">
+<form onsubmit={handleSubmit} class="max-w-5xl mx-auto w-full p-6">
   <fieldset
     class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
   >
