@@ -54,6 +54,7 @@
     type="url"
     class="input validator w-full"
     {placeholder}
+    required={dateValue ? true : false}
   />
 
   <DateInput bind:value={dateValue} />

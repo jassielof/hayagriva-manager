@@ -8,6 +8,9 @@
   import DateInput from './schema-definitions/DateInput.svelte';
   import LanguageInput from './schema-definitions/LanguageInput.svelte';
   import UrlInput from './schema-definitions/UrlInput.svelte';
+  import NumericOrStringInput from './schema-definitions/NumericOrStringInput.svelte';
+  import IntegerInput from './schema-definitions/IntegerInput.svelte';
+  import PublisherInput from './schema-definitions/PublisherInput.svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
@@ -78,13 +81,46 @@
   <PeopleInput label="Editor" bind:value={entryData.editor} />
 
   <!-- TODO: Add affiliated as affiliated list-->
-  <!-- TODO: Add publisher as publisher -->
-  <!-- TODO: Add issue as numeric or string -->
-  <!-- TODO: Add volume as numeric or string -->
-  <!-- TODO: Add volume total as integer -->
-  <!-- TODO: Add edition as numeric or string -->
-  <!-- TODO: Add page range as numeric or string -->
-  <!-- TODO: Add page total as integer -->
+  <PublisherInput value={entryData.publisher} />
+
+  <NumericOrStringInput
+    label="Issue"
+    placeholder="5"
+    bind:value={entryData.issue}
+  />
+
+  <NumericOrStringInput
+    label="Volume"
+    placeholder="10"
+    bind:value={entryData.volume}
+  />
+
+  <NumericOrStringInput
+    label="Edition"
+    placeholder="2nd"
+    bind:value={entryData.edition}
+  />
+
+  <NumericOrStringInput
+    label="Page range"
+    placeholder="1-10"
+    bind:value={entryData['page-range']}
+  />
+
+  <IntegerInput
+    bind:value={entryData['volume-total']}
+    label="Volume total"
+    naturalSet={true}
+    placeholder="0"
+  />
+
+  <IntegerInput
+    bind:value={entryData['page-total']}
+    label="Page total"
+    naturalSet={true}
+    placeholder="0"
+  />
+
   <!-- TODO: Add time range as timestamp range -->
   <!-- TODO: Add runtime as timestamp -->
 

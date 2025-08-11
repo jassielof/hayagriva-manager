@@ -1,19 +1,28 @@
 <script lang="ts">
   import type { NumericOrString } from '$lib/types/numeric-or-string';
 
-  const {
-    value,
+  let {
+    value = $bindable(),
     label,
-    placeholder,
-    update
+    placeholder
   }: {
-    value: NumericOrString;
+    value?: NumericOrString;
     label: string;
     placeholder: string;
-    update: (value: NumericOrString) => void;
   } = $props();
+
+  $effect(() => {
+    if (typeof value === 'string' && !isNaN(Number(value))) {
+      value = Number(value);
+    }
+  });
 </script>
 
-<input type="checkbox" checked={true} class="toggle" />
-Numeric or string?
-
+<label class="label" for="numeric-or-string">{label}</label>
+<input
+  class="input w-full"
+  type="text"
+  id="numeric-or-string"
+  {placeholder}
+  bind:value
+/>
