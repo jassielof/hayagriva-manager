@@ -11,6 +11,7 @@
   import NumericOrStringInput from './schema-definitions/NumericOrStringInput.svelte';
   import IntegerInput from './schema-definitions/IntegerInput.svelte';
   import PublisherInput from './schema-definitions/PublisherInput.svelte';
+  import SerialNumberInput from './schema-definitions/SerialNumberInput.svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
@@ -81,6 +82,8 @@
   <PeopleInput label="Editor" bind:value={entryData.editor} />
 
   <!-- TODO: Add affiliated as affiliated list-->
+  
+
   <PublisherInput value={entryData.publisher} />
 
   <NumericOrStringInput
@@ -126,7 +129,7 @@
 
   <UrlInput bind:value={entryData.url} />
 
-  <!-- TODO: Add serial number as serial number -->
+  <SerialNumberInput bind:value={entryData['serial-number']} />
 
   <LanguageInput bind:value={entryData.language} />
 

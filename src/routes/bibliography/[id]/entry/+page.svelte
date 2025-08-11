@@ -33,7 +33,13 @@
         navigator.clipboard.readText().then((text) => {
           const data = loadHayagrivaYaml(text);
 
-          // throw alert if the data is a
+          // throw alert if the data has more than 1 key
+          if (Object.keys(data).length > 1) {
+            alert('The pasted data has more than 1 key.');
+          } else {
+            // FIXME: Paste from clipboard
+            // newEntryData = data;
+          }
         });
       }}
     >
