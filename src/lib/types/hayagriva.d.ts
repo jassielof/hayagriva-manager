@@ -239,7 +239,7 @@ export type SerialNumber =
       pmcid?: PMCID;
       arxiv?: ArXiv;
       serial?: SerialNumber1;
-      [k: string]: unknown;
+      [k: string]: string;
     };
 /**
  * Digital Object Identifier.

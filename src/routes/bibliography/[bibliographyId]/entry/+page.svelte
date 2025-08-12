@@ -1,27 +1,22 @@
 <script lang="ts">
-  import yaml from 'js-yaml';
   import EntryForm from '$lib/components/EntryForm.svelte';
-  import type {
-    BibliographyEntry,
-    Hayagriva,
-    TopLevelEntry
-  } from '$lib/types/hayagriva';
+  import type { TopLevelEntry } from '$lib/types/hayagriva';
   import type { PageProps } from './$types';
-  import { Clipboard, ClipboardPaste, Save, X } from '@lucide/svelte';
+  import { ClipboardPaste, Save, X } from '@lucide/svelte';
   import { loadHayagrivaYaml } from '$lib/hayagriva';
-  import { ENTRY_TYPES } from '$lib/validators/entry-type';
 
-  let { data, params }: PageProps = $props();
+  let { params }: PageProps = $props();
 
   let newEntryId: string = $state('');
   let newEntryData: TopLevelEntry = $state({
     type: 'misc'
   });
 
+  // TODO: Handle submit
   function handleSubmit() {}
 </script>
 
-<form onsubmit={handleSubmit} class="max-w-5xl mx-auto w-full p-6">
+<form onsubmit={handleSubmit} class="mx-auto w-full max-w-5xl p-6">
   <fieldset
     class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
   >
@@ -62,7 +57,11 @@
       <Save class="inline-block" />
       Add
     </button>
-    <a href={`/bibliography/${params.id}/`} class="btn btn-error" type="button">
+    <a
+      href={`/bibliography/${params.bibliographyId}/`}
+      class="btn btn-error"
+      type="button"
+    >
       <X class="inline-block" />
       Cancel
     </a>
