@@ -3,7 +3,9 @@
   import { goto } from '$app/navigation';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
   import { db } from '$lib/db';
-  import { page } from '$app/stores';
+  import type { PageProps } from './$types';
+
+  let { params }: PageProps = $props();
 
   let id = $state('');
   let title = $state('');
@@ -13,7 +15,7 @@
 
   // Load bibliography metadata by ID from route param
   onMount(async () => {
-    const bibId = $page.params.id;
+    const bibId = params.bibliographyId;
 
     try {
       const bib = await db.getBibliography(bibId!);
@@ -33,7 +35,7 @@
 
   async function handleSubmit() {
     try {
-      const originalId = $page.params.id!;
+      const originalId = params.bibliographyId!;
       const trimmedId = id.trim();
       const existingBib = await db.getBibliography(originalId);
 

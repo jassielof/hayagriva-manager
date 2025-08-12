@@ -25,6 +25,12 @@ export function dumpHayagrivaYaml(content: Hayagriva) {
   return data;
 }
 
+export function dumpSingleHayagriva(content: TopLevelEntry) {
+  const data = yaml.dump(content, { schema: yaml.CORE_SCHEMA });
+
+  return data;
+}
+
 let schemaCache: any = null;
 let schemaPromise: Promise<any> | null = null;
 

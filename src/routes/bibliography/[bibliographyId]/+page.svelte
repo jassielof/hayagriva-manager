@@ -5,21 +5,23 @@
   import EntryList from '$lib/components/EntryList.svelte';
   import type { Hayagriva, BibliographyEntry } from '$lib/types/hayagriva';
   import { db } from '$lib/db';
-  import { BookPlus, FilePlus } from '@lucide/svelte';
+  import { BookPlus } from '@lucide/svelte';
 
   let bibliography: Bibliography | null = $state(null);
   let entries: [string, BibliographyEntry][] = $state([]);
 
-  let { data, params }: PageProps = $props();
+  let { params }: PageProps = $props();
 
   onMount(async () => {
-    const bib = await db.getBibliography(params.id);
+    const bib = await db.getBibliography(params.bibliographyId);
 
     if (bib) {
       bibliography = bib;
       entries = Object.entries(bib.data as Hayagriva);
     }
   });
+
+  // TODO: Implement search by, sort by, and filter by
 
   $effect(() => {
     if (bibliography) {
