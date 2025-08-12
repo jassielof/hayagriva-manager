@@ -13,6 +13,8 @@
   import PublisherInput from './schema-definitions/PublisherInput.svelte';
   import SerialNumberInput from './schema-definitions/SerialNumberInput.svelte';
   import AffiliatedListInput from './schema-definitions/AffiliatedListInput.svelte';
+  import TimestampInput from './schema-definitions/TimestampInput.svelte';
+  import TimestampRangeInput from './schema-definitions/TimestampRangeInput.svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 
@@ -62,187 +64,190 @@
   }
 </script>
 
-<fieldset
+<!-- <fieldset
   class="fieldset bg-base-100 border-base-300 rounded-box mt-4 border-2 p-4"
 >
-  <legend class="fieldset-legend text-primary text-lg">Entry Details</legend>
+  <legend class="fieldset-legend text-primary text-lg">Entry Details</legend> -->
 
-  <EntryTypeInput bind:value={entryData.type!} />
+<EntryTypeInput bind:value={entryData.type!} />
 
-  <FormattableStringInput
-    label="Title"
-    placeholder="UML & Patterns"
-    shortPlaceholder="UML"
-    bind:value={entryData.title!}
-  />
+<FormattableStringInput
+  label="Title"
+  placeholder="UML & Patterns"
+  shortPlaceholder="UML"
+  bind:value={entryData.title!}
+/>
 
-  <PeopleInput label="Author" bind:value={entryData.author} />
+<PeopleInput label="Author" bind:value={entryData.author} />
 
-  <DateInput bind:value={entryData.date} />
+<DateInput bind:value={entryData.date} />
 
-  <PeopleInput label="Editor" bind:value={entryData.editor} />
+<PeopleInput label="Editor" bind:value={entryData.editor} />
 
-  <AffiliatedListInput bind:value={entryData.affiliated} />
+<AffiliatedListInput bind:value={entryData.affiliated} />
 
-  <PublisherInput bind:value={entryData.publisher} />
+<PublisherInput bind:value={entryData.publisher} />
 
-  <NumericOrStringInput
-    label="Issue"
-    placeholder="5"
-    bind:value={entryData.issue}
-  />
+<NumericOrStringInput
+  label="Issue"
+  placeholder="5"
+  bind:value={entryData.issue}
+/>
 
-  <NumericOrStringInput
-    label="Volume"
-    placeholder="10"
-    bind:value={entryData.volume}
-  />
+<NumericOrStringInput
+  label="Volume"
+  placeholder="10"
+  bind:value={entryData.volume}
+/>
 
-  <NumericOrStringInput
-    label="Edition"
-    placeholder="2nd"
-    bind:value={entryData.edition}
-  />
+<NumericOrStringInput
+  label="Edition"
+  placeholder="2nd"
+  bind:value={entryData.edition}
+/>
 
-  <NumericOrStringInput
-    label="Page range"
-    placeholder="1-10"
-    bind:value={entryData['page-range']}
-  />
+<NumericOrStringInput
+  label="Page range"
+  placeholder="1-10"
+  bind:value={entryData['page-range']}
+/>
 
-  <IntegerInput
-    bind:value={entryData['volume-total']}
-    label="Volume total"
-    naturalSet={true}
-    placeholder="0"
-  />
+<IntegerInput
+  bind:value={entryData['volume-total']}
+  label="Volume total"
+  naturalSet={true}
+  placeholder="0"
+/>
 
-  <IntegerInput
-    bind:value={entryData['page-total']}
-    label="Page total"
-    naturalSet={true}
-    placeholder="0"
-  />
+<IntegerInput
+  bind:value={entryData['page-total']}
+  label="Page total"
+  naturalSet={true}
+  placeholder="0"
+/>
 
-  <!-- TODO: Add time range as timestamp range -->
-  <!-- TODO: Add runtime as timestamp -->
+<!-- TODO: Add time range as timestamp range -->
+<TimestampRangeInput bind:value={entryData['time-range']} label="Time range" />
 
-  <UrlInput bind:value={entryData.url} />
+<!-- TODO: Add runtime as timestamp -->
+<TimestampInput bind:value={entryData.runtime} label="Runtime" />
 
-  <SerialNumberInput bind:value={entryData['serial-number']} />
+<UrlInput bind:value={entryData.url} />
 
-  <LanguageInput bind:value={entryData.language} />
+<SerialNumberInput bind:value={entryData['serial-number']} />
 
-  <FormattableStringInput
-    label="Abstract"
-    placeholder="This article compares..."
-    bind:value={entryData.abstract!}
-    multiline={true}
-  />
+<LanguageInput bind:value={entryData.language} />
 
-  <FormattableStringInput
-    label="Genre"
-    placeholder="Doctoral dissertation"
-    bind:value={entryData.genre!}
-  />
+<FormattableStringInput
+  label="Abstract"
+  placeholder="This article compares..."
+  bind:value={entryData.abstract!}
+  multiline={true}
+/>
 
-  <FormattableStringInput
-    label="Call Number"
-    placeholder="QA76.76.D47 G66 2005"
-    bind:value={entryData['call-number']!}
-  />
+<FormattableStringInput
+  label="Genre"
+  placeholder="Doctoral dissertation"
+  bind:value={entryData.genre!}
+/>
 
-  <FormattableStringInput
-    label="Location"
-    placeholder="New York, NY"
-    bind:value={entryData.location!}
-  />
+<FormattableStringInput
+  label="Call Number"
+  placeholder="QA76.76.D47 G66 2005"
+  bind:value={entryData['call-number']!}
+/>
 
-  <FormattableStringInput
-    label="Organization"
-    placeholder="ACM"
-    bind:value={entryData.organization!}
-  />
+<FormattableStringInput
+  label="Location"
+  placeholder="New York, NY"
+  bind:value={entryData.location!}
+/>
 
-  <FormattableStringInput
-    label="Archive"
-    placeholder="Library of Congress"
-    bind:value={entryData.archive!}
-  />
+<FormattableStringInput
+  label="Organization"
+  placeholder="ACM"
+  bind:value={entryData.organization!}
+/>
 
-  <FormattableStringInput
-    label="Archive Location"
-    placeholder="Box 12, Folder 3"
-    bind:value={entryData['archive-location']!}
-  />
+<FormattableStringInput
+  label="Archive"
+  placeholder="Library of Congress"
+  bind:value={entryData.archive!}
+/>
 
-  <FormattableStringInput
-    label="Note"
-    placeholder="See also related work in appendix."
-    bind:value={entryData.note!}
-    multiline={true}
-  />
+<FormattableStringInput
+  label="Archive Location"
+  placeholder="Box 12, Folder 3"
+  bind:value={entryData['archive-location']!}
+/>
 
-  <div class="divider"></div>
+<FormattableStringInput
+  label="Note"
+  placeholder="See also related work in appendix."
+  bind:value={entryData.note!}
+  multiline={true}
+/>
 
-  <label for="parent-type" class="label">Parent Type</label>
-  <select
-    id="parent-type"
-    class="select w-full"
-    value={parentType}
-    onchange={handleParentTypeChange}
-  >
-    <option value="none">None</option>
-    <option value="single">Single Parent</option>
-    <option value="list">List of Parents</option>
-  </select>
+<div class="divider"></div>
 
-  {#if parentType === 'single' && entryData.parent && !Array.isArray(entryData.parent)}
-    <h3 class="text-secondary mt-4 text-lg">
-      Parent entry of
-      <span class="font-semibold italic">
-        {#if typeof entryData.title == 'string'}
-          {entryData.title}
-        {:else if typeof entryData.title === 'object' && entryData.title.value}
-          {entryData.title.value}
-        {/if}
-      </span>
-    </h3>
-    <EntryForm bind:entryData={entryData.parent} />
-  {/if}
+<label for="parent-type" class="label">Parent Type</label>
+<select
+  id="parent-type"
+  class="select w-full"
+  value={parentType}
+  onchange={handleParentTypeChange}
+>
+  <option value="none">None</option>
+  <option value="single">Single Parent</option>
+  <option value="list">List of Parents</option>
+</select>
 
-  {#if parentType === 'list' && Array.isArray(entryData.parent)}
-    {#each entryData.parent as _, i}
-      <div class="mt-4 flex">
-        <div class="flex-1">
-          <h3 class="text-secondary text-lg">
-            Parent entry #{i + 1} of
-            <span class="font-semibold italic">
-              {entryData.title}
-            </span>
-          </h3>
-        </div>
+{#if parentType === 'single' && entryData.parent && !Array.isArray(entryData.parent)}
+  <h3 class="text-secondary mt-4 text-lg">
+    Parent entry of
+    <span class="font-semibold italic">
+      {#if typeof entryData.title == 'string'}
+        {entryData.title}
+      {:else if typeof entryData.title === 'object' && entryData.title.value}
+        {entryData.title.value}
+      {/if}
+    </span>
+  </h3>
+  <EntryForm bind:entryData={entryData.parent} />
+{/if}
 
-        <div class="flex items-center">
-          <button
-            type="button"
-            class="btn btn-sm btn-circle btn-outline btn-error"
-            onclick={() => removeParent(i)}
-          >
-            <X class="h-4 w-4" />
-          </button>
-        </div>
+{#if parentType === 'list' && Array.isArray(entryData.parent)}
+  {#each entryData.parent as _, i}
+    <div class="mt-4 flex">
+      <div class="flex-1">
+        <h3 class="text-secondary text-lg">
+          Parent entry #{i + 1} of
+          <span class="font-semibold italic">
+            {entryData.title}
+          </span>
+        </h3>
       </div>
 
-      <EntryForm bind:entryData={entryData.parent[i]} />
-    {/each}
+      <div class="flex items-center">
+        <button
+          type="button"
+          class="btn btn-sm btn-circle btn-outline btn-error"
+          onclick={() => removeParent(i)}
+        >
+          <X class="h-4 w-4" />
+        </button>
+      </div>
+    </div>
 
-    <button
-      type="button"
-      class="btn btn-secondary btn-outline mt-4"
-      onclick={addParent}
-    >
-      Add Parent
-    </button>
-  {/if}
-</fieldset>
+    <EntryForm bind:entryData={entryData.parent[i]} />
+  {/each}
+
+  <button
+    type="button"
+    class="btn btn-secondary btn-outline mt-4"
+    onclick={addParent}
+  >
+    Add Parent
+  </button>
+{/if}
+<!-- </fieldset> -->
