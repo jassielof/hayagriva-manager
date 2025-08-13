@@ -4,6 +4,7 @@
   import type { PageProps } from './$types';
   import { ClipboardPaste, Save, X } from '@lucide/svelte';
   import { loadHayagrivaYaml } from '$lib/hayagriva';
+  import { db } from '$lib/db';
 
   let { params }: PageProps = $props();
 
@@ -13,7 +14,13 @@
   });
 
   // TODO: Handle submit
-  function handleSubmit() {}
+  async function handleSubmit() {
+    await db.saveBibliographyEntry(
+      params.bibliographyId,
+      newEntryId,
+      newEntryData
+    );
+  }
 </script>
 
 <form onsubmit={handleSubmit} class="mx-auto w-full max-w-5xl p-6">
@@ -27,18 +34,21 @@
       onclick={() => {
         navigator.clipboard.readText().then((text) => {
           const data = loadHayagrivaYaml(text);
+          const pastedEntryData: TopLevelEntry = data[Object.keys(data)[0]];
+          const pastedEntryId: string = Object.keys(data)[0];
 
-          // throw alert if the data has more than 1 key
+          console.log('Pasted data:', pastedEntryData);
+
           if (Object.keys(data).length > 1) {
             alert('The pasted data has more than 1 key.');
           } else {
-            // FIXME: Paste from clipboard
-            // newEntryData = data;
+            newEntryId = pastedEntryId;
+            newEntryData = pastedEntryData;
           }
         });
       }}
     >
-      <ClipboardPaste class="inline-block" />
+      <ClipboardPaste class="size-[1.2em]" />
       Paste from clipboard
     </button>
 
@@ -54,7 +64,7 @@
     <EntryForm bind:entryData={newEntryData} />
 
     <button class="btn btn-success mt-4">
-      <Save class="inline-block" />
+      <Save class="size-[1.2em]" />
       Add
     </button>
     <a
@@ -62,7 +72,7 @@
       class="btn btn-error"
       type="button"
     >
-      <X class="inline-block" />
+      <X class="size-[1.2em]" />
       Cancel
     </a>
   </fieldset>

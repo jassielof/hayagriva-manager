@@ -37,10 +37,12 @@ export class HayagrivaManagerDB extends Dexie {
   }
 
   async saveBibliographyEntry(
-    bibliography: Bibliography,
+    bibliographyId: string,
     entryId: string,
     updateEntry: TopLevelEntry
   ): Promise<void> {
+    let bibliography = await this.getBibliography(bibliographyId);
+    if (!bibliography) throw new Error('Bibliography not found');
     bibliography.data[entryId] = updateEntry;
     await this.saveBibliography(bibliography);
   }
