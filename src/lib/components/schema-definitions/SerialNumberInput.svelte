@@ -1,6 +1,5 @@
 <script lang="ts">
-  // FIXME: LOOP error
-  import type { BibliographyEntry, SerialNumber } from '$lib/types/hayagriva';
+  import type { BibliographyEntry } from '$lib/types/hayagriva';
   import { Plus, X } from '@lucide/svelte';
 
   let {
@@ -8,6 +7,8 @@
   }: {
     value: BibliographyEntry['serial-number'];
   } = $props();
+
+  const KNOWN_KEYS = ['serial', 'doi', 'isbn', 'issn', 'pmid', 'pmcid', 'arxiv'] as const;
 
   let serial = $state('');
   let doi = $state('');
@@ -18,68 +19,115 @@
   let arxiv = $state('');
   let customSerials: { key: string; value: string }[] = $state([]);
 
+  function toNonEmptyString(v: unknown): string {
+    return typeof v === 'string' ? v : v == null ? '' : String(v);
+  }
+
   // Populate form fields from parent value (incoming data)
   $effect(() => {
-    $inspect('value: ', value);
-    $inspect('type of value: ', typeof value);
-    if (typeof value === 'string') {
-      serial = String(value);
-    } else if (value && typeof value === 'object') {
-      serial = String(value.serial);
-      doi = String(value.doi);
-      isbn = String(value.isbn);
-      issn = String(value.issn);
-      pmid = String(value.pmid);
-      pmcid = String(value.pmcid);
-      arxiv = String(value.arxiv);
-
+    if (typeof value === 'string' || typeof value === 'number') {
+      serial = String(value ?? '');
+      doi = '';
+      isbn = '';
+      issn = '';
+      pmid = '';
+      pmcid = '';
+      arxiv = '';
       customSerials = [];
+    } else if (value && typeof value === 'object') {
+      // Use nullish coalescing to avoid "undefined" text in inputs
+      serial = toNonEmptyString((value as any).serial ?? '');
+      doi = toNonEmptyString((value as any).doi ?? '');
+      isbn = toNonEmptyString((value as any).isbn ?? '');
+      issn = toNonEmptyString((value as any).issn ?? '');
+      pmid = toNonEmptyString((value as any).pmid ?? '');
+      pmcid = toNonEmptyString((value as any).pmcid ?? '');
+      arxiv = toNonEmptyString((value as any).arxiv ?? '');
+
+      const nextCustom: { key: string; value: string }[] = [];
       for (const [key, val] of Object.entries(value)) {
-        if (
-          !['serial', 'doi', 'isbn', 'issn', 'pmid', 'pmcid', 'arxiv'].includes(
-            key
-          )
-        ) {
-          customSerials.push({ key, value: String(val) });
+        if (!KNOWN_KEYS.includes(key as any)) {
+          nextCustom.push({ key, value: toNonEmptyString(val) });
         }
       }
-    }
-  });
-
-  // reformat content for outgoing data (for the parent)
-  $effect(() => {
-    const hasStandardFields = doi || isbn || issn || pmid || pmcid || arxiv;
-    const hasCustomSerials = customSerials.length > 0;
-
-    if (!serial && !hasStandardFields && !hasCustomSerials) {
-      value = undefined;
-    } else if (serial && !hasStandardFields && !hasCustomSerials) {
-      value = serial;
+      customSerials = nextCustom;
     } else {
-      // Filter out empty custom serials
-      const validCustomSerials = customSerials.filter(
-        ({ key, value }) => key.trim() && value.trim()
-      );
-
-      const newValue: any = {};
-
-      if (serial) newValue.serial = serial;
-      if (doi) newValue.doi = doi;
-      if (isbn) newValue.isbn = isbn;
-      if (issn) newValue.issn = issn;
-      if (pmid) newValue.pmid = pmid;
-      if (pmcid) newValue.pmcid = pmcid;
-      if (arxiv) newValue.arxiv = arxiv;
-
-      // Add valid custom serials
-      for (const { key, value: customValue } of validCustomSerials) {
-        newValue[key] = customValue;
-      }
-
-      value = newValue;
+      serial = '';
+      doi = '';
+      isbn = '';
+      issn = '';
+      pmid = '';
+      pmcid = '';
+      arxiv = '';
+      customSerials = [];
     }
   });
+
+  function buildOutgoing():
+    | string
+    | number
+    | {
+        [k: string]: string;
+      }
+    | undefined {
+    const hasStandard =
+      !!doi || !!isbn || !!issn || !!pmid || !!pmcid || !!arxiv;
+    const validCustoms = customSerials.filter(
+      ({ key, value }) => key.trim() && value.trim()
+    );
+
+    if (!serial && !hasStandard && validCustoms.length === 0) {
+      return undefined;
+    }
+
+    if (serial && !hasStandard && validCustoms.length === 0) {
+      // keep as string to mirror UrlInput behavior
+      return serial;
+    }
+
+    const obj: Record<string, string> = {};
+    if (serial) obj.serial = serial;
+    if (doi) obj.doi = doi;
+    if (isbn) obj.isbn = isbn;
+    if (issn) obj.issn = issn;
+    if (pmid) obj.pmid = pmid;
+    if (pmcid) obj.pmcid = pmcid;
+    if (arxiv) obj.arxiv = arxiv;
+
+    for (const { key, value } of validCustoms) {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function deepEqualSerial(a: any, b: any): boolean {
+    if (a === b) return true;
+    const aIsObj = a && typeof a === 'object';
+    const bIsObj = b && typeof b === 'object';
+    if (aIsObj !== bIsObj) return false;
+    if (!aIsObj) return false; // primitives already handled above
+
+    const aKeys = Object.keys(a).sort();
+    const bKeys = Object.keys(b).sort();
+    if (aKeys.length !== bKeys.length) return false;
+    for (let i = 0; i < aKeys.length; i++) {
+      if (aKeys[i] !== bKeys[i]) return false;
+      if (a[aKeys[i]] !== b[bKeys[i]]) return false;
+    }
+    return true;
+  }
+
+  // Reformat content for outgoing data (for the parent)
+  $effect(() => {
+    const next = buildOutgoing();
+    if (!deepEqualSerial(value, next)) {
+      value = next as any;
+    }
+  });
+  $inspect(value)
 </script>
+
 
 <fieldset
   class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
