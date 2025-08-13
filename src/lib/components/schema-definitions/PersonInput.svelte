@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { Person } from '$lib/types/hayagriva';
-  import { X } from '@lucide/svelte';
 
-  let { value = $bindable() }: { value: Person } = $props();
+  let { value = $bindable(), remove }: { value: Person; remove: any } =
+    $props();
 
   let isDetailed = $state(false);
 
@@ -89,61 +89,64 @@
   {:else}
     <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
       <div>
-        <label for="prefix" class="label pb-1">Prefix</label>
+        <label for="prefix" class="label pb-2">Prefix</label>
         <input
           id="prefix"
           type="text"
           placeholder="Dr."
-          class="input input-sm w-full"
+          class="input w-full"
           bind:value={prefix}
           oninput={updateParent}
         />
       </div>
       <div>
-        <label for="suffix" class="label pb-1">Suffix</label>
+        <label for="suffix" class="label pb-2">Suffix</label>
         <input
           id="suffix"
           type="text"
           placeholder="Jr."
-          class="input input-sm w-full"
+          class="input w-full"
           bind:value={suffix}
           oninput={updateParent}
         />
       </div>
       <div>
-        <label for="given-name" class="label pb-1">Given Name</label>
+        <label for="given-name" class="label pb-2">Given Name</label>
         <input
           id="given-name"
           type="text"
           placeholder="Jane"
-          class="input input-sm w-full"
+          class="input w-full"
           bind:value={givenName}
           oninput={updateParent}
         />
       </div>
       <div>
-        <label for="name" class="label pb-1">Family Name</label>
+        <label for="name" class="label pb-2">Family Name</label>
         <input
           id="name"
           type="text"
           required
           placeholder="Doe"
-          class="input input-sm w-full"
+          class="input w-full"
           bind:value={name}
           oninput={updateParent}
         />
       </div>
       <div class="md:col-span-2">
-        <label for="alias" class="label pb-1">Alias</label>
+        <label for="alias" class="label pb-2">Alias</label>
         <input
           id="alias"
           type="text"
           placeholder="bell hooks"
-          class="input input-sm w-full"
+          class="input w-full"
           bind:value={alias}
           oninput={updateParent}
         />
       </div>
     </div>
   {/if}
+  <button class="btn btn-error mt-2" type="button" onclick={() => remove()}
+    >Remove</button
+  >
 </fieldset>

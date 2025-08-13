@@ -3,94 +3,75 @@
   import PersonInput from './PersonInput.svelte';
   import { X, Plus } from '@lucide/svelte';
 
-  let {
-    value = $bindable(),
-    label
-  }: { value: Author | undefined; label: string } = $props();
+  let { value = $bindable(), label }: { value?: Author; label: string } =
+    $props();
 
-  let authorType: 'none' | 'single' | 'list' = $state('none');
-
-  $effect(() => {
+  function addPerson() {
     if (value === undefined || value === null) {
-      authorType = 'none';
-    } else if (Array.isArray(value)) {
-      authorType = 'list';
-    } else {
-      authorType = 'single';
+      // start as single
+      value = '';
+      return;
     }
-  });
-
-  function handleTypeChange(e: Event) {
-    const newType = (e.target as HTMLSelectElement).value;
-    switch (newType) {
-      case 'none':
-        value = undefined;
-        break;
-      case 'single':
-        value = Array.isArray(value) && value.length > 0 ? value[0] : '';
-        break;
-      case 'list':
-        value = value && !Array.isArray(value) ? [value] : [];
-        break;
-    }
-  }
-
-  function addAuthor() {
     if (Array.isArray(value)) {
+      // already a list, append another
       value = [...value, ''];
+      return;
     }
+    // currently single -> convert to list and add a new empty one
+    value = [value, ''];
   }
 
-  function removeAuthor(index: number) {
-    if (Array.isArray(value)) {
-      value = value.filter((_, i) => i !== index);
+  function removeSingle() {
+    value = undefined;
+  }
+
+  function removePerson(index: number) {
+    if (!Array.isArray(value)) return;
+    const next = value.filter((_, i) => i !== index);
+    if (next.length === 0) {
+      value = undefined;
+    } else if (next.length === 1) {
+      // collapse back to single
+      value = next[0];
+    } else {
+      value = next;
     }
   }
 </script>
 
-<label for="author-type" class="label">{label}</label>
-<select
-  id="author-type"
-  class="select w-full"
-  value={authorType}
-  onchange={handleTypeChange}
+<fieldset
+  class="fieldset bg-base-300/50 border-base-content/20 rounded-box gap-2 border p-4"
 >
-  <option value="none">None</option>
-  <option value="single">Single</option>
-  <option value="list">List</option>
-</select>
-
-{#if authorType === 'single' && value !== undefined && !Array.isArray(value)}
-  <PersonInput bind:value />
-{/if}
-
-{#if authorType === 'list' && Array.isArray(value)}
-  <div class="mt-2 space-y-2">
+  <legend class="fieldset-legend">{label} </legend>
+  {#if value === undefined || value === null}
+    <button
+      type="button"
+      class="btn btn-outline btn-success w-full"
+      onclick={addPerson}
+    >
+      <Plus class="size-[1.2em]" /> Add {label}
+    </button>
+  {:else if Array.isArray(value)}
     {#each value as _person, i (i)}
-      <div class="flex gap-2">
-        <div class="indicator w-full">
-          <span class="indicator-item">
-            <button
-              type="button"
-              class="btn btn-error btn-xs btn-circle mt-9 mr-0.25"
-              onclick={() => removeAuthor(i)}
-            >
-              <X class="h-4 w-4" />
-            </button>
-          </span>
-          <div class="w-full">
-            <PersonInput bind:value={value[i]} />
-          </div>
-        </div>
-      </div>
+      <PersonInput bind:value={value[i]} remove={() => removePerson(i)} />
     {/each}
 
     <button
       type="button"
-      class="btn btn-outline btn-success w-full"
-      onclick={addAuthor}
+      class="btn btn-outline mt-2 btn-success w-full"
+      onclick={addPerson}
     >
-      <Plus class="h-4 w-4" /> Add Person
+      <Plus class="size-[1.2em]" /> Add Person
     </button>
-  </div>
-{/if}
+  {:else}
+    <PersonInput bind:value remove={removeSingle} />
+
+    <button
+      type="button"
+      class="btn btn-outline btn-success mt-2 w-full"
+      onclick={addPerson}
+    >
+      <Plus class="size-[1.2em]" /> Add Person
+    </button>
+  {/if}
+</fieldset>
