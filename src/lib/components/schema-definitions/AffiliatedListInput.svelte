@@ -26,8 +26,11 @@
 </script>
 
 <!-- FIXME: Improve UI -->
-<div>
-  <label class="label">Affiliated People</label>
+<fieldset
+  class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+>
+  <legend class="fieldset-legend"> Affiliated people </legend>
+
   {#if value && value.length > 0}
     <div class="space-y-4">
       {#each value as _, i (i)}
@@ -60,11 +63,8 @@
     </div>
   {/if}
 
-  <button
-    type="button"
-    class="btn btn-outline mt-4 w-full"
-    onclick={addAffiliated}
-  >
-    <Plus class="h-4 w-4" /> Add Affiliated Person
+  <button type="button" class="btn btn-outline w-full" onclick={addAffiliated}>
+    <Plus class="size-[1.2em]" />
+    Add Affiliated Person
   </button>
-</div>
+</fieldset>

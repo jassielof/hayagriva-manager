@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Person } from '$lib/types/hayagriva';
+  import { X } from '@lucide/svelte';
 
   let { value = $bindable() }: { value: Person } = $props();
 
