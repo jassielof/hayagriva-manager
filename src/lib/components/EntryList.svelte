@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { db } from '$lib/db';
   import type { FormattableString } from '$lib/types/formattable-string';
   import type { BibliographyEntry } from '$lib/types/hayagriva';
   import {
@@ -176,26 +177,30 @@
               style={`position-anchor: --anchor-${id};`}
             >
               <li>
-                <a href={`/bibliography/${bibliographyId}/entry/${id}`}>
+                <a href="/bibliography/{bibliographyId}/entry/{id}">
                   <Eye class="inline-block h-5 w-5" />
                   View
                 </a>
               </li>
               <li>
-                <a href={`/bibliography/${bibliographyId}/entry/${id}/edit`}>
+                <a href="/bibliography/{bibliographyId}/entry/{id}/edit">
                   <Pencil class="inline-block h-5 w-5" />
                   Edit</a
                 >
               </li>
               <li>
+                <!-- TODO: Delete entry -->
                 <button
                   class="btn btn-error btn-sm btn-soft"
-                  onclick={() => {}}
+                  onclick={async () => {
+                    confirm(
+                      `Are you sure you want to delete the entry "${id}"? This action cannot be undone.`
+                    ) && (await db.deleteBibliographyEntry(bibliographyId, id));
+                  }}
                 >
-                  <!-- TODO: Delete entry -->
                   <Trash class="inline-block h-5 w-5" />
-                  Delete</button
-                >
+                  Delete
+                </button>
               </li>
             </ul>
           </div>

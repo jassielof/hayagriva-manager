@@ -6,17 +6,20 @@
   let { value = $bindable(), label }: { value?: Author; label: string } =
     $props();
 
+  // FIXME: use something like effects
   function addPerson() {
     if (value === undefined || value === null) {
       // start as single
       value = '';
       return;
     }
+
     if (Array.isArray(value)) {
       // already a list, append another
       value = [...value, ''];
       return;
     }
+
     // currently single -> convert to list and add a new empty one
     value = [value, ''];
   }
@@ -58,7 +61,7 @@
 
     <button
       type="button"
-      class="btn btn-outline mt-2 btn-success w-full"
+      class="btn btn-outline btn-success mt-2 w-full"
       onclick={addPerson}
     >
       <Plus class="size-[1.2em]" /> Add Person

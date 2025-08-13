@@ -46,6 +46,13 @@ export class HayagrivaManagerDB extends Dexie {
     bibliography.data[entryId] = updateEntry;
     await this.saveBibliography(bibliography);
   }
+
+  async deleteBibliographyEntry(bibliography: string, entryId: string) {
+    let bib = await this.getBibliography(bibliography);
+    if (!bib) throw new Error('Bibliography not found');
+    delete bib.data[entryId];
+    await this.updateBibliography(bib);
+  }
 }
 
 export const db = new HayagrivaManagerDB();

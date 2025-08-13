@@ -15,30 +15,23 @@
     Pencil,
     Trash
   } from '@lucide/svelte';
+  import type { PageProps } from './$types';
 
-  let bibliographies: Bibliography[] = $state([]);
+  let { data }: PageProps = $props();
+
+  let bibliographies: Bibliography[] = $state(data.bibliographies);
   let showConfirmModal = $state(false);
   let confirmAction = $state(() => {});
   let showAlertModal = $state(false);
   let alertTitle = $state('');
   let alertMessage = $state('');
 
-  onMount(async () => {
-    try {
-      bibliographies = await db.bibliographies.toArray();
-    } catch (error) {
-      console.error('Error loading bibliographies:', error);
-      alertTitle = 'Error';
-      alertMessage = 'Failed to load bibliographies. Please try again later.';
-      showAlertModal = true;
-    }
-  });
-
   async function handleDelete(id: string) {
     confirmAction = async () => {
       await db.bibliographies.delete(id);
       bibliographies = await db.bibliographies.toArray();
     };
+    alert
     showConfirmModal = true;
   }
 
@@ -57,18 +50,16 @@
       href="/bibliography/new"
       class="btn btn-primary"
       title="Create a new bibliography"
-      aria-label="Create a new bibliography"
     >
-      <BookPlus class="inline-block" />
+      <BookPlus class="size-[1.2em]" />
       New
     </a>
     <a
       href="/bibliography/import"
       class="btn btn-secondary"
       title="Import from a YAML file"
-      aria-label="Import from a YAML file"
     >
-      <Import class="inline-block" />
+      <Import class="size-[1.2em]" />
       Import
     </a>
   </div>
@@ -160,8 +151,7 @@
               <button
                 class="btn btn-soft btn-error join-item"
                 onclick={() => handleDelete(bib.metadata.id)}
-                title="Delete Bibliography"
-                aria-label="Delete Bibliography"
+                title="Delete bibliography {bib.metadata.title}"
               >
                 <Trash />
               </button>

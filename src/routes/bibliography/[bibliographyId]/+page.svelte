@@ -53,7 +53,7 @@
       <div class="flex flex-auto items-end justify-end md:items-start">
         <a
           class="btn btn-primary"
-          href={`/bibliography/${bibliography.metadata.id}/entry/`}
+          href="/bibliography/{bibliography.metadata.id}/entry/"
         >
           <BookPlus />
           New entry
