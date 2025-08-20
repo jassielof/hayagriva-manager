@@ -1,9 +1,6 @@
 <script lang="ts">
-  import yaml from 'js-yaml';
-  import ConfirmModal from '$lib/components/ConfirmModal.svelte';
+  import YAML from 'yaml';
   import type { Bibliography } from '$lib/types/bibliography';
-  import { onMount } from 'svelte';
-  import AlertModal from '$lib/components/AlertModal.svelte';
   import { db } from '$lib/db';
   import {
     BookOpen,
@@ -20,20 +17,6 @@
   let { data }: PageProps = $props();
 
   let bibliographies: Bibliography[] = $state(data.bibliographies);
-  let showConfirmModal = $state(false);
-  let confirmAction = $state(() => {});
-  let showAlertModal = $state(false);
-  let alertTitle = $state('');
-  let alertMessage = $state('');
-
-  async function handleDelete(id: string) {
-    confirmAction = async () => {
-      await db.bibliographies.delete(id);
-      bibliographies = await db.bibliographies.toArray();
-    };
-    alert
-    showConfirmModal = true;
-  }
 
   function formatDate(date: Date) {
     return new Intl.DateTimeFormat(undefined, {
@@ -70,9 +53,7 @@
     <section class="grid min-h-[60vh] place-content-center text-center">
       <h2 class="text-2xl font-bold">No bibliographies found</h2>
       <p class="mt-2 mb-4">Create a new one or import it from a YAML file.</p>
-      <div class="flex flex-wrap justify-center gap-2">
-        {@render actions()}
-      </div>
+      {@render actions()}
     </section>
   {:else}
     <div class="mb-4 flex justify-end">
@@ -105,8 +86,7 @@
               <a
                 href={`/bibliography/${bib.metadata.id}`}
                 class="btn btn-soft join-item"
-                title="Open"
-                aria-label="Open Bibliography"
+                title="View bibliography entries"
               >
                 <BookOpen />
               </a>
@@ -114,7 +94,6 @@
                 class="btn btn-soft join-item"
                 href={`/bibliography/${bib.metadata.id}/edit`}
                 title="Edit metadata"
-                aria-label="Edit metadata"
               >
                 <Pencil />
               </a>
@@ -122,9 +101,8 @@
               <a
                 class="btn btn-soft join-item"
                 title="Download as YAML file"
-                aria-label="Download as YAML file"
                 href={URL.createObjectURL(
-                  new Blob([yaml.dump(bib.data)], {
+                  new Blob([YAML.stringify(bib.data)], {
                     type: 'application/x-yaml'
                   })
                 )}
@@ -141,17 +119,20 @@
               <button
                 class="btn btn-soft join-item"
                 title="Copy to clipboard as YAML"
-                aria-label="Copy to clipboard as YAML"
                 onclick={() =>
-                  navigator.clipboard.writeText(yaml.dump(bib.data))}
+                  navigator.clipboard.writeText(YAML.stringify(bib.data))}
               >
                 <Copy />
               </button>
 
               <button
                 class="btn btn-soft btn-error join-item"
-                onclick={() => handleDelete(bib.metadata.id)}
-                title="Delete bibliography {bib.metadata.title}"
+                onclick={async () => {
+                  alert('Are you sure you want to delete this bibliography?');
+                  await db.bibliographies.delete(bib.metadata.id);
+                  bibliographies = await db.bibliographies.toArray();
+                }}
+                title="Delete"
               >
                 <Trash />
               </button>
@@ -162,18 +143,3 @@
     </div>
   {/if}
 </main>
-
-<ConfirmModal
-  show={showConfirmModal}
-  title="Confirm Deletion"
-  message="Are you sure you want to delete this bibliography? This cannot be undone."
-  onConfirm={confirmAction}
-  onCancel={() => (showConfirmModal = false)}
-/>
-
-<AlertModal
-  show={showAlertModal}
-  title={alertTitle}
-  message={alertMessage}
-  onClose={() => (showAlertModal = false)}
-/>

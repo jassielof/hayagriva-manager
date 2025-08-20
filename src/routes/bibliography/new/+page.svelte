@@ -47,7 +47,7 @@
         <span>{errorMessage}</span>
       </div>
     {/if}
-
+    <!-- FIXME: single bind -->
     <BibliographyMetadataForm bind:id bind:title bind:description />
 
     <button class="btn btn-primary mt-4">Save</button>

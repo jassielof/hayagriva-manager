@@ -2,68 +2,20 @@
   import type { BibliographyMetadata } from '$lib/types/bibliography-metadata';
 
   let {
-    id = $bindable(''),
-    title = $bindable(''),
-    description = $bindable(''),
-    bibliography = null,
-    showValidation = false
+    bibliographyMetadata = $bindable()
   }: {
-    id: string;
-    title: string;
-    description: string;
-    bibliography?: BibliographyMetadata | null;
-    showValidation?: boolean;
+    bibliographyMetadata: BibliographyMetadata;
   } = $props();
-
-  let idError = $state('');
-  let titleError = $state('');
-  let hasInteracted = $state(false);
-
-  // Auto-populate form when bibliography is provided
-  $effect(() => {
-    if (bibliography) {
-      title = bibliography.title;
-      description = bibliography.description || '';
-    }
-  });
-
-  // Validation effect
-  $effect(() => {
-    if (showValidation || hasInteracted) {
-      titleError = !title.trim() ? 'Title is required' : '';
-    }
-  });
-
-  function handleTitleInput() {
-    hasInteracted = true;
-  }
-
-  // Expose validation state to parent
-  export function isValid(): boolean {
-    return title.trim().length > 0;
-  }
-
-  // Expose form data to parent
-  export function getFormData(): Partial<BibliographyMetadata> {
-    return {
-      title: title.trim(),
-      description: description.trim()
-    };
-  }
-
-  export function validate(): boolean {
-    hasInteracted = true;
-    return isValid();
-  }
 </script>
 
 <label for="bibliography-id" class="label">ID</label>
 <input
   id="bibliography-id"
   type="text"
+  title="Enter a unique ID for the bibliography"
   placeholder="my-research-papers"
   class="input validator w-full font-mono"
-  bind:value={id}
+  bind:value={bibliographyMetadata.id}
   required
 />
 
@@ -72,10 +24,9 @@
   id="bibliography-title"
   type="text"
   placeholder="My Research Papers"
+  title="Enter a title for the bibliography"
   class="input validator w-full"
-  class:input-error={titleError}
-  bind:value={title}
-  oninput={handleTitleInput}
+  bind:value={bibliographyMetadata.title}
   required
 />
 
@@ -84,5 +35,5 @@
   id="bibliography-description"
   class="textarea w-full"
   placeholder="Research papers on various topics"
-  bind:value={description}
+  bind:value={bibliographyMetadata.description}
 ></textarea>

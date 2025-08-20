@@ -134,7 +134,7 @@
         <span>{error}</span>
       </div>
     {/if}
-
+<!-- FIXME: single bind -->
     {#if parsedData && !error}
       <BibliographyMetadataForm bind:id bind:title bind:description />
     {/if}
