@@ -25,6 +25,9 @@
       day: 'numeric'
     }).format(new Date(date));
   }
+  // TODO: Add export/backup with checks for single/multiple/all bibliographies
+  // If single, just the YAML file
+  // if multiple, must be compressed
 </script>
 
 {#snippet actions()}

@@ -4,6 +4,7 @@
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
   import { db } from '$lib/db';
   import type { PageProps } from './$types';
+  import { bibliographyService } from '$lib/services/bibliography.service';
 
   let { data, params }: PageProps = $props();
 
@@ -13,32 +14,15 @@
 
   async function handleSubmit() {
     try {
-      const originalId = params.bibliographyId!;
-      const trimmedId = id.trim();
-      const existingBib = await db.getBibliography(originalId);
-
-      if (trimmedId !== originalId) {
-        const existingByNewId = await db.getBibliography(trimmedId);
-        if (existingByNewId) {
+      if (oldBibliography.metadata.id !== params.bibliographyId) {
+        if (await bibliographyService.get(oldBibliography.metadata.id)) {
           errorMessage = 'A bibliography with this ID already exists.';
           return;
         }
-      }
 
-      if (trimmedId !== originalId) {
-        await db.deleteBibliography(originalId);
-      }
-
-      await db.updateBibliography({
-        metadata: {
-          id: id.trim(),
-          title: title.trim(),
-          description: description,
-          createdAt: existingBib!.metadata.createdAt,
-          updatedAt: new Date()
-        },
-        data: existingBib!.data
-      });
+        await bibliographyService.put(oldBibliography);
+        await bibliographyService.delete(params.bibliographyId);
+      } else await bibliographyService.put(oldBibliography);
 
       goto('/');
     } catch (error) {

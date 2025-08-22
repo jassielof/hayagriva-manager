@@ -6,24 +6,28 @@ import type { TopLevelEntry } from '$lib/types/hayagriva';
  * Service for managing Hayagriva bibliographies and its entries in IndexedDB.
  */
 export class BibliographyService {
-  async getAll(): Promise<Bibliography[]> {
+  async getAll() {
     return await db.bibliographies.toArray();
   }
 
-  async get(id: string): Promise<Bibliography | undefined> {
+  async get(id: string) {
     return await db.bibliographies.get(id);
   }
 
-  async save(bibliography: Bibliography): Promise<void> {
+  async save(bibliography: Bibliography) {
     // Save it sanitized, given that Dexie can't clone Svelte $states().
     await db.bibliographies.add(JSON.parse(JSON.stringify(bibliography)));
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string) {
     await db.bibliographies.delete(id);
   }
 
-  async update(bibliography: Bibliography): Promise<void> {
+  async update(key: string, changes: Partial<Bibliography>) {
+    await db.bibliographies.update(key, changes);
+  }
+
+  async put(bibliography: Bibliography) {
     await db.bibliographies.put(bibliography);
   }
 
@@ -31,7 +35,7 @@ export class BibliographyService {
     bibliographyId: string,
     entryId: string,
     updateEntry: TopLevelEntry
-  ): Promise<void> {
+  ) {
     let bibliography = await this.get(bibliographyId);
     if (!bibliography) throw new Error('Bibliography not found');
     bibliography.data[entryId] = updateEntry;
@@ -42,7 +46,7 @@ export class BibliographyService {
     let bib = await this.get(bibliography);
     if (!bib) throw new Error('Bibliography not found');
     delete bib.data[entryId];
-    await this.update(bib);
+    await this.put(bib);
   }
 }
 
