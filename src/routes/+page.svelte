@@ -1,5 +1,4 @@
 <script lang="ts">
-  import YAML from 'yaml';
   import type { Bibliography } from '$lib/types/bibliography';
   import { db } from '$lib/db';
   import {
@@ -13,6 +12,7 @@
     Trash
   } from '@lucide/svelte';
   import type { PageProps } from './$types';
+  import { hayagrivaService } from '$lib/services/hayagriva.service';
 
   let { data }: PageProps = $props();
 
@@ -65,7 +65,7 @@
         {#each bibliographies as bib (bib.metadata.id)}
           <li class="list-row">
             <div class="flex h-full items-center justify-center">
-              <Library />
+              <Library class="size-[1.2em]" />
             </div>
             <div class="list-col-grow flex flex-col items-start justify-center">
               <h6 class="font-bold">{bib.metadata.title}</h6>
@@ -88,41 +88,35 @@
                 class="btn btn-soft join-item"
                 title="View bibliography entries"
               >
-                <BookOpen />
+                <BookOpen class="size-[1.2em]" />
               </a>
               <a
                 class="btn btn-soft join-item"
                 href={`/bibliography/${bib.metadata.id}/edit`}
                 title="Edit metadata"
               >
-                <Pencil />
+                <Pencil class="size-[1.2em]" />
               </a>
 
-              <a
+              <button
                 class="btn btn-soft join-item"
                 title="Download as YAML file"
-                href={URL.createObjectURL(
-                  new Blob([YAML.stringify(bib.data)], {
-                    type: 'application/x-yaml'
-                  })
-                )}
-                download={`${bib.metadata.id}.yaml`}
-                onclick={(event) => {
-                  setTimeout(() => {
-                    URL.revokeObjectURL(event?.currentTarget.href);
-                  }, 1000);
-                }}
+                onclick={() =>
+                  hayagrivaService.export(bib.data, {
+                    asFile: true,
+                    filename: `${bib.metadata.id}.yaml`
+                  })}
               >
-                <Download />
-              </a>
+                <Download class="size-[1.2em]" />
+              </button>
 
               <button
                 class="btn btn-soft join-item"
                 title="Copy to clipboard as YAML"
                 onclick={() =>
-                  navigator.clipboard.writeText(YAML.stringify(bib.data))}
+                  hayagrivaService.export(bib.data, { toClipboard: true })}
               >
-                <Copy />
+                <Copy class="size-[1.2em]" />
               </button>
 
               <button

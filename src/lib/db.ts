@@ -1,6 +1,5 @@
 import type { Bibliography } from './types/bibliography';
 import Dexie, { type Table } from 'dexie';
-import type { BibliographyEntry, TopLevelEntry } from './types/hayagriva';
 
 /**
  * HayagrivaManagerDB is a Dexie database for managing bibliographies.

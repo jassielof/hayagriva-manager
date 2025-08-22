@@ -4,7 +4,7 @@ import type { PageLoad } from './$types';
 
 export const ssr = false;
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageLoad = async () => {
   let bibliographies: Bibliography[] = await db.bibliographies.toArray();
   return { bibliographies };
 };

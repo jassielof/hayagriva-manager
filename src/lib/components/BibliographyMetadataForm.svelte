@@ -16,6 +16,7 @@
   placeholder="my-research-papers"
   class="input validator w-full font-mono"
   bind:value={bibliographyMetadata.id}
+  onblur={() => (bibliographyMetadata.id = bibliographyMetadata.id.trim())}
   required
 />
 
@@ -27,6 +28,8 @@
   title="Enter a title for the bibliography"
   class="input validator w-full"
   bind:value={bibliographyMetadata.title}
+  onblur={() =>
+    (bibliographyMetadata.title = bibliographyMetadata.title.trim())}
   required
 />
 
@@ -36,4 +39,7 @@
   class="textarea w-full"
   placeholder="Research papers on various topics"
   bind:value={bibliographyMetadata.description}
+  onblur={() =>
+    (bibliographyMetadata.description =
+      bibliographyMetadata.description?.trim())}
 ></textarea>

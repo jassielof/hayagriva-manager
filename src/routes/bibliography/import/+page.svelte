@@ -1,102 +1,71 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
-  import { db } from '$lib/db';
-  import { loadHayagrivaYaml } from '$lib/hayagriva';
+  import { bibliographyService } from '$lib/services/bibliography.service';
+  import { hayagrivaService } from '$lib/services/hayagriva.service';
+  import type { Bibliography } from '$lib/types/bibliography';
   import type { Hayagriva } from '$lib/types/hayagriva';
-  import { CircleX } from '@lucide/svelte';
 
-  let fileInput: HTMLInputElement | null = null;
-  let file: File | null = $state(null);
+  let files: FileList | undefined = $state(undefined);
   let isLoading = $state(false);
-  let error: string | null = $state(null);
 
-  let parsedData: Hayagriva | null = $state(null);
+  let newBibliography: Bibliography = $state({
+    metadata: {
+      id: '',
+      title: '',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    data: {}
+  });
 
-  let id = $state('');
-  let title = $state('');
-  let description = $state('');
-  let errorMessage = $state('');
+  let errorMessage: string | undefined = $state();
 
   $effect(() => {
-    if (file) {
+    if (files && files.length > 0) {
       isLoading = true;
-      error = null;
-
-      const autoTitle = file.name
-        .replace(/\.(yml|yaml)$/i, '')
-        .replace(/[-_]/g, ' ')
-        .replace(/\b\w/g, (l) => l.toUpperCase());
-
-      id = file.name;
-      title = autoTitle;
 
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = () => {
         try {
-          const content = e.target?.result as string;
-          parsedData = loadHayagrivaYaml(content);
-        } catch (e: any) {
-          error = 'Failed to parse YAML';
-          file = null;
-          if (fileInput) (fileInput as HTMLInputElement).value = '';
+          newBibliography.data = hayagrivaService.import(
+            reader.result as string
+          ) as Hayagriva;
+        } catch (error) {
+          errorMessage = 'Failed to parse YAML';
+          files = undefined;
+          console.error('Error parsing YAML:', error);
         } finally {
           isLoading = false;
         }
       };
       reader.onerror = () => {
-        error = 'Failed to read the file.';
+        errorMessage = 'Failed to read the file.';
+        files = undefined;
         isLoading = false;
       };
-      reader.readAsText(file);
+      reader.readAsText(files[0]);
     }
   });
 
   async function handleSubmit() {
-    let safeData;
     try {
-      safeData = JSON.parse(JSON.stringify(parsedData));
-    } catch (error) {
-      console.error('Error serializing parsed data:', error);
-      return;
-    }
+      await bibliographyService.save(newBibliography);
+      goto('/');
+    } catch (error: any) {
+      if (error.name == 'ConstraintError') {
+        errorMessage = 'Bibliography with this ID already exists.';
+      } else {
+        errorMessage = 'Failed to save bibliography. Please try again.';
+      }
 
-    await db
-      .saveBibliography({
-        metadata: {
-          id: id.trim(),
-          title: title.trim(),
-          description: description.trim() || '',
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        data: safeData
-      })
-      .then(() => {
-        goto('/');
-      })
-      .catch((error) => {
-        if (error.name == 'ConstraintError') {
-          errorMessage = 'Bibliography with this ID already exists.';
-          return;
-        } else {
-          errorMessage = 'Failed to save bibliography. Please try again.';
-        }
-
-        console.error('Error saving bibliography:', error);
-      });
-  }
-
-  function handleFileSelect(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const selectedFile = target.files?.[0];
-    if (selectedFile) {
-      file = selectedFile;
+      console.error('Error saving bibliography:', error);
     }
   }
 </script>
 
-<form class="mx-auto w-full max-w-md p-6" onsubmit={handleSubmit}>
+<form class="mx-auto max-w-md p-6" onsubmit={handleSubmit}>
   <fieldset
     class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4"
   >
@@ -108,44 +77,45 @@
       </div>
     {/if}
 
-    <label for="hayagriva-file" class="label"
-      >Select a Hayagriva YAML file</label
-    >
+    <label for="hayagriva-file" class="label">
+      Select a Hayagriva YAML file
+    </label>
+
     <input
       type="file"
       class="file-input w-full"
-      id="file-input"
-      accept=".yml,.yaml"
-      bind:this={fileInput}
-      onchange={handleFileSelect}
+      onchange={() => {
+        if (!files || files.length === 0) return;
+
+        newBibliography.metadata.id = files[0].name.replace(
+          /\.(yml|yaml)$/i,
+          ''
+        ) as string;
+        newBibliography.metadata.title = newBibliography.metadata.id
+          .replace(/[-_]/g, ' ')
+          .replace(/\b\w/g, (l) => l.toUpperCase());
+      }}
+      id="hayagriva-file"
+      required
+      accept=".yaml, .yml, application/yaml"
+      bind:files
       disabled={isLoading}
     />
 
-    {#if isLoading}
+    {#if isLoading && files}
       <div class="mt-4 flex items-center gap-2">
-        <span class="loading loading-spinner loading-sm"></span>
-        <span>Parsing {file?.name}...</span>
+        <span class="loading loading-spinner loading-md"></span>
+        <span>Parsing {files[0].name}...</span>
       </div>
     {/if}
 
-    {#if error}
-      <div role="alert" class="alert alert-error mt-4">
-        <CircleX class="h-6 w-6 shrink-0 stroke-current" />
-        <span>{error}</span>
-      </div>
-    {/if}
-<!-- FIXME: single bind -->
-    {#if parsedData && !error}
-      <BibliographyMetadataForm bind:id bind:title bind:description />
+    {#if Object.keys(newBibliography.data).length > 0 && !errorMessage}
+      <BibliographyMetadataForm
+        bind:bibliographyMetadata={newBibliography.metadata}
+      />
     {/if}
 
     <button class="btn btn-primary mt-4">Save</button>
-    <button
-      class="btn"
-      type="button"
-      onclick={() => {
-        goto('/');
-      }}>Cancel</button
-    >
+    <a class="btn" href="/">Cancel</a>
   </fieldset>
 </form>

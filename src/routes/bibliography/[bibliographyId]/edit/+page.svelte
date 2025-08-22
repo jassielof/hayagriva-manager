@@ -7,12 +7,9 @@
 
   let { data, params }: PageProps = $props();
 
+  let oldBibliography = $state(data.oldBibliography);
 
-  let id = $state(data.oldBibliography?.metadata.id);
-  let title = $state(data.oldBibliography?.metadata.title);
-  let description = $state(data.oldBibliography?.metadata.description);
   let errorMessage = $state('');
-  let originalCreationDate = data.oldBibliography.metadata.createdAt;
 
   async function handleSubmit() {
     try {

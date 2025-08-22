@@ -2,43 +2,47 @@ import { db } from '$lib/db';
 import type { Bibliography } from '$lib/types/bibliography';
 import type { TopLevelEntry } from '$lib/types/hayagriva';
 
+/**
+ * Service for managing Hayagriva bibliographies and its entries in IndexedDB.
+ */
 export class BibliographyService {
-  async getAllBibliographies(): Promise<Bibliography[]> {
+  async getAll(): Promise<Bibliography[]> {
     return await db.bibliographies.toArray();
   }
 
-  async getBibliography(id: string): Promise<Bibliography | undefined> {
+  async get(id: string): Promise<Bibliography | undefined> {
     return await db.bibliographies.get(id);
   }
 
-  async saveBibliography(bibliography: Bibliography): Promise<void> {
-    await db.bibliographies.add(bibliography);
+  async save(bibliography: Bibliography): Promise<void> {
+    // Save it sanitized, given that Dexie can't clone Svelte $states().
+    await db.bibliographies.add(JSON.parse(JSON.stringify(bibliography)));
   }
 
-  async deleteBibliography(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     await db.bibliographies.delete(id);
   }
 
-  async updateBibliography(bibliography: Bibliography): Promise<void> {
+  async update(bibliography: Bibliography): Promise<void> {
     await db.bibliographies.put(bibliography);
   }
 
-  async saveBibliographyEntry(
+  async saveEntry(
     bibliographyId: string,
     entryId: string,
     updateEntry: TopLevelEntry
   ): Promise<void> {
-    let bibliography = await this.getBibliography(bibliographyId);
+    let bibliography = await this.get(bibliographyId);
     if (!bibliography) throw new Error('Bibliography not found');
     bibliography.data[entryId] = updateEntry;
-    await this.saveBibliography(bibliography);
+    await this.save(bibliography);
   }
 
-  async deleteBibliographyEntry(bibliography: string, entryId: string) {
-    let bib = await this.getBibliography(bibliography);
+  async deleteEntry(bibliography: string, entryId: string) {
+    let bib = await this.get(bibliography);
     if (!bib) throw new Error('Bibliography not found');
     delete bib.data[entryId];
-    await this.updateBibliography(bib);
+    await this.update(bib);
   }
 }
 
