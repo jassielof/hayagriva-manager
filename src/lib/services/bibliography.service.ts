@@ -28,7 +28,7 @@ export class BibliographyService {
   }
 
   async put(bibliography: Bibliography) {
-    await db.bibliographies.put(bibliography);
+    await db.bibliographies.put(JSON.parse(JSON.stringify(bibliography)));
   }
 
   async saveEntry(

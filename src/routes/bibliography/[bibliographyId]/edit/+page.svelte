@@ -43,7 +43,7 @@
     {/if}
 
     <BibliographyMetadataForm
-      bind:bibliographyMetadata={data.oldBibliography.metadata}
+      bind:bibliographyMetadata={oldBibliography.metadata}
     />
 
     <button class="btn btn-primary mt-4">Save</button>
