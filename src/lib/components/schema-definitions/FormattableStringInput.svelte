@@ -17,19 +17,28 @@
   let mainValue = $derived.by(() => {
     if (typeof value === 'object' && value) return value.value;
     if (typeof value === 'string') return value;
-    return undefined;
   });
 
   let shortValue = $derived.by(() => {
     if (typeof value === 'object' && value) return value.short;
     if (typeof value === 'string') return undefined;
-    return undefined;
   });
 
   let verbatimValue = $derived.by(() => {
     if (typeof value === 'object' && value) return value.verbatim;
     if (typeof value === 'string') return undefined;
-    return undefined;
+  });
+
+  $effect(() => {
+    if (shortValue || verbatimValue) {
+      value = {
+        value: mainValue!,
+        short: shortValue,
+        verbatim: verbatimValue
+      };
+    } else {
+      value = mainValue!;
+    }
   });
 </script>
 

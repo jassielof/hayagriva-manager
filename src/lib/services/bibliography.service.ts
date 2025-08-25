@@ -14,7 +14,7 @@ export class BibliographyService {
     return await db.bibliographies.get(id);
   }
 
-  async save(bibliography: Bibliography) {
+  async add(bibliography: Bibliography) {
     // Save it sanitized, given that Dexie can't clone Svelte $states().
     await db.bibliographies.add(JSON.parse(JSON.stringify(bibliography)));
   }
@@ -33,20 +33,47 @@ export class BibliographyService {
 
   async saveEntry(
     bibliographyId: string,
-    entryId: string,
-    updateEntry: TopLevelEntry
+    newEntryId: string,
+    newEntryData: TopLevelEntry
   ) {
     let bibliography = await this.get(bibliographyId);
     if (!bibliography) throw new Error('Bibliography not found');
-    bibliography.data[entryId] = updateEntry;
-    await this.save(bibliography);
+    if (bibliography.data[newEntryId]) {
+      throw new Error('Entry already exists');
+    }
+    bibliography.data[newEntryId] = newEntryData;
+    await this.put(bibliography);
   }
 
   async deleteEntry(bibliographyId: string, entryId: string) {
-    let bib = await this.get(bibliographyId);
-    if (!bib) throw new Error('Bibliography not found');
-    delete bib.data[entryId];
-    await this.put(bib);
+    let bibliography = await this.get(bibliographyId);
+    if (!bibliography) throw new Error('Bibliography not found');
+    delete bibliography.data[entryId];
+    await this.put(bibliography);
+  }
+
+  async getEntry(bibliographyId: string, entryId: string) {
+    const bibliography = await this.get(bibliographyId);
+    if (!bibliography) throw new Error('Bibliography not found');
+    return bibliography.data[entryId];
+  }
+
+  async updateEntry(
+    bibliographyId: string,
+    updatedEntryId: string,
+    updatedEntryData: TopLevelEntry,
+    oldEntryId?: string
+  ) {
+    let bibliography = await this.get(bibliographyId);
+    if (!bibliography) throw new Error('Bibliography not found');
+    if (!bibliography.data[updatedEntryId]) {
+      delete bibliography.data[oldEntryId!];
+    }
+
+    console.log('new data: ', updatedEntryData);
+
+    bibliography.data[updatedEntryId] = updatedEntryData;
+    await this.put(bibliography);
   }
 }
 

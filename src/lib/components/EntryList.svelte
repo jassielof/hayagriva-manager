@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { db } from '$lib/db';
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
   import { bibliographyService } from '$lib/services/bibliography.service';
   import type { FormattableString } from '$lib/types/formattable-string';
@@ -124,17 +123,15 @@
                 >
               </li>
               <li>
-                <!-- TODO: Delete entry -->
                 <button
                   class="btn btn-error btn-sm btn-soft"
                   onclick={async () => {
                     confirm(
                       `Are you sure you want to delete the following entry: ${id}?`
-                    ) &&
-                      (await bibliographyService.deleteEntry(
-                        bibliographyId,
-                        id
-                      ));
+                    );
+
+                    await bibliographyService.deleteEntry(bibliographyId, id);
+                    delete entries[id];
                   }}
                 >
                   <Trash class="inline size-[1.2em]" />

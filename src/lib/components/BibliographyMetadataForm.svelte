@@ -16,7 +16,19 @@
   placeholder="my-research-papers"
   class="input validator w-full font-mono"
   bind:value={bibliographyMetadata.id}
-  onblur={() => (bibliographyMetadata.id = bibliographyMetadata.id.trim())}
+  onblur={() => {
+    bibliographyMetadata.id = bibliographyMetadata.id.trim();
+    if (
+      bibliographyMetadata.id === 'new' ||
+      bibliographyMetadata.id === 'import'
+    ){
+
+      alert(
+        `"${bibliographyMetadata.id}" is a reserved ID. Please choose another one.`
+      );
+      return;
+    }
+  }}
   required
 />
 

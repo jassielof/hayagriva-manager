@@ -21,7 +21,7 @@
   let parentType: 'none' | 'single' | 'list' = $state('none');
 
   $effect(() => {
-    if (entryData.parent === undefined || entryData.parent === null) {
+      if (entryData.parent === undefined || entryData.parent === null) {
       parentType = 'none';
     } else if (Array.isArray(entryData.parent)) {
       parentType = 'list';
@@ -64,18 +64,13 @@
   }
 </script>
 
-<!-- <fieldset
-  class="fieldset bg-base-100 border-base-300 rounded-box mt-4 border-2 p-4"
->
-  <legend class="fieldset-legend text-primary text-lg">Entry Details</legend> -->
-
 <EntryTypeInput bind:value={entryData.type!} />
 
 <FormattableStringInput
   label="Title"
   placeholder="UML & Patterns"
   shortPlaceholder="UML"
-  bind:value={entryData.title!}
+  bind:value={entryData.title}
 />
 
 <PeopleInput label="Author" bind:value={entryData.author} />
@@ -126,10 +121,8 @@
   placeholder="0"
 />
 
-<!-- TODO: Add time range as timestamp range -->
 <TimestampRangeInput bind:value={entryData['time-range']} label="Time range" />
 
-<!-- TODO: Add runtime as timestamp -->
 <TimestampInput bind:value={entryData.runtime} label="Runtime" />
 
 <UrlInput bind:value={entryData.url} />
@@ -250,4 +243,3 @@
     Add Parent
   </button>
 {/if}
-<!-- </fieldset> -->

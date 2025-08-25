@@ -7,7 +7,7 @@
     label = 'Date',
     placeholder = '2025, 2020-12, or 2010-12-30'
   }: {
-    value: BibliographyEntry['date'];
+    value?: BibliographyEntry['date'];
     label?: string;
     placeholder?: string;
   } = $props();

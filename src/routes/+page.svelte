@@ -131,7 +131,7 @@
                 }}
                 title="Delete"
               >
-                <Trash />
+                <Trash class="size-[1.2em]" />
               </button>
             </div>
           </li>

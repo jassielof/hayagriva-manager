@@ -51,7 +51,7 @@
 
   async function handleSubmit() {
     try {
-      await bibliographyService.save(newBibliography);
+      await bibliographyService.add(newBibliography);
       goto('/');
     } catch (error: any) {
       if (error.name == 'ConstraintError') {

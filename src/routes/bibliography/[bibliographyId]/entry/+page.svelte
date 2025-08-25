@@ -1,10 +1,11 @@
 <script lang="ts">
   import EntryForm from '$lib/components/EntryForm.svelte';
-  import type { Hayagriva, TopLevelEntry } from '$lib/types/hayagriva';
+  import type { TopLevelEntry } from '$lib/types/hayagriva';
   import type { PageProps } from './$types';
   import { ClipboardPaste, Save, X } from '@lucide/svelte';
   import { bibliographyService } from '$lib/services/bibliography.service';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
+  import { goto } from '$app/navigation';
 
   let { params }: PageProps = $props();
 
@@ -13,15 +14,14 @@
     type: 'misc'
   });
 
-  // TODO: Handle submit
-  // Here is where the data should be properly formatted, not in every component
-  // For example, if a formattable string is an object with only "value", it should be converted into a string.
   async function handleSubmit() {
     await bibliographyService.saveEntry(
       params.bibliographyId,
       newEntryId,
       newEntryData
     );
+
+    goto(`/bibliography/${params.bibliographyId}/`);
   }
 </script>
 
@@ -66,6 +66,8 @@
       placeholder="UMLAndPatterns"
       class="input w-full font-mono"
       type="text"
+      required
+      onblur={() => (newEntryId = newEntryId.trim())}
       bind:value={newEntryId}
     />
 
