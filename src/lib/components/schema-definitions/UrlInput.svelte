@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { BibliographyEntry } from '$lib/types/hayagriva';
+  import type { BibliographyEntry, URL } from '$lib/types/hayagriva';
   import DateInput from './DateInput.svelte';
 
   let {
@@ -7,38 +7,21 @@
     label = 'URL',
     placeholder = 'https://example.com'
   }: {
-    value: BibliographyEntry['url'];
+    value?: URL;
     label?: string;
     placeholder?: string;
   } = $props();
 
-  let urlValue = $state('');
-  let dateValue: BibliographyEntry['date'] = $state(undefined);
-
-  $effect(() => {
-    if (typeof value === 'string') {
-      urlValue = value;
-      dateValue = undefined;
-    } else if (value && typeof value === 'object') {
-      urlValue = value.value;
-      dateValue = value.date;
-    } else {
-      urlValue = '';
-      dateValue = undefined;
-    }
+  let urlValue = $derived.by(() => {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object') return value.value;
+    return undefined;
   });
 
-  $effect(() => {
-    if (!urlValue) {
-      value = undefined;
-    } else if (!dateValue) {
-      value = urlValue;
-    } else {
-      value = {
-        value: urlValue,
-        date: dateValue
-      };
-    }
+  let dateValue: BibliographyEntry['date'] = $derived.by(() => {
+    if (typeof value === 'string') return undefined;
+    if (typeof value === 'object') return value.date;
+    return undefined;
   });
 </script>
 
