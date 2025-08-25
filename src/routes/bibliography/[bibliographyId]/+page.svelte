@@ -4,7 +4,7 @@
   import { BookPlus } from '@lucide/svelte';
 
   let { data }: PageProps = $props();
-
+  
   let bibliography = $state(data.bibliography);
 
   // TODO: Implement search by, sort by, and filter by

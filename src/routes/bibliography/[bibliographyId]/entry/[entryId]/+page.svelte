@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Code, Eye } from '@lucide/svelte';
+  import { Clipboard, Code, Eye } from '@lucide/svelte';
   import type { PageProps } from './$types';
+  import FormattableStringView from '$lib/components/views/FormattableStringView.svelte';
 
   let { data }: PageProps = $props();
 </script>
@@ -15,9 +16,19 @@
       </label>
       <div class="tab-content bg-base-100 border-base-300 p-6">
         <!-- TODO: Normal content rendered -->
-        <h1 class="text-xl font-bold">{data.entry.title}</h1>
-        <p class="italic">{data.entry.abstract}</p>
-        <span class="badge badge-info">{data.entry.language}</span>
+        <h1 class="text-xl font-bold">
+          <FormattableStringView value={data.entry.title} />
+        </h1>
+        <p class="italic">
+          {() => {
+            return data.entry.abstract;
+          }}
+        </p>
+        <span class="badge badge-info"
+          >{() => {
+            return data.entry.language;
+          }}</span
+        >
       </div>
 
       <label class="tab">
@@ -26,10 +37,20 @@
         Code preview
       </label>
       <div class="tab-content bg-base-100 border-base-300 p-6">
-        <div class="mockup-code w-full">
-          {#each data.entryYamlData as line, i}
-            <pre data-prefix={i + 1}><code>{line}</code></pre>
-          {/each}
+        <div class="relative">
+          <div class="mockup-code w-full">
+            {#each data.entryYamlData as line, i}
+              <pre data-prefix={i + 1}><code>{line}</code></pre>
+            {/each}
+          </div>
+          <button
+            type="button"
+            class="btn btn-sm btn-neutral absolute top-2 right-2"
+            onclick={() =>
+              navigator.clipboard.writeText(data.entryYamlData.join('\n'))}
+          >
+            <Clipboard class="size-4" />
+          </button>
         </div>
       </div>
     </div>

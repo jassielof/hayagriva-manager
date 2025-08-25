@@ -29,6 +29,5 @@ export const load: PageLoad = async ({ params }) => {
   } catch (err) {
     console.error('Error loading entry:', error);
     throw err;
-    // throw error(500, 'Failed to load entry');
   }
 };
