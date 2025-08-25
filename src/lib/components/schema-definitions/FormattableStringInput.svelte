@@ -14,39 +14,22 @@
     multiline?: boolean;
   } = $props();
 
-  let mainValue = $state('');
-  let shortValue = $state('');
-  let verbatimValue = $state(false);
-
-  $effect(() => {
-    if (typeof value === 'string') {
-      mainValue = value;
-      shortValue = '';
-      verbatimValue = false;
-    } else if (value && typeof value === 'object') {
-      mainValue = value.value || '';
-      shortValue = value.short || '';
-      verbatimValue = value.verbatim || false;
-    } else {
-      mainValue = '';
-      shortValue = '';
-      verbatimValue = false;
-    }
+  let mainValue = $derived.by(() => {
+    if (typeof value === 'object' && value) return value.value;
+    if (typeof value === 'string') return value;
+    return undefined;
   });
 
-  $effect(() => {
-    if (!mainValue) {
-      value = undefined;
-    } else if (!shortValue && !verbatimValue) {
-      value = mainValue;
-    } else {
-      const newValue: any = {
-        value: mainValue
-      };
-      if (shortValue) newValue.short = shortValue;
-      if (verbatimValue) newValue.verbatim = verbatimValue;
-      value = newValue;
-    }
+  let shortValue = $derived.by(() => {
+    if (typeof value === 'object' && value) return value.short;
+    if (typeof value === 'string') return undefined;
+    return undefined;
+  });
+
+  let verbatimValue = $derived.by(() => {
+    if (typeof value === 'object' && value) return value.verbatim;
+    if (typeof value === 'string') return undefined;
+    return undefined;
   });
 </script>
 
@@ -56,17 +39,17 @@
   <legend class="fieldset-legend">{label}</legend>
 
   {#if multiline}
-    <label class="label" for="textarea-entry">{label}</label>
+    <label class="label" for="textarea-entry-{label}">{label}</label>
     <textarea
-      id="textarea-entry"
+      id="textarea-entry-{label}"
       class="textarea w-full"
       {placeholder}
       bind:value={mainValue}
     ></textarea>
   {:else}
-    <label for="main-value" class="label">{label}</label>
+    <label for="main-value-{label}" class="label">{label}</label>
     <input
-      id="main-value"
+      id="main-value-{label}"
       type="text"
       class="input w-full"
       {placeholder}
@@ -74,9 +57,9 @@
     />
   {/if}
 
-  <label for="short-form" class="label">Short form of {label}</label>
+  <label for="short-form-{label}" class="label">Short form of {label}</label>
   <input
-    id="short-form"
+    id="short-form-{label}"
     type="text"
     placeholder={shortPlaceholder}
     class="input w-full"

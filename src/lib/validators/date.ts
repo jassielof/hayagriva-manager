@@ -1,7 +1,7 @@
-import { getHayagrivaSchema } from '$lib/hayagriva';
+import { hayagrivaService } from '$lib/services/hayagriva.service';
 import type { Date } from '$lib/types/hayagriva';
 
-const hayagrivaSchema = await getHayagrivaSchema();
+const hayagrivaSchema = await hayagrivaService.getSchema();
 export const datePattern: string =
   hayagrivaSchema.definitions.date.anyOf.find((d: any) => d.pattern)?.pattern ??
   (() => {

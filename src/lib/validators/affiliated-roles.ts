@@ -1,5 +1,5 @@
-import { getHayagrivaSchema } from '$lib/hayagriva';
+import { hayagrivaService } from '$lib/services/hayagriva.service';
 
-export const AFFILIATED_ROLES: string[] = await getHayagrivaSchema().then(
-  (schema) => schema.definitions.roleType.enum
-);
+export const AFFILIATED_ROLES: string[] = await hayagrivaService
+  .getSchema()
+  .then((schema) => schema.definitions.roleType.enum);

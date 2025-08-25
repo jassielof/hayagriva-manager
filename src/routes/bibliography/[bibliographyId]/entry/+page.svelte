@@ -1,10 +1,10 @@
 <script lang="ts">
   import EntryForm from '$lib/components/EntryForm.svelte';
-  import type { TopLevelEntry } from '$lib/types/hayagriva';
+  import type { Hayagriva, TopLevelEntry } from '$lib/types/hayagriva';
   import type { PageProps } from './$types';
   import { ClipboardPaste, Save, X } from '@lucide/svelte';
-  import { loadHayagrivaYaml } from '$lib/hayagriva';
-  import { db } from '$lib/db';
+  import { bibliographyService } from '$lib/services/bibliography.service';
+  import { hayagrivaService } from '$lib/services/hayagriva.service';
 
   let { params }: PageProps = $props();
 
@@ -14,8 +14,10 @@
   });
 
   // TODO: Handle submit
+  // Here is where the data should be properly formatted, not in every component
+  // For example, if a formattable string is an object with only "value", it should be converted into a string.
   async function handleSubmit() {
-    await db.saveBibliographyEntry(
+    await bibliographyService.saveEntry(
       params.bibliographyId,
       newEntryId,
       newEntryData
@@ -33,18 +35,24 @@
       type="button"
       onclick={() => {
         navigator.clipboard.readText().then((text) => {
-          const data = loadHayagrivaYaml(text);
-          const pastedEntryData: TopLevelEntry = data[Object.keys(data)[0]];
-          const pastedEntryId: string = Object.keys(data)[0];
+          const data = hayagrivaService.import(text);
 
-          console.log('Pasted data:', pastedEntryData);
-
-          if (Object.keys(data).length > 1) {
-            alert('The pasted data has more than 1 key.');
-          } else {
-            newEntryId = pastedEntryId;
-            newEntryData = pastedEntryData;
+          if (data === null || data === undefined) {
+            alert('Invalid bibliography.');
+            return;
           }
+
+          const dataLength = Object.keys(data).length;
+
+          if (dataLength > 1 || dataLength <= 0) {
+            alert(
+              `The bibliography needs to have 1 entry. It has ${dataLength} entries.`
+            );
+            return;
+          }
+
+          newEntryId = Object.keys(data)[0];
+          newEntryData = data[newEntryId];
         });
       }}
     >

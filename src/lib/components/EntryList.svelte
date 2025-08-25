@@ -1,44 +1,24 @@
 <script lang="ts">
   import { db } from '$lib/db';
+  import { formatEntryType } from '$lib/formatters/entry-type-formatter';
+  import { bibliographyService } from '$lib/services/bibliography.service';
   import type { FormattableString } from '$lib/types/formattable-string';
-  import type { BibliographyEntry } from '$lib/types/hayagriva';
+  import type { BibliographyEntry, Hayagriva } from '$lib/types/hayagriva';
   import {
-    Book,
-    BookOpen,
-    BookType,
     Calendar,
-    ClipboardList,
-    Copyright,
     Ellipsis,
     Eye,
-    FileArchive,
-    FileAudio,
-    FileText,
-    Film,
-    FolderOpen,
-    Globe,
-    GraduationCap,
     Hash,
-    Landmark,
-    Layers,
-    MessageCircle,
-    Music,
-    Newspaper,
-    Palette,
     Pencil,
-    PenLine,
-    Star,
     Trash,
-    User,
-    Users,
-    Video
+    User
   } from '@lucide/svelte';
 
   let {
-    entries,
-    bibliographyId
+    entries = $bindable(),
+    bibliographyId = $bindable()
   }: {
-    entries: [string, BibliographyEntry][];
+    entries: Hayagriva;
     bibliographyId: string;
   } = $props();
 
@@ -61,51 +41,6 @@
     return author.name || '';
   }
 
-  const entryTypeIcons: Record<string, typeof BookOpen> = {
-    article: FileText,
-    chapter: FileText,
-    entry: FileText,
-    anthos: Layers,
-    report: ClipboardList,
-    thesis: GraduationCap,
-    web: Globe,
-    scene: Film,
-    artwork: Palette,
-    patent: Copyright,
-    case: Landmark,
-    newspaper: Newspaper,
-    legislation: Landmark,
-    manuscript: PenLine,
-    original: Star,
-    post: MessageCircle,
-    misc: FileArchive,
-    performance: Music,
-    periodical: BookType,
-    proceedings: Layers,
-    book: Book,
-    blog: Globe,
-    reference: ClipboardList,
-    conference: Users,
-    anthology: Layers,
-    repository: FolderOpen,
-    thread: MessageCircle,
-    video: Video,
-    audio: FileAudio,
-    exhibition: Eye
-  };
-
-  function formatEntryType(type: BibliographyEntry['type']): {
-    label: string;
-    Icon: typeof BookOpen;
-  } {
-    if (!type) return { label: '', Icon: FileArchive };
-    const normalized =
-      type.charAt(0).toLowerCase() + type.slice(1).toLowerCase();
-    const Icon = entryTypeIcons[normalized] || FileArchive;
-    const label = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
-    return { label, Icon };
-  }
-
   function formatEntryDate(date: BibliographyEntry['date']): string {
     if (!date) {
       return '';
@@ -124,13 +59,13 @@
 </script>
 
 <div class="card mt-4 shadow-md">
-  {#if entries.length === 0}
+  {#if Object.entries(entries).length === 0}
     <div class="card-body">
       <p class="text-center text-gray-500">This bibliography has no entries.</p>
     </div>
   {:else}
     <ul class="list bg-base-200 rounded-box shadow-md">
-      {#each entries as [id, entry] (id)}
+      {#each Object.entries(entries) as [id, entry] (id)}
         {@const { label, Icon } = formatEntryType(entry.type)}
         <li class="list-row">
           <div class="flex flex-col items-center justify-center">
@@ -140,7 +75,7 @@
           </div>
           <div>
             <span class="font-mono text-sm">
-              <Hash class="inline-block h-5 w-5" />
+              <Hash class="inline size-[1.2em]" />
               {id}
             </span>
             <br />
@@ -150,14 +85,14 @@
             {#if entry.author}
               <br />
               <span class="font-serif italic">
-                <User class="inline-block h-5 w-5" />
+                <User class="inline size-[1.2em]" />
                 {formatAuthor(entry.author)}
               </span>
             {/if}
             {#if entry.date}
               <br />
               <span class="text-xs">
-                <Calendar class="inline-block h-5 w-5" />
+                <Calendar class="inline size-[1.2em]" />
                 {formatEntryDate(entry.date)}
               </span>
             {/if}
@@ -178,13 +113,13 @@
             >
               <li>
                 <a href="/bibliography/{bibliographyId}/entry/{id}">
-                  <Eye class="inline-block h-5 w-5" />
+                  <Eye class="inline size-[1.2em]" />
                   View
                 </a>
               </li>
               <li>
                 <a href="/bibliography/{bibliographyId}/entry/{id}/edit">
-                  <Pencil class="inline-block h-5 w-5" />
+                  <Pencil class="inline size-[1.2em]" />
                   Edit</a
                 >
               </li>
@@ -194,11 +129,15 @@
                   class="btn btn-error btn-sm btn-soft"
                   onclick={async () => {
                     confirm(
-                      `Are you sure you want to delete the entry "${id}"? This action cannot be undone.`
-                    ) && (await db.deleteBibliographyEntry(bibliographyId, id));
+                      `Are you sure you want to delete the following entry: ${id}?`
+                    ) &&
+                      (await bibliographyService.deleteEntry(
+                        bibliographyId,
+                        id
+                      ));
                   }}
                 >
-                  <Trash class="inline-block h-5 w-5" />
+                  <Trash class="inline size-[1.2em]" />
                   Delete
                 </button>
               </li>

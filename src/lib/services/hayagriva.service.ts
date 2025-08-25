@@ -5,17 +5,17 @@ import YAML from 'yaml';
  * Service for managing Hayagriva YAML files.
  */
 export class HayagrivaService {
-  readonly JSON_SCHEMA_URL =
+  private readonly JSON_SCHEMA_URL =
     'https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json';
   private schemaCache: any = null;
   private schemaPromise: Promise<any> | null = null;
 
-  import(content: string, asTopLevelEntry: boolean = false) {
+  import(content: string) {
     const data = YAML.parse(content, {
       schema: 'core'
     });
 
-    return asTopLevelEntry ? (data as TopLevelEntry) : (data as Hayagriva);
+    return data as Hayagriva;
   }
 
   export(

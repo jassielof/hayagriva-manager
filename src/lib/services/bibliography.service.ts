@@ -23,8 +23,8 @@ export class BibliographyService {
     await db.bibliographies.delete(id);
   }
 
-  async update(key: string, changes: Partial<Bibliography>) {
-    await db.bibliographies.update(key, changes);
+  async update(id: string, changes: Partial<Bibliography>) {
+    await db.bibliographies.update(id, changes);
   }
 
   async put(bibliography: Bibliography) {
@@ -42,8 +42,8 @@ export class BibliographyService {
     await this.save(bibliography);
   }
 
-  async deleteEntry(bibliography: string, entryId: string) {
-    let bib = await this.get(bibliography);
+  async deleteEntry(bibliographyId: string, entryId: string) {
+    let bib = await this.get(bibliographyId);
     if (!bib) throw new Error('Bibliography not found');
     delete bib.data[entryId];
     await this.put(bib);

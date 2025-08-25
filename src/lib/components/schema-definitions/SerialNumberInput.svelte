@@ -125,7 +125,6 @@
       value = next as any;
     }
   });
-  $inspect(value)
 </script>
 
 

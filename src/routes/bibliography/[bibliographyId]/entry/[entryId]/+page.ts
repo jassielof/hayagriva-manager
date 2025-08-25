@@ -1,5 +1,5 @@
 import { db } from '$lib/db';
-import { dumpSingleHayagriva } from '$lib/hayagriva';
+import { hayagrivaService } from '$lib/services/hayagriva.service';
 import type { PageLoad } from './$types';
 
 export const ssr = false;
@@ -12,7 +12,7 @@ export const load: PageLoad = async ({ params }) => {
     throw new Error('Entry not found');
   }
 
-  let yamlData = dumpSingleHayagriva(entry);
+  let yamlData = hayagrivaService.export(entry) as string;
   let indentedYaml = yamlData
     .split('\n')
     .map((line) => `  ${line}`)

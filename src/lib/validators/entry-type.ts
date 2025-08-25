@@ -1,7 +1,7 @@
-import { getHayagrivaSchema } from '$lib/hayagriva';
+import { hayagrivaService } from '$lib/services/hayagriva.service';
 import type { Type } from '$lib/types/hayagriva';
 
-export const ENTRY_TYPES: Type[] = await getHayagrivaSchema().then(
+export const ENTRY_TYPES: Type[] = await hayagrivaService.getSchema().then(
   (schema) => schema.definitions.entryType.examples
 );
 

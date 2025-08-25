@@ -3,7 +3,7 @@
   import EntryForm from './EntryForm.svelte';
   import EntryTypeInput from '$lib/components/schema-definitions/EntryTypeInput.svelte';
   import FormattableStringInput from '$lib/components/schema-definitions/FormattableStringInput.svelte';
-  import { Plus, X } from '@lucide/svelte';
+  import { X } from '@lucide/svelte';
   import PeopleInput from './schema-definitions/PeopleInput.svelte';
   import DateInput from './schema-definitions/DateInput.svelte';
   import LanguageInput from './schema-definitions/LanguageInput.svelte';

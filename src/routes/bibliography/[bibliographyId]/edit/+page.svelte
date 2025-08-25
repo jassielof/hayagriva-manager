@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
-  import { db } from '$lib/db';
   import type { PageProps } from './$types';
   import { bibliographyService } from '$lib/services/bibliography.service';
 

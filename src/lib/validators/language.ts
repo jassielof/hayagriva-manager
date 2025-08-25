@@ -1,9 +1,9 @@
-import { getHayagrivaSchema } from '$lib/hayagriva';
+import { hayagrivaService } from '$lib/services/hayagriva.service';
 import type { Language } from '$lib/types/hayagriva';
 
-export const languagePattern = await getHayagrivaSchema().then(
-  (schema) => schema.definitions.language.pattern
-);
+export const languagePattern = await hayagrivaService
+  .getSchema()
+  .then((schema) => schema.definitions.language.pattern);
 
 const LANGUAGE_REGEX = new RegExp(languagePattern);
 
