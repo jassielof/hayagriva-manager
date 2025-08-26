@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Language } from '$lib/types/hayagriva';
-  import { isValidLanguage, languagePattern } from '$lib/validators/language';
+  import { languagePattern } from '$lib/validators/language';
 
   let {
     value = $bindable()

@@ -4,7 +4,7 @@
 
   let {
     value = $bindable(),
-    label = ''
+    label
   }: {
     value?: string;
     label?: string;
@@ -44,6 +44,7 @@
     value = undefined;
   }
 </script>
+
 <!-- FIXME: UI -->
 
 <div class="form-control w-full">

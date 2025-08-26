@@ -4,8 +4,6 @@
   import PeopleInput from './PeopleInput.svelte';
   import { AFFILIATED_ROLES } from '$lib/validators/affiliated-roles';
 
-  // TODO: Implement Affiliated List input component
-
   let { value = $bindable() }: { value?: AffiliatedPeople } = $props();
 
   function addAffiliated() {

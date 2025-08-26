@@ -12,11 +12,11 @@
   } = $props();
 </script>
 
-<label for="integer-input" class="label">{label}</label>
+<label for="integer-input-{label}" class="label">{label}</label>
 <input
   type="number"
   min={naturalSet ? '0' : undefined}
-  id="integer-input"
+  id="integer-input-{label}"
   class="input w-full"
   bind:value
   {placeholder}

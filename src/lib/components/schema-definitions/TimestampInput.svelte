@@ -1,139 +1,112 @@
 <script lang="ts">
-  import { X } from '@lucide/svelte';
-
   let {
     value = $bindable(),
-    label = '',
-    placeholder = '00:00'
+    label
   }: {
     value?: string;
     label?: string;
-    placeholder?: string;
   } = $props();
 
-  let days = $state(0);
-  let hours = $state(0);
-  let minutes = $state(0);
-  let seconds = $state(0);
-  let milliseconds = $state(0);
+  let timestampDay: undefined | string = $state();
+  let timestampHour: undefined | string = $state();
+  let timestampMinute: undefined | string = $state();
+  let timestampSecond: undefined | string = $state();
+  let timestampMillisecond: undefined | string = $state();
 
-  function parseTimestamp(ts: string | undefined) {
-    if (!ts) {
-      days = 0;
-      hours = 0;
-      minutes = 0;
-      seconds = 0;
-      milliseconds = 0;
-      return;
+  let timestamp = $derived.by(() => {
+    if (!value) {
+      return {};
     }
 
-    const [timePart, msPart] = ts.split(',');
-    milliseconds = msPart ? parseInt(msPart) : 0;
+    const [
+      timestampDay,
+      timestampHour,
+      timestampMinute,
+      timestampSecond,
+      timestampMillisecond
+    ] = value.split(/[:,]/);
 
-    const parts = timePart.split(':').map(Number);
-    if (parts.length === 2) {
-      // MM:SS
-      [minutes, seconds] = parts;
-      hours = 0;
-      days = 0;
-    } else if (parts.length === 3) {
-      // HH:MM:SS
-      [hours, minutes, seconds] = parts;
-      days = 0;
-    } else if (parts.length === 4) {
-      // DD:HH:MM:SS
-      [days, hours, minutes, seconds] = parts;
-    }
-  }
-
-  function formatTimestamp() {
-    if (!days && !hours && !minutes && !seconds && !milliseconds) {
-      value = undefined;
-      return;
-    }
-
-    let parts = [];
-    if (days > 0) {
-      parts.push(String(days).padStart(2, '0'));
-    }
-    if (days > 0 || hours > 0) {
-      parts.push(String(hours).padStart(2, '0'));
-    }
-    parts.push(String(minutes).padStart(2, '0'));
-    parts.push(String(seconds).padStart(2, '0'));
-
-    let timeString = parts.join(':');
-
-    if (milliseconds > 0) {
-      timeString += `,${milliseconds}`;
-    }
-
-    value = timeString;
-  }
-
-  $effect(() => {
-    parseTimestamp(value);
+    return {
+      day: timestampDay,
+      hour: timestampHour,
+      minute: timestampMinute,
+      second: timestampSecond,
+      millisecond: timestampMillisecond
+    };
   });
 
   $effect(() => {
-    formatTimestamp();
-  });
+    $inspect(timestamp, value, !!timestamp.day);
+    // parse the timestamp as dd:hh:mm:ss:ms
+    // if there are more than minute and second, then dd:hh:mm:ss,ms accordingly their existence
+    // if for example all exist but not ms, then it's dd:hh:mm:ss
+    // if not dd but yes to all the rest, then it's hh:mm:ss,ms
+    const parts: string[] = [];
+    if (!!timestamp.day) parts.push(String(timestamp.day).padStart(2, '0'));
+    if (!!timestamp.hour) parts.push(String(timestamp.hour).padStart(2, '0'));
+    if (!!timestamp.minute)
+      parts.push(String(timestamp.minute).padStart(2, '0'));
+    if (!!timestamp.second)
+      parts.push(String(timestamp.second).padStart(2, '0'));
+    if (!!timestamp.millisecond)
+      parts.push(String(timestamp.millisecond).padStart(2, '0'));
 
-  function clearInput() {
-    value = undefined;
-  }
+    if (parts.length === 0) {
+      if (timestamp.millisecond && parts.length > 1) {
+        const mainParts = parts.slice(0, -1);
+        value = mainParts.join(':') + ',' + parts[parts.length - 1];
+      } else {
+        value = parts.join(':');
+      }
+    } else value = undefined;
+  });
 </script>
-<!-- FIXME: UI -->
-<div class="form-control w-full">
-  {#if label}
-    <label for={label} class="label">
-      <span class="label-text">{label}</span>
-    </label>
-  {/if}
-  <div class="join w-full">
-    <input
-      type="number"
-      min="0"
-      placeholder="DD"
-      class="input join-item input-bordered w-1/5"
-      bind:value={days}
-    />
-    <input
-      type="number"
-      min="0"
-      max="23"
-      placeholder="HH"
-      class="input join-item input-bordered w-1/5"
-      bind:value={hours}
-    />
-    <input
-      type="number"
-      min="0"
-      max="59"
-      placeholder="MM"
-      class="input join-item input-bordered w-1/5"
-      bind:value={minutes}
-    />
-    <input
-      type="number"
-      min="0"
-      max="59"
-      placeholder="SS"
-      class="input join-item input-bordered w-1/5"
-      bind:value={seconds}
-    />
-    <input
-      type="number"
-      min="0"
-      max="999"
-      placeholder="ms"
-      class="input join-item input-bordered w-1/5"
-      bind:value={milliseconds}
-    />
-    {#if value}
-      <button class="btn btn-square join-item" onclick={clearInput}>
-        <X class="h-4 w-4" />
-      </button>
-    {/if}
-  </div>
+
+{#if label}
+  <label for={label} class="label">
+    {label}
+  </label>
+{/if}
+<div class="join w-full">
+  <input
+    type="number"
+    min="0"
+    placeholder="DD"
+    class="input join-item validator w-1/5"
+    bind:value={timestamp.day}
+  />
+  <input
+    type="number"
+    min="0"
+    max={!!timestamp.day ? 23 : undefined}
+    placeholder="HH"
+    class="input join-item validator w-1/5"
+    required={!!timestamp.day}
+    bind:value={timestamp.hour}
+  />
+  <input
+    type="number"
+    min="0"
+    max={!!timestamp.hour ? 59 : undefined}
+    placeholder="MM"
+    class="input join-item validator w-1/5"
+    required={!!timestamp.second || !!timestamp.hour}
+    bind:value={timestamp.minute}
+  />
+  <input
+    type="number"
+    min="0"
+    max={!!timestamp.minute ? 59 : undefined}
+    placeholder="SS"
+    required={!!timestamp.minute || !!timestamp.millisecond}
+    class="input join-item validator w-1/5"
+    bind:value={timestamp.second}
+  />
+  <input
+    type="number"
+    min="0"
+    placeholder="ms"
+    class="input join-item validator w-1/5"
+    bind:value={timestamp.millisecond}
+  />
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Author } from '$lib/types/hayagriva';
   import PersonInput from './PersonInput.svelte';
-  import { X, Plus } from '@lucide/svelte';
+  import { Plus } from '@lucide/svelte';
 
   let { value = $bindable(), label }: { value?: Author; label: string } =
     $props();

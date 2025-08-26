@@ -15,13 +15,19 @@
   let urlValue = $derived.by(() => {
     if (typeof value === 'string') return value;
     if (typeof value === 'object') return value.value;
-    return undefined;
   });
 
   let dateValue: BibliographyEntry['date'] = $derived.by(() => {
     if (typeof value === 'string') return undefined;
     if (typeof value === 'object') return value.date;
-    return undefined;
+  });
+
+  $effect(() => {
+    if (dateValue) {
+      value = { value: urlValue!, date: dateValue };
+    } else {
+      value = urlValue;
+    }
   });
 </script>
 
