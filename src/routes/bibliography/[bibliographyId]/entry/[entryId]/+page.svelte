@@ -1,9 +1,10 @@
 <script lang="ts">
   import { Clipboard, Code, Eye } from '@lucide/svelte';
   import type { PageProps } from './$types';
-  import FormattableStringView from '$lib/components/views/FormattableStringView.svelte';
 
   let { data }: PageProps = $props();
+
+  const author = data.entry.author!;
 </script>
 
 <main>
@@ -17,18 +18,25 @@
       <div class="tab-content bg-base-100 border-base-300 p-6">
         <!-- TODO: Normal content rendered -->
         <h1 class="text-xl font-bold">
-          <FormattableStringView value={data.entry.title} />
+          {#if typeof data.entry.title === 'object'}
+            {data.entry.title.value}
+          {:else}
+            {data.entry.title}
+          {/if}
         </h1>
-        <p class="italic">
-          {() => {
-            return data.entry.abstract;
-          }}
+        <p>
+          {data.entry.author}
         </p>
-        <span class="badge badge-info"
-          >{() => {
-            return data.entry.language;
-          }}</span
-        >
+        <p>{data.entry.organization}</p>
+        <p>{data.entry.date}</p>
+        <p>{data.entry.edition}</p>
+        <p>{data.entry.type}</p>
+        <p>{data.entry.affiliated}</p>
+        <p>{data.entry.publisher}</p>
+        <p class="italic">
+          {data.entry.abstract}
+        </p>
+        <span class="badge badge-info">{data.entry.language}</span>
       </div>
 
       <label class="tab">
