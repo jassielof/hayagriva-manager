@@ -1,13 +1,16 @@
 <script lang="ts">
   import type { BibliographyEntry } from '$lib/types/hayagriva';
+  import Self from './PreviewEntry.svelte';
 
-  export let entry: BibliographyEntry;
-  export let baseHeadingLevel = 1;
+  let {
+    entry,
+    baseHeadingLevel = 1
+  }: { entry: BibliographyEntry; baseHeadingLevel?: number } = $props();
 
   const clamp = (n: number) => Math.min(6, Math.max(1, n));
-  $: titleLevel = clamp(baseHeadingLevel);
-  $: sectionLevel = clamp(baseHeadingLevel + 2);
-  $: subSectionLevel = clamp(baseHeadingLevel + 3);
+  const titleLevel = $derived(clamp(baseHeadingLevel));
+  const sectionLevel = $derived(clamp(baseHeadingLevel + 2));
+  const subSectionLevel = $derived(clamp(baseHeadingLevel + 3));
 </script>
 
 <article class="prose max-w-none">
@@ -284,7 +287,9 @@
 
   {#if entry.affiliated}
     <section>
-      <svelte:element this={`h${sectionLevel}`}>Affiliated People</svelte:element>
+      <svelte:element this={`h${sectionLevel}`}
+        >Affiliated People</svelte:element
+      >
       {#each entry.affiliated as affiliation}
         <svelte:element this={`h${subSectionLevel}`}>
           {affiliation.role.charAt(0).toUpperCase() + affiliation.role.slice(1)}
@@ -314,7 +319,8 @@
             {affiliation.names['given-name'] || ''}
             {affiliation.names.name}
             {affiliation.names.suffix || ''}
-            {#if affiliation.names.alias}<em>({affiliation.names.alias})</em>{/if}
+            {#if affiliation.names.alias}<em>({affiliation.names.alias})</em
+              >{/if}
           </p>
         {/if}
       {/each}
@@ -329,10 +335,10 @@
 
       {#if Array.isArray(entry.parent)}
         {#each entry.parent as p}
-          <svelte:self entry={p} baseHeadingLevel={baseHeadingLevel + 1} />
+          <Self entry={p} baseHeadingLevel={baseHeadingLevel + 1} />
         {/each}
       {:else}
-        <svelte:self entry={entry.parent} baseHeadingLevel={baseHeadingLevel + 1} />
+        <Self entry={entry.parent} baseHeadingLevel={baseHeadingLevel + 1} />
       {/if}
     </section>
   {/if}
