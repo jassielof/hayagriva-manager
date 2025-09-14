@@ -4,7 +4,7 @@
   import { BookPlus } from '@lucide/svelte';
 
   let { data }: PageProps = $props();
-  
+
   let bibliography = $state(data.bibliography);
 
   // TODO: Implement search by, sort by, and filter by
@@ -24,6 +24,12 @@
         {/if}
       </div>
       <div class="flex flex-auto items-end justify-end md:items-start">
+        <select name="sort" id="sort" class="select mr-2 w-auto">
+          <option disabled selected>Sort by</option>
+          <option value="id">ID</option>
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+        </select>
         <a
           class="btn btn-primary"
           href="/bibliography/{bibliography.metadata.id}/entry/"
