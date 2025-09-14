@@ -1,4 +1,3 @@
-<!-- TODO: Edit entry form -->
 <script lang="ts">
   import { hayagrivaService } from '$lib/services/hayagriva.service';
   import { ClipboardPaste, Save, X } from '@lucide/svelte';

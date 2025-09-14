@@ -23,7 +23,6 @@
   }
 </script>
 
-<!-- FIXME: Improve UI -->
 <fieldset
   class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
 >

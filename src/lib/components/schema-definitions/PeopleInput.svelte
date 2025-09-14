@@ -6,7 +6,6 @@
   let { value = $bindable(), label }: { value?: Author; label: string } =
     $props();
 
-  // FIXME: use something like effects
   function addPerson() {
     if (value === undefined || value === null) {
       // start as single

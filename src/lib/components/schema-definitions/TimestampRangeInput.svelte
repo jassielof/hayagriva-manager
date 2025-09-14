@@ -45,8 +45,6 @@
   }
 </script>
 
-<!-- FIXME: UI -->
-
 <div class="form-control w-full">
   {#if label}
     <label for={label} class="label">
