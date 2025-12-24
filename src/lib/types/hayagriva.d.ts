@@ -6,13 +6,14 @@
  */
 
 export type TopLevelEntry = BibliographyEntry & {
-  type: EntryType;
+  type: EntryType1;
   [k: string]: unknown;
 };
 /**
  * The media type of the entry. Often determines the structure of references.
+ * Entry types are case-insensitive in Typst (first letter can be upper or lowercase).
  */
-export type Type = string;
+export type EntryType = string;
 /**
  * The title of this entry.
  */
@@ -25,7 +26,7 @@ export type Title =
     };
 export type Value = string;
 /**
- * If true, disables text case transformations.
+ * If true, disables text case transformations. Preserves casing as it appears in source.
  */
 export type Verbatim = boolean;
 /**
@@ -35,34 +36,39 @@ export type ShortForm = string;
 /**
  * The person or people primarily responsible for the creation of this entry.
  */
-export type Author = Person | Person[];
+export type Author = Person | [Person, ...Person[]];
+/**
+ * A person with a name and optionally given name, prefix, suffix, and alias.
+ * String format: "Last, First" or "Prefix Last, First, Suffix"
+ * Prefix is auto-detected using BibTeX algorithm (consecutive lowercase words at start).
+ */
 export type Person =
   | string
   | {
-      name: Name;
+      name: FamilyName;
       "given-name"?: GivenName;
-      prefix?: Prefix;
-      suffix?: Suffix;
+      prefix?: NamePrefix;
+      suffix?: NameSuffix;
       alias?: Alias;
     };
 /**
- * The family name of the person.
+ * The family/last name of the person (required).
  */
-export type Name = string;
+export type FamilyName = string;
 /**
- * The given name of the person.
+ * The given/first name of the person.
  */
 export type GivenName = string;
 /**
- * The prefix of the person's name.
+ * The prefix of the person's name (e.g., "von", "van der").
  */
-export type Prefix = string;
+export type NamePrefix = string;
 /**
- * The suffix of the person's name.
+ * The suffix of the person's name (e.g., "Jr.", "III").
  */
-export type Suffix = string;
+export type NameSuffix = string;
 /**
- * An alias for the person.
+ * An alternative name or pseudonym for the person.
  */
 export type Alias = string;
 /**
@@ -72,7 +78,7 @@ export type Date = number | string;
 /**
  * Entry in which the current entry was published, or to which it is strongly associated.
  */
-export type ParentEntry = BibliographyEntry | BibliographyEntry[];
+export type ParentEntry = BibliographyEntry | [BibliographyEntry, ...BibliographyEntry[]];
 /**
  * The abstract or summary of the entry.
  */
@@ -84,7 +90,8 @@ export type Abstract =
       short?: ShortForm;
     };
 /**
- * The type, class, or subtype of the item (e.g. "Doctoral dissertation" for a PhD thesis; "NIH Publication" for an NIH technical report). This field is not intended for topical descriptions or categories (e.g. "adventure" for an adventure movie).
+ * The type, class, or subtype of the item (e.g. "Doctoral dissertation" for a PhD thesis; "NIH Publication" for an NIH technical report).
+ * Do not use for topical descriptions or categories (e.g. "adventure" for an adventure movie).
  */
 export type Genre =
   | string
@@ -96,7 +103,13 @@ export type Genre =
 /**
  * The person or people responsible for selecting and revising the content of the entry.
  */
-export type Editor = Person | Person[];
+export type Editor = Person | [Person, ...Person[]];
+/**
+ * People involved with the entry that do not fit `author` or `editor` roles.
+ *
+ * @minItems 1
+ */
+export type AffiliatedPeople = [AffiliatedRole, ...AffiliatedRole[]];
 /**
  * The role of the person or people in relation to the entry.
  */
@@ -124,11 +137,7 @@ export type Role =
 /**
  * The name(s) of the person or people involved in the role.
  */
-export type PeopleInvolved = Person | Person[];
-/**
- * The people involved with the entry that do not fit `author` or `editor` roles.
- */
-export type AffiliatedPeople = AffiliatedList[];
+export type PeopleInvolved = Person | [Person, ...Person[]];
 /**
  * The number of the item in a library, institution, or collection. Use with the `archive` field.
  */
@@ -140,7 +149,7 @@ export type CallNumber =
       short?: ShortForm;
     };
 /**
- * The name of the publisher. The publisher's location also be included.
+ * The publisher of the item. Can include name and location.
  */
 export type Publisher =
   | string
@@ -157,7 +166,8 @@ export type PublisherName = string;
  */
 export type PublisherLocation = string;
 /**
- * The location at which the entry is physically located or took place. For the location where an item was published, use the `publisher` field instead.
+ * The location at which the entry is physically located or took place.
+ * For the location where an item was published, use the `publisher` field instead.
  */
 export type Location =
   | string
@@ -177,7 +187,8 @@ export type Organization =
       short?: ShortForm;
     };
 /**
- * For an entry whose parent has multiple issues, this field identifies to which specific issue the entry belongs. Also used to indicate the episode number for TV series.
+ * For an entry whose parent has multiple issues, this field identifies to which specific issue the entry belongs.
+ * Also used to indicate the episode number for TV series.
  */
 export type Issue = number | string;
 /**
@@ -189,11 +200,17 @@ export type Volume = number | string;
  */
 export type VolumeTotal = number;
 /**
+ * The number of the chapter in the referenced work where this item can be found.
+ * When the chapter itself is the item being cited (common if it has its own non-numeric title),
+ * prefer using `type: chapter` for the entry while specifying the containing work's data as its parent.
+ */
+export type Chapter = number | string;
+/**
  * The published version of the entry.
  */
 export type Edition = number | string;
 /**
- * The range of pages within that this entry occupies within the parent.
+ * The range of pages within the parent that this entry occupies.
  */
 export type PageRange = number | string;
 /**
@@ -222,11 +239,14 @@ export type URL =
  */
 export type URLValue = string;
 /**
- * The access date of the URL.
+ * The date when the URL was accessed.
  */
 export type AccessDate = number | string;
 /**
- * Any serial number, including article numbers, associated with the entry. If you have serial numbers of well-known schemes like `doi`, you should put them into the serial number as a dictionary. Hayagriva will recognize and specially treat `doi`, `isbn`, `issn`, `pmid`, `pmcid`, and `arxiv`. You can also include `serial` for the serial number when you provide other formats as well.
+ * Any serial number, including article numbers, associated with the entry.
+ * If you have serial numbers of well-known schemes like `doi`, you should put them into the serial number as a dictionary.
+ * Hayagriva will recognize and specially treat `doi`, `isbn`, `issn`, `pmid`, `pmcid`, and `arxiv`.
+ * You can also include `serial` for the serial number when you provide other formats as well.
  */
 export type SerialNumber =
   | string
@@ -266,11 +286,11 @@ export type PMCID = string;
  */
 export type ArXiv = string;
 /**
- * Serial number.
+ * Generic serial number.
  */
 export type SerialNumber1 = string;
 /**
- * The language of the entry.
+ * The language of the entry as a Unicode Language Identifier.
  */
 export type Language = string;
 /**
@@ -305,20 +325,22 @@ export type Note =
     };
 /**
  * The media type of the entry. Often determines the structure of references.
+ * Entry types are case-insensitive in Typst (first letter can be upper or lowercase).
  */
-export type EntryType = string;
+export type EntryType1 = string;
 
 /**
- * A bibliography management format for the modern age.
+ * Schema for Hayagriva YAML bibliography files, a bibliography management format for the modern age.
+ * https://github.com/typst/hayagriva/blob/main/docs/file-format.md
  */
-export interface Hayagriva {
+export interface HayagrivaBibliographyFormat {
   [k: string]: TopLevelEntry;
 }
 /**
- * A single bibliography entry.
+ * A single bibliography entry with fields describing a work.
  */
 export interface BibliographyEntry {
-  type?: Type;
+  type?: EntryType;
   title?: Title;
   author?: Author;
   date?: Date;
@@ -334,6 +356,7 @@ export interface BibliographyEntry {
   issue?: Issue;
   volume?: Volume;
   "volume-total"?: VolumeTotal;
+  chapter?: Chapter;
   edition?: Edition;
   "page-range"?: PageRange;
   "page-total"?: PageTotal;
@@ -346,7 +369,7 @@ export interface BibliographyEntry {
   "archive-location"?: ArchiveLocation;
   note?: Note;
 }
-export interface AffiliatedList {
+export interface AffiliatedRole {
   role: Role;
   names: PeopleInvolved;
 }

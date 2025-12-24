@@ -27,7 +27,7 @@
   }
   // TODO: Add export/backup with checks for single/multiple/all bibliographies
   // If single, just the YAML file
-  // if multiple, must be compressed
+  // if multiple, must be compressed as Zip or any good format
 </script>
 
 {#snippet actions()}
