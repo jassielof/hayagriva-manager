@@ -6,7 +6,8 @@
 
   let { data, params }: PageProps = $props();
 
-  let oldBibliography = $state(data.oldBibliography);
+  const initialOldBibliography = data.oldBibliography;
+  let oldBibliography = $state(initialOldBibliography);
 
   let errorMessage = $state('');
 

@@ -13,6 +13,12 @@ export interface HayagrivaBibliography {
 }
 
 /**
+ * Alias for HayagrivaBibliography.
+ * This is the commonly used type name throughout the codebase.
+ */
+export type Hayagriva = HayagrivaBibliography;
+
+/**
  * A bibliography entry found at the top level of the file.
  * At the top level, the 'type' field is mandatory.
  */
@@ -210,6 +216,8 @@ export type NumericOrString = number | string;
 
 /**
  * A calendar date in ISO 8601 format (YYYY-MM-DD, YYYY-MM, or YYYY) or an integer year.
+ * Can include sign prefix for years before 0000 (e.g., -0001 for 2 B.C.E.).
+ * Year 1 B.C.E. is represented as 0000.
  */
 export type HayagrivaDate = string | number;
 
@@ -364,3 +372,30 @@ export type RoleType =
   | "director"
   | "illustrator"
   | "narrator";
+
+/**
+ * Type aliases for common usage patterns.
+ */
+
+/** Alias for EntryType. */
+export type Type = EntryType;
+
+/** Alias for HayagrivaDate. Note: This shadows the global Date type. */
+export type Date = HayagrivaDate;
+
+/** Alias for language string. */
+export type Language = string;
+
+/** Alias for author field type. */
+export type Author = Person | Person[];
+
+/** Alias for affiliated people (array of roles). */
+export type AffiliatedPeople = AffiliatedRole[];
+
+/** Alias for URL field type. */
+export type URL = string | { value: string; date?: HayagrivaDate };
+
+/** Type helpers for FormattableString object fields. */
+export type Value = string;
+export type ShortForm = string;
+export type Verbatim = boolean;

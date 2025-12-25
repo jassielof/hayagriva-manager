@@ -16,7 +16,8 @@
 
   let { data }: PageProps = $props();
 
-  let bibliographies: Bibliography[] = $state(data.bibliographies);
+  const initialBibliographies = data.bibliographies;
+  let bibliographies: Bibliography[] = $state(initialBibliographies);
 
   function formatDate(date: Date) {
     return new Intl.DateTimeFormat(undefined, {

@@ -3,11 +3,16 @@
   import EntryList from '$lib/components/EntryList.svelte';
   import { BookPlus, Search } from '@lucide/svelte';
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
-  import type { BibliographyEntry, FormattableString, Hayagriva } from '$lib/types/hayagriva';
+  import type {
+    BibliographyEntry,
+    FormattableString,
+    Hayagriva
+  } from '$lib/types/hayagriva';
 
   let { data }: PageProps = $props();
 
-  let bibliography = $state(data.bibliography);
+  const initialBibliography = data.bibliography;
+  let bibliography = $state(initialBibliography);
 
   // Search, sort, and filter state
   let searchQuery = $state('');
@@ -25,7 +30,10 @@
     if (!author) return '';
     if (typeof author === 'string') return author.toLowerCase();
     if (Array.isArray(author)) {
-      return author.map((a) => (typeof a === 'string' ? a : a.name || '')).join('; ').toLowerCase();
+      return author
+        .map((a) => (typeof a === 'string' ? a : a.name || ''))
+        .join('; ')
+        .toLowerCase();
     }
     return (author.name || '').toLowerCase();
   }
@@ -122,37 +130,15 @@
     return entries.map(([id]) => id);
   });
 
-  // Track if filteredEntries has been initialized to avoid false deletion detection on first run
-  let filteredEntriesInitialized = $state(false);
-
   // Sync filteredEntries based on entryOrder, maintaining references to original entries
   // This creates a filtered and sorted view of bibliography.data
   $effect(() => {
     if (!bibliography) {
       filteredEntries = {};
-      filteredEntriesInitialized = false;
       return;
     }
 
-    // Before rebuilding, check if any entries were deleted from filteredEntries
-    // (EntryList may have deleted entries, which we need to sync to bibliography.data)
-    // Only check if filteredEntries has been initialized (not on first run)
-    if (filteredEntriesInitialized) {
-      const currentFilteredIds = new Set(Object.keys(filteredEntries));
-      const expectedIds = new Set(entryOrder);
-
-      // If an entry should be in the filtered view but isn't in filteredEntries,
-      // and it still exists in bibliography.data, it means EntryList deleted it
-      expectedIds.forEach((id) => {
-        if (!currentFilteredIds.has(id) && bibliography.data[id]) {
-          // This entry should be visible but was removed from filteredEntries
-          // EntryList deleted it, so delete it from bibliography.data too
-          delete bibliography.data[id];
-        }
-      });
-    }
-
-    // Build new filtered entries object
+    // Build new filtered entries object based on current entryOrder
     const result: Hayagriva = {};
     entryOrder.forEach((id) => {
       if (bibliography.data[id]) {
@@ -163,7 +149,25 @@
 
     // Update filteredEntries - replace entire object to trigger reactivity
     filteredEntries = result;
-    filteredEntriesInitialized = true;
+  });
+
+  // Separate effect to handle deletions from EntryList
+  // When EntryList deletes from filteredEntries, also delete from bibliography.data
+  $effect(() => {
+    if (!bibliography) return;
+
+    // Watch filteredEntries for deletions
+    const currentFilteredIds = new Set(Object.keys(filteredEntries));
+    const expectedIds = new Set(entryOrder);
+
+    // If an entry should be visible (in entryOrder) but isn't in filteredEntries,
+    // it was deleted by EntryList - delete it from bibliography.data
+    expectedIds.forEach((id) => {
+      if (!currentFilteredIds.has(id) && bibliography.data[id]) {
+        // Entry was deleted from filteredEntries, delete from bibliography.data
+        delete bibliography.data[id];
+      }
+    });
   });
 </script>
 
@@ -192,53 +196,47 @@
     </div>
 
     <!-- Search, Sort, and Filter Controls -->
-    <div class="mt-4 flex flex-col gap-2 md:flex-row md:items-center">
+    <div class="mt-4 flex flex-col gap-3 md:flex-row">
       <!-- Search Input -->
-      <div class="form-control flex-auto">
-        <div class="input-group">
-          <span class="bg-base-200 px-4">
-            <Search class="size-4" />
-          </span>
-          <input
-            type="text"
-            placeholder="Search by ID, title, or author..."
-            class="input input-bordered w-full"
-            bind:value={searchQuery}
-          />
-        </div>
-      </div>
+      <label class="input flex-1">
+        <span>
+          <Search class="size-5" />
+        </span>
+        <input
+          type="search"
+          placeholder="Search by ID, title, or author..."
+          class="grow"
+          bind:value={searchQuery}
+        />
+      </label>
 
       <!-- Filter by Type -->
-      <div class="form-control w-auto">
-        <select
-          name="filter"
-          id="filter"
-          class="select select-bordered w-auto"
-          bind:value={filterByType}
-        >
-          <option value="all">All types</option>
-          {#each availableEntryTypes as entryType}
-            {@const { label } = formatEntryType(entryType)}
-            <option value={entryType}>{label}</option>
-          {/each}
-        </select>
-      </div>
+      <select
+        name="filter"
+        id="filter"
+        class="select select-bordered w-full md:w-48"
+        bind:value={filterByType}
+      >
+        <option value="all">All types</option>
+        {#each availableEntryTypes as entryType}
+          {@const { label } = formatEntryType(entryType)}
+          <option value={entryType}>{label}</option>
+        {/each}
+      </select>
 
       <!-- Sort by -->
-      <div class="form-control w-auto">
-        <select
-          name="sort"
-          id="sort"
-          class="select select-bordered w-auto"
-          bind:value={sortBy}
-        >
-          <option value="id">Sort: ID</option>
-          <option value="title">Sort: Title</option>
-          <option value="author">Sort: Author</option>
-          <option value="date">Sort: Date</option>
-          <option value="type">Sort: Type</option>
-        </select>
-      </div>
+      <select
+        name="sort"
+        id="sort"
+        class="select select-bordered w-full md:w-40"
+        bind:value={sortBy}
+      >
+        <option value="id">Sort: ID</option>
+        <option value="title">Sort: Title</option>
+        <option value="author">Sort: Author</option>
+        <option value="date">Sort: Date</option>
+        <option value="type">Sort: Type</option>
+      </select>
     </div>
 
     <EntryList
