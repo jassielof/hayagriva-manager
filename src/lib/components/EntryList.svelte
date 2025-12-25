@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
-  import { bibliographyService } from '$lib/services/bibliography.service';
+  import { BibliographyService } from '$lib/services/bibliography.service';
   import type { FormattableString } from '$lib/types/formattable-string';
   import type { BibliographyEntry, Hayagriva } from '$lib/types/hayagriva';
   import {
@@ -130,7 +130,7 @@
                       `Are you sure you want to delete the following entry: ${id}?`
                     );
 
-                    await bibliographyService.deleteEntry(bibliographyId, id);
+                    await BibliographyService.deleteEntry(bibliographyId, id);
                     delete entries[id];
                   }}
                 >

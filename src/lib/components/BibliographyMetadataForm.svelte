@@ -21,8 +21,7 @@
     if (
       bibliographyMetadata.id === 'new' ||
       bibliographyMetadata.id === 'import'
-    ){
-
+    ) {
       alert(
         `"${bibliographyMetadata.id}" is a reserved ID. Please choose another one.`
       );
@@ -40,6 +39,9 @@
   title="Enter a title for the bibliography"
   class="input validator w-full"
   bind:value={bibliographyMetadata.title}
+  oninput={() => {
+    
+  }}
   onblur={() =>
     (bibliographyMetadata.title = bibliographyMetadata.title.trim())}
   required

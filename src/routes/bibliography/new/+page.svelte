@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
-  import { bibliographyService } from '$lib/services/bibliography.service';
+  import { BibliographyService } from '$lib/services/bibliography.service';
   import type { Bibliography } from '$lib/types/bibliography';
 
   let newBibliography: Bibliography = $state({
@@ -18,7 +18,7 @@
 
   async function handleSubmit() {
     try {
-      await bibliographyService.add(newBibliography);
+      await BibliographyService.add(newBibliography);
       goto('/');
     } catch (error: any) {
       if (error.name === 'ConstraintError') {

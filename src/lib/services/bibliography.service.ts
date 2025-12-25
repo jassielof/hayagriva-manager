@@ -6,32 +6,70 @@ import type { TopLevelEntry } from '$lib/types/hayagriva';
  * Service for managing Hayagriva bibliographies and its entries in IndexedDB.
  */
 export class BibliographyService {
-  async getAll() {
+  /**
+   * Retrieves all bibliographies from the database.
+   * @returns A promise that resolves to an array of all bibliographies.
+   */
+  static async getAll() {
     return await db.bibliographies.toArray();
   }
 
-  async get(id: string) {
+  /**
+   * Retrieves a specific bibliography by its ID.
+   * @param id - The unique identifier of the bibliography.
+   * @returns A promise that resolves to the bibliography if found, undefined otherwise.
+   */
+  static async get(id: string) {
     return await db.bibliographies.get(id);
   }
 
-  async add(bibliography: Bibliography) {
+  /**
+   * Adds a new bibliography to the database.
+   * @param bibliography - The bibliography object to add.
+   * @returns A promise that resolves when the bibliography has been added.
+   */
+  static async add(bibliography: Bibliography) {
     // Save it sanitized, given that Dexie can't clone Svelte $states().
     await db.bibliographies.add(JSON.parse(JSON.stringify(bibliography)));
   }
 
-  async delete(id: string) {
+  /**
+   * Deletes a bibliography from the database.
+   * @param id - The unique identifier of the bibliography to delete.
+   * @returns A promise that resolves when the bibliography has been deleted.
+   */
+  static async delete(id: string) {
     await db.bibliographies.delete(id);
   }
 
-  async update(id: string, changes: Partial<Bibliography>) {
+  /**
+   * Updates specific fields of an existing bibliography.
+   * @param id - The unique identifier of the bibliography to update.
+   * @param changes - An object containing the fields to update.
+   * @returns A promise that resolves when the bibliography has been updated.
+   */
+  static async update(id: string, changes: Partial<Bibliography>) {
     await db.bibliographies.update(id, changes);
   }
 
-  async put(bibliography: Bibliography) {
+  /**
+   * Replaces an existing bibliography or adds a new one if it doesn't exist.
+   * @param bibliography - The bibliography object to put.
+   * @returns A promise that resolves when the bibliography has been saved.
+   */
+  static async put(bibliography: Bibliography) {
     await db.bibliographies.put(JSON.parse(JSON.stringify(bibliography)));
   }
 
-  async saveEntry(
+  /**
+   * Adds a new entry to a bibliography.
+   * @param bibliographyId - The unique identifier of the bibliography.
+   * @param newEntryId - The unique identifier for the new entry.
+   * @param newEntryData - The entry data to add.
+   * @throws {Error} If the bibliography is not found or if the entry already exists.
+   * @returns A promise that resolves when the entry has been saved.
+   */
+  static async saveEntry(
     bibliographyId: string,
     newEntryId: string,
     newEntryData: TopLevelEntry
@@ -45,20 +83,43 @@ export class BibliographyService {
     await this.put(bibliography);
   }
 
-  async deleteEntry(bibliographyId: string, entryId: string) {
+  /**
+   * Deletes an entry from a bibliography.
+   * @param bibliographyId - The unique identifier of the bibliography.
+   * @param entryId - The unique identifier of the entry to delete.
+   * @throws {Error} If the bibliography is not found.
+   * @returns A promise that resolves when the entry has been deleted.
+   */
+  static async deleteEntry(bibliographyId: string, entryId: string) {
     let bibliography = await this.get(bibliographyId);
     if (!bibliography) throw new Error('Bibliography not found');
     delete bibliography.data[entryId];
     await this.put(bibliography);
   }
 
-  async getEntry(bibliographyId: string, entryId: string) {
+  /**
+   * Retrieves a specific entry from a bibliography.
+   * @param bibliographyId - The unique identifier of the bibliography.
+   * @param entryId - The unique identifier of the entry to retrieve.
+   * @throws {Error} If the bibliography is not found.
+   * @returns A promise that resolves to the entry data.
+   */
+  static async getEntry(bibliographyId: string, entryId: string) {
     const bibliography = await this.get(bibliographyId);
     if (!bibliography) throw new Error('Bibliography not found');
     return bibliography.data[entryId];
   }
 
-  async updateEntry(
+  /**
+   * Updates an existing entry in a bibliography. If the entry ID changes, the old entry is deleted.
+   * @param bibliographyId - The unique identifier of the bibliography.
+   * @param updatedEntryId - The new or current unique identifier of the entry.
+   * @param updatedEntryData - The updated entry data.
+   * @param oldEntryId - The previous unique identifier of the entry (if the ID changed).
+   * @throws {Error} If the bibliography is not found.
+   * @returns A promise that resolves when the entry has been updated.
+   */
+  static async updateEntry(
     bibliographyId: string,
     updatedEntryId: string,
     updatedEntryData: TopLevelEntry,
@@ -76,5 +137,3 @@ export class BibliographyService {
     await this.put(bibliography);
   }
 }
-
-export const bibliographyService = new BibliographyService();
