@@ -1,10 +1,7 @@
+import type { bibliographyMetadataSchema } from '$lib/schemas/bibliography-metadata';
+import type z from 'zod';
+
 /**
- * Bibliography Metadata Interface
+ * Bibliography Metadata type definition.
  */
-export interface BibliographyMetadata {
-  id: string;
-  title: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type BibliographyMetadata = z.infer<typeof bibliographyMetadataSchema>;

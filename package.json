@@ -37,7 +37,7 @@
 		"prettier": "^3.7.4",
 		"prettier-plugin-svelte": "^3.4.1",
 		"prettier-plugin-tailwindcss": "^0.7.2",
-		"svelte": "^5.46.0",
+		"svelte": "^5.46.1",
 		"svelte-check": "^4.3.5",
 		"tailwindcss": "^4.1.18",
 		"typescript": "^5.9.3",
@@ -47,6 +47,7 @@
 	"dependencies": {
 		"@lucide/svelte": "^0.562.0",
 		"dexie": "^4.2.1",
-		"yaml": "^2.8.2"
+		"yaml": "^2.8.2",
+		"zod": "^4.2.1"
 	}
 }
