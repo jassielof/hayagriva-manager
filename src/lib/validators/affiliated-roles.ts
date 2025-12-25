@@ -1,5 +1,20 @@
-import { hayagrivaService } from '$lib/services/hayagriva.service';
-
-export const AFFILIATED_ROLES: string[] = await hayagrivaService
-  .getSchema()
-  .then((schema) => schema.definitions.roleType.enum);
+// Affiliated roles from Hayagriva schema
+// This avoids SSR fetch issues while keeping validation consistent
+export const AFFILIATED_ROLES: string[] = [
+  'translator',
+  'annotator',
+  'commentator',
+  'holder',
+  'compiler',
+  'founder',
+  'collaborator',
+  'organizer',
+  'cast',
+  'composer',
+  'producer',
+  'executive-producer',
+  'director',
+  'illustrator',
+  'narrator',
+  'performer'
+];

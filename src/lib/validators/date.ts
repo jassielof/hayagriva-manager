@@ -1,12 +1,8 @@
-import { hayagrivaService } from '$lib/services/hayagriva.service';
 import type { Date } from '$lib/types/hayagriva';
 
-const hayagrivaSchema = await hayagrivaService.getSchema();
-export const datePattern: string =
-  hayagrivaSchema.definitions.date.anyOf.find((d: any) => d.pattern)?.pattern ??
-  (() => {
-    throw new Error('No date pattern found in schema');
-  })();
+// Date pattern from Hayagriva schema (YYYY, YYYY-MM, or YYYY-MM-DD)
+// This avoids SSR fetch issues while keeping validation consistent
+export const datePattern: string = '^-?\\d{1,4}(-\\d{2}){0,2}$';
 
 export const DATE_REGEX = new RegExp(datePattern);
 
