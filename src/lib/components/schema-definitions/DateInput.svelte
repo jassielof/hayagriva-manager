@@ -19,13 +19,22 @@
   });
 </script>
 
-<label class="label" for="entry-date">{label}</label>
-<input
-  pattern={datePattern}
-  title="Date must match the format: YYYY, YYYY-MM, or YYYY-MM-DD."
-  bind:value
-  id="entry-date"
-  type="text"
-  class="input validator w-full"
-  {placeholder}
-/>
+<div class="form-control w-full">
+  <label class="label" for="entry-date">
+    <span class="label-text font-medium">{label}</span>
+  </label>
+  <input
+    pattern={datePattern}
+    title="Date must match the format: YYYY, YYYY-MM, or YYYY-MM-DD."
+    bind:value
+    id="entry-date"
+    type="text"
+    class="input input-bordered w-full"
+    {placeholder}
+  />
+  <label class="label">
+    <span class="label-text-alt text-base-content/60"
+      >Year, Year-Month, or full YYYY-MM-DD format</span
+    >
+  </label>
+</div>

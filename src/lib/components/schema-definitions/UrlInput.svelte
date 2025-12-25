@@ -32,19 +32,28 @@
 </script>
 
 <fieldset
-  class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+  class="fieldset bg-base-200/30 border-base-300 space-y-4 rounded-lg border p-5"
 >
-  <legend class="fieldset-legend"> {label} </legend>
+  <legend class="fieldset-legend px-2 text-sm font-semibold">{label}</legend>
 
-  <label class="label" for="entry-url">{label}</label>
-  <input
-    bind:value={urlValue}
-    id="entry-url"
-    type="url"
-    class="input validator w-full"
-    {placeholder}
-    required={dateValue ? true : false}
-  />
+  <div class="form-control w-full">
+    <label class="label" for="entry-url">
+      <span class="label-text font-medium">{label}</span>
+    </label>
+    <input
+      bind:value={urlValue}
+      id="entry-url"
+      type="url"
+      class="input input-bordered w-full"
+      {placeholder}
+      required={dateValue ? true : false}
+    />
+    <label class="label">
+      <span class="label-text-alt text-base-content/60"
+        >Full URL including https://</span
+      >
+    </label>
+  </div>
 
-  <DateInput bind:value={dateValue} />
+  <DateInput bind:value={dateValue} label="Visit/Access Date" />
 </fieldset>

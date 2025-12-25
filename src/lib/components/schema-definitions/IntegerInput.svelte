@@ -12,12 +12,17 @@
   } = $props();
 </script>
 
-<label for="integer-input-{label}" class="label">{label}</label>
-<input
-  type="number"
-  min={naturalSet ? '0' : undefined}
-  id="integer-input-{label}"
-  class="input w-full"
-  bind:value
-  {placeholder}
-/>
+<div class="form-control w-full">
+  <label for="integer-input-{label}" class="label">
+    <span class="label-text font-medium">{label}</span>
+    <span class="label-text-alt text-base-content/60">Optional</span>
+  </label>
+  <input
+    type="number"
+    min={naturalSet ? '0' : undefined}
+    id="integer-input-{label}"
+    class="input input-bordered w-full"
+    bind:value
+    {placeholder}
+  />
+</div>

@@ -51,7 +51,7 @@
   <input
     type="text"
     id="publisher-entry"
-    class="input w-full validator"
+    class="input validator w-full"
     bind:value={publisherName}
     {placeholder}
     required={publisherLocation ? true : false}

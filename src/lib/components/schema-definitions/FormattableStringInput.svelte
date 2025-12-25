@@ -43,40 +43,66 @@
 </script>
 
 <fieldset
-  class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+  class="fieldset bg-base-200/30 border-base-300 space-y-4 rounded-lg border p-5"
 >
-  <legend class="fieldset-legend">{label}</legend>
+  <legend class="fieldset-legend px-2 text-sm font-semibold">{label}</legend>
 
-  {#if multiline}
-    <label class="label" for="textarea-entry-{label}">{label}</label>
-    <textarea
-      id="textarea-entry-{label}"
-      class="textarea w-full"
-      {placeholder}
-      bind:value={mainValue}
-    ></textarea>
-  {:else}
-    <label for="main-value-{label}" class="label">{label}</label>
+  <div class="form-control w-full">
+    {#if multiline}
+      <label class="label" for="textarea-entry-{label}">
+        <span class="label-text font-medium">{label}</span>
+      </label>
+      <textarea
+        id="textarea-entry-{label}"
+        class="textarea textarea-bordered w-full"
+        {placeholder}
+        rows="4"
+        bind:value={mainValue}
+      ></textarea>
+    {:else}
+      <label for="main-value-{label}" class="label">
+        <span class="label-text font-medium">{label}</span>
+      </label>
+      <input
+        id="main-value-{label}"
+        type="text"
+        class="input input-bordered w-full"
+        {placeholder}
+        bind:value={mainValue}
+      />
+    {/if}
+  </div>
+
+  <div class="form-control w-full">
+    <label for="short-form-{label}" class="label">
+      <span class="label-text text-sm font-medium">Short form</span>
+      <span class="label-text-alt text-base-content/60">Optional</span>
+    </label>
     <input
-      id="main-value-{label}"
+      id="short-form-{label}"
       type="text"
-      class="input w-full"
-      {placeholder}
-      bind:value={mainValue}
+      placeholder={shortPlaceholder}
+      class="input input-bordered input-sm w-full"
+      bind:value={shortValue}
     />
-  {/if}
+    <label for="short-form-{label}" class="label">
+      <span class="label-text-alt text-base-content/60"
+        >Abbreviated version for citations</span
+      >
+    </label>
+  </div>
 
-  <label for="short-form-{label}" class="label">Short form of {label}</label>
-  <input
-    id="short-form-{label}"
-    type="text"
-    placeholder={shortPlaceholder}
-    class="input w-full"
-    bind:value={shortValue}
-  />
-
-  <label class="label mt-2 font-mono">
-    <input type="checkbox" class="checkbox" bind:checked={verbatimValue} />
-    Verbatim
-  </label>
+  <div class="form-control">
+    <label class="label cursor-pointer justify-start gap-3">
+      <input
+        type="checkbox"
+        class="checkbox checkbox-sm"
+        bind:checked={verbatimValue}
+      />
+      <span class="label-text font-medium">Verbatim</span>
+      <span class="label-text-alt text-base-content/60"
+        >(Use exact formatting)</span
+      >
+    </label>
+  </div>
 </fieldset>

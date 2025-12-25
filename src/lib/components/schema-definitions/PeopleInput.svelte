@@ -42,38 +42,44 @@
 </script>
 
 <fieldset
-  class="fieldset bg-base-300/50 border-base-content/20 rounded-box gap-2 border p-4"
+  class="fieldset bg-base-200/30 border-base-300 gap-4 rounded-lg border p-5"
 >
-  <legend class="fieldset-legend">{label} </legend>
+  <legend class="fieldset-legend px-2 text-sm font-semibold">{label}</legend>
   {#if value === undefined || value === null}
-    <button
-      type="button"
-      class="btn btn-outline btn-success w-full"
-      onclick={addPerson}
-    >
-      <Plus class="size-[1.2em]" /> Add {label}
-    </button>
+    <div class="py-4">
+      <button
+        type="button"
+        class="btn btn-outline btn-success btn-block gap-2"
+        onclick={addPerson}
+      >
+        <Plus class="size-[1.2em]" /> Add {label}
+      </button>
+    </div>
   {:else if Array.isArray(value)}
-    {#each value as _person, i (i)}
-      <PersonInput bind:value={value[i]} remove={() => removePerson(i)} />
-    {/each}
+    <div class="space-y-4">
+      {#each value as _person, i (i)}
+        <div class="border-primary/20 rounded-lg border-2 p-1">
+          <PersonInput bind:value={value[i]} remove={() => removePerson(i)} />
+        </div>
+      {/each}
+    </div>
 
     <button
       type="button"
-      class="btn btn-outline btn-success mt-2 w-full"
+      class="btn btn-outline btn-success btn-block mt-4 gap-2"
       onclick={addPerson}
     >
-      <Plus class="size-[1.2em]" /> Add Person
+      <Plus class="size-[1.2em]" /> Add Another Person
     </button>
   {:else}
     <PersonInput bind:value remove={removeSingle} />
 
     <button
       type="button"
-      class="btn btn-outline btn-success mt-2 w-full"
+      class="btn btn-outline btn-success btn-block mt-4 gap-2"
       onclick={addPerson}
     >
-      <Plus class="size-[1.2em]" /> Add Person
+      <Plus class="size-[1.2em]" /> Add Another Person
     </button>
   {/if}
 </fieldset>

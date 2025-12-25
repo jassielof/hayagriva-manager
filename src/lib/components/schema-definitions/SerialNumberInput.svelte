@@ -8,7 +8,15 @@
     value: BibliographyEntry['serial-number'];
   } = $props();
 
-  const KNOWN_KEYS = ['serial', 'doi', 'isbn', 'issn', 'pmid', 'pmcid', 'arxiv'] as const;
+  const KNOWN_KEYS = [
+    'serial',
+    'doi',
+    'isbn',
+    'issn',
+    'pmid',
+    'pmcid',
+    'arxiv'
+  ] as const;
 
   let serial = $state('');
   let doi = $state('');
@@ -126,7 +134,6 @@
     }
   });
 </script>
-
 
 <fieldset
   class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"

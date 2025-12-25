@@ -40,7 +40,7 @@ export type Person =
   | string
   | {
       name: Name;
-      "given-name"?: GivenName;
+      'given-name'?: GivenName;
       prefix?: Prefix;
       suffix?: Suffix;
       alias?: Alias;
@@ -101,26 +101,26 @@ export type Editor = Person | Person[];
  * The role of the person or people in relation to the entry.
  */
 export type Role =
-  | "translator"
-  | "afterword"
-  | "foreword"
-  | "introduction"
-  | "annotator"
-  | "commentator"
-  | "holder"
-  | "compiler"
-  | "founder"
-  | "collaborator"
-  | "organizer"
-  | "cast-member"
-  | "composer"
-  | "producer"
-  | "executive-producer"
-  | "writer"
-  | "cinematography"
-  | "director"
-  | "illustrator"
-  | "narrator";
+  | 'translator'
+  | 'afterword'
+  | 'foreword'
+  | 'introduction'
+  | 'annotator'
+  | 'commentator'
+  | 'holder'
+  | 'compiler'
+  | 'founder'
+  | 'collaborator'
+  | 'organizer'
+  | 'cast-member'
+  | 'composer'
+  | 'producer'
+  | 'executive-producer'
+  | 'writer'
+  | 'cinematography'
+  | 'director'
+  | 'illustrator'
+  | 'narrator';
 /**
  * The name(s) of the person or people involved in the role.
  */
@@ -327,23 +327,23 @@ export interface BibliographyEntry {
   genre?: Genre;
   editor?: Editor;
   affiliated?: AffiliatedPeople;
-  "call-number"?: CallNumber;
+  'call-number'?: CallNumber;
   publisher?: Publisher;
   location?: Location;
   organization?: Organization;
   issue?: Issue;
   volume?: Volume;
-  "volume-total"?: VolumeTotal;
+  'volume-total'?: VolumeTotal;
   edition?: Edition;
-  "page-range"?: PageRange;
-  "page-total"?: PageTotal;
-  "time-range"?: TimeRange;
+  'page-range'?: PageRange;
+  'page-total'?: PageTotal;
+  'time-range'?: TimeRange;
   runtime?: Runtime;
   url?: URL;
-  "serial-number"?: SerialNumber;
+  'serial-number'?: SerialNumber;
   language?: Language;
   archive?: Archive;
-  "archive-location"?: ArchiveLocation;
+  'archive-location'?: ArchiveLocation;
   note?: Note;
 }
 export interface AffiliatedList {

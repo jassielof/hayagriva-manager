@@ -18,11 +18,16 @@
   });
 </script>
 
-<label class="label" for="numeric-or-string">{label}</label>
-<input
-  class="input w-full"
-  type="text"
-  id="numeric-or-string"
-  {placeholder}
-  bind:value
-/>
+<div class="form-control w-full">
+  <label class="label" for="numeric-or-string">
+    <span class="label-text font-medium">{label}</span>
+    <span class="label-text-alt text-base-content/60">Optional</span>
+  </label>
+  <input
+    class="input input-bordered w-full"
+    type="text"
+    id="numeric-or-string"
+    {placeholder}
+    bind:value
+  />
+</div>

@@ -10,13 +10,30 @@
   } = $props();
 </script>
 
-<label for="entry-type" class="label">Type </label>
-<select id="entry-type" class="select w-full" bind:value>
-  <option disabled selected>Select an entry type</option>
-  {#each ENTRY_TYPES as type}
-    {@const { label } = formatEntryType(type)}
-    <option value={type}>
-      {label}
-    </option>
-  {/each}
-</select>
+<div class="form-control w-full">
+  <label for="entry-type" class="label">
+    <span class="label-text font-semibold"
+      >Entry Type<span class="text-error ml-1">*</span></span
+    >
+  </label>
+  <select
+    id="entry-type"
+    class="select select-bordered w-full"
+    bind:value
+    required
+    aria-required="true"
+  >
+    <option disabled selected>Select an entry type</option>
+    {#each ENTRY_TYPES as type}
+      {@const { label } = formatEntryType(type)}
+      <option value={type}>
+        {label}
+      </option>
+    {/each}
+  </select>
+  <label for="entry-type" class="label">
+    <span class="label-text-alt text-base-content/60"
+      >The type of bibliographic entry (book, article, etc.)</span
+    >
+  </label>
+</div>
