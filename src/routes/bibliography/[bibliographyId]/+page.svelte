@@ -3,7 +3,6 @@
   import EntryList from '$lib/components/EntryList.svelte';
   import { BookPlus, Search } from '@lucide/svelte';
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
-  import { ENTRY_TYPES } from '$lib/validators/entry-type';
   import type { BibliographyEntry, FormattableString, Hayagriva } from '$lib/types/hayagriva';
 
   let { data }: PageProps = $props();
@@ -50,9 +49,13 @@
     return Array.from(types).sort();
   });
 
-  // Filtered and sorted entries
-  let filteredEntries = $derived.by(() => {
-    if (!bibliography) return {};
+  // Filtered and sorted entries - use state to allow bind:entries in EntryList
+  // Sync it reactively with filters/sorts applied
+  let filteredEntries = $state<Hayagriva>({});
+
+  // Compute which entries should be shown (for filtering/sorting)
+  let entryOrder = $derived.by(() => {
+    if (!bibliography) return [];
 
     let entries = Object.entries(bibliography.data);
 
@@ -116,13 +119,51 @@
       return comparison;
     });
 
-    // Convert back to Hayagriva format (object)
+    return entries.map(([id]) => id);
+  });
+
+  // Track if filteredEntries has been initialized to avoid false deletion detection on first run
+  let filteredEntriesInitialized = $state(false);
+
+  // Sync filteredEntries based on entryOrder, maintaining references to original entries
+  // This creates a filtered and sorted view of bibliography.data
+  $effect(() => {
+    if (!bibliography) {
+      filteredEntries = {};
+      filteredEntriesInitialized = false;
+      return;
+    }
+
+    // Before rebuilding, check if any entries were deleted from filteredEntries
+    // (EntryList may have deleted entries, which we need to sync to bibliography.data)
+    // Only check if filteredEntries has been initialized (not on first run)
+    if (filteredEntriesInitialized) {
+      const currentFilteredIds = new Set(Object.keys(filteredEntries));
+      const expectedIds = new Set(entryOrder);
+
+      // If an entry should be in the filtered view but isn't in filteredEntries,
+      // and it still exists in bibliography.data, it means EntryList deleted it
+      expectedIds.forEach((id) => {
+        if (!currentFilteredIds.has(id) && bibliography.data[id]) {
+          // This entry should be visible but was removed from filteredEntries
+          // EntryList deleted it, so delete it from bibliography.data too
+          delete bibliography.data[id];
+        }
+      });
+    }
+
+    // Build new filtered entries object
     const result: Hayagriva = {};
-    entries.forEach(([id, entry]) => {
-      result[id] = entry;
+    entryOrder.forEach((id) => {
+      if (bibliography.data[id]) {
+        // Use reference to original entry so changes propagate
+        result[id] = bibliography.data[id];
+      }
     });
 
-    return result;
+    // Update filteredEntries - replace entire object to trigger reactivity
+    filteredEntries = result;
+    filteredEntriesInitialized = true;
   });
 </script>
 
@@ -140,12 +181,6 @@
         {/if}
       </div>
       <div class="flex flex-auto items-end justify-end md:items-start">
-        <select name="sort" id="sort" class="select mr-2 w-auto">
-          <option disabled selected>Sort by</option>
-          <option value="id">ID</option>
-          <option value="title">Title</option>
-          <option value="author">Author</option>
-        </select>
         <a
           class="btn btn-primary"
           href="/bibliography/{bibliography.metadata.id}/entry/"
@@ -155,8 +190,59 @@
         </a>
       </div>
     </div>
+
+    <!-- Search, Sort, and Filter Controls -->
+    <div class="mt-4 flex flex-col gap-2 md:flex-row md:items-center">
+      <!-- Search Input -->
+      <div class="form-control flex-auto">
+        <div class="input-group">
+          <span class="bg-base-200 px-4">
+            <Search class="size-4" />
+          </span>
+          <input
+            type="text"
+            placeholder="Search by ID, title, or author..."
+            class="input input-bordered w-full"
+            bind:value={searchQuery}
+          />
+        </div>
+      </div>
+
+      <!-- Filter by Type -->
+      <div class="form-control w-auto">
+        <select
+          name="filter"
+          id="filter"
+          class="select select-bordered w-auto"
+          bind:value={filterByType}
+        >
+          <option value="all">All types</option>
+          {#each availableEntryTypes as entryType}
+            {@const { label } = formatEntryType(entryType)}
+            <option value={entryType}>{label}</option>
+          {/each}
+        </select>
+      </div>
+
+      <!-- Sort by -->
+      <div class="form-control w-auto">
+        <select
+          name="sort"
+          id="sort"
+          class="select select-bordered w-auto"
+          bind:value={sortBy}
+        >
+          <option value="id">Sort: ID</option>
+          <option value="title">Sort: Title</option>
+          <option value="author">Sort: Author</option>
+          <option value="date">Sort: Date</option>
+          <option value="type">Sort: Type</option>
+        </select>
+      </div>
+    </div>
+
     <EntryList
-      bind:entries={bibliography.data}
+      bind:entries={filteredEntries}
       bind:bibliographyId={bibliography.metadata.id}
     />
   {:else}
