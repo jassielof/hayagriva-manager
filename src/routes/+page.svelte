@@ -16,7 +16,8 @@
 
   let { data }: PageProps = $props();
 
-  let bibliographies: Bibliography[] = $state(data.bibliographies);
+  const initialBibliographies = data.bibliographies;
+  let bibliographies: Bibliography[] = $state(initialBibliographies);
 
   function formatDate(date: Date) {
     return new Intl.DateTimeFormat(undefined, {
@@ -27,7 +28,7 @@
   }
   // TODO: Add export/backup with checks for single/multiple/all bibliographies
   // If single, just the YAML file
-  // if multiple, must be compressed
+  // if multiple, must be compressed as Zip or any good format
 </script>
 
 {#snippet actions()}
