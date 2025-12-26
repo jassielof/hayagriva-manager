@@ -31,23 +31,19 @@
   }
 </script>
 
-<form class="mx-auto max-w-md p-6" onsubmit={handleSubmit}>
-  <fieldset
-    class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4"
-  >
-    <legend class="fieldset-legend"> New Bibliography </legend>
+<div class="grid min-h-full place-items-center py-50 px-4">
+  <form class="w-full max-w-md" onsubmit={handleSubmit}>
+    <fieldset
+      class="fieldset w-full rounded-box border border-base-300 bg-base-200 p-4"
+    >
+      <legend class=" fieldset-legend text-2xl"> New Bibliography </legend>
 
-    {#if errorMessage}
-      <div class="alert alert-error" role="alert">
-        <span>{errorMessage}</span>
-      </div>
-    {/if}
+      <BibliographyMetadataForm
+        bind:bibliographyMetadata={newBibliography.metadata}
+      />
 
-    <BibliographyMetadataForm
-      bind:bibliographyMetadata={newBibliography.metadata}
-    />
-
-    <button class="btn btn-primary mt-4">Save</button>
-    <a class="btn" href="/">Cancel</a>
-  </fieldset>
-</form>
+      <button class="btn mt-4 btn-primary">Save</button>
+      <a class="btn btn-error" href="/">Cancel</a>
+    </fieldset>
+  </form>
+</div>

@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
-  import { bibliographyService } from '$lib/services/bibliography.service';
+  import { BibliographyService } from '$lib/services/bibliography.service';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
   import type { Bibliography } from '$lib/types/bibliography';
   import type { Hayagriva } from '$lib/types/hayagriva';
@@ -51,7 +50,7 @@
 
   async function handleSubmit() {
     try {
-      await bibliographyService.add(newBibliography);
+      await BibliographyService.add(newBibliography);
       goto('/');
     } catch (error: any) {
       if (error.name == 'ConstraintError') {
@@ -67,7 +66,7 @@
 
 <form class="mx-auto max-w-md p-6" onsubmit={handleSubmit}>
   <fieldset
-    class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4"
+    class="fieldset w-full rounded-box border border-base-300 bg-base-200 p-4"
   >
     <legend class="fieldset-legend"> Import Bibliography </legend>
 
@@ -104,7 +103,7 @@
 
     {#if isLoading && files}
       <div class="mt-4 flex items-center gap-2">
-        <span class="loading loading-spinner loading-md"></span>
+        <span class="loading loading-md loading-spinner"></span>
         <span>Parsing {files[0].name}...</span>
       </div>
     {/if}
@@ -115,7 +114,7 @@
       />
     {/if}
 
-    <button class="btn btn-primary mt-4">Save</button>
+    <button class="btn mt-4 btn-primary">Save</button>
     <a class="btn" href="/">Cancel</a>
   </fieldset>
 </form>
