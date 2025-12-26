@@ -1,4 +1,5 @@
 import { db } from '$lib/db';
+import { bibliographyMetadataSchema } from '$lib/schemas/bibliography-metadata';
 import type { Bibliography } from '$lib/types/bibliography';
 import type { TopLevelEntry } from '$lib/types/hayagriva';
 
@@ -29,7 +30,7 @@ export class BibliographyService {
    * @returns A promise that resolves when the bibliography has been added.
    */
   static async add(bibliography: Bibliography) {
-    // Save it sanitized, given that Dexie can't clone Svelte $states().
+    bibliographyMetadataSchema.parse(bibliography.metadata);
     await db.bibliographies.add(JSON.parse(JSON.stringify(bibliography)));
   }
 

@@ -26,9 +26,6 @@
       day: 'numeric'
     }).format(new Date(date));
   }
-  // TODO: Add export/backup with checks for single/multiple/all bibliographies
-  // If single, just the YAML file
-  // if multiple, must be compressed as Zip or any good format
 </script>
 
 {#snippet actions()}
@@ -85,17 +82,17 @@
             </div>
 
             <div
-              class="join lg:join-horizontal join-vertical flex items-center justify-end"
+              class="join join-vertical flex items-center justify-end lg:join-horizontal"
             >
               <a
                 href={`/bibliography/${bib.metadata.id}`}
-                class="btn btn-soft join-item"
+                class="btn join-item btn-soft"
                 title="View bibliography entries"
               >
                 <BookOpen class="size-[1.2em]" />
               </a>
               <a
-                class="btn btn-soft join-item"
+                class="btn join-item btn-soft"
                 href={`/bibliography/${bib.metadata.id}/edit`}
                 title="Edit metadata"
               >
@@ -103,7 +100,7 @@
               </a>
 
               <button
-                class="btn btn-soft join-item"
+                class="btn join-item btn-soft"
                 title="Download as YAML file"
                 onclick={() =>
                   hayagrivaService.export(bib.data, {
@@ -115,7 +112,7 @@
               </button>
 
               <button
-                class="btn btn-soft join-item"
+                class="btn join-item btn-soft"
                 title="Copy to clipboard as YAML"
                 onclick={() =>
                   hayagrivaService.export(bib.data, { toClipboard: true })}
@@ -124,7 +121,7 @@
               </button>
 
               <button
-                class="btn btn-soft btn-error join-item"
+                class="btn join-item btn-soft btn-error"
                 onclick={async () => {
                   alert('Are you sure you want to delete this bibliography?');
                   await db.bibliographies.delete(bib.metadata.id);
