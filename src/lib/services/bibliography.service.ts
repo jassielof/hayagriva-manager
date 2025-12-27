@@ -75,7 +75,7 @@ export class BibliographyService {
     newEntryId: string,
     newEntryData: TopLevelEntry
   ) {
-    let bibliography = await this.get(bibliographyId);
+    const bibliography = await this.get(bibliographyId);
     if (!bibliography) throw new Error('Bibliography not found');
     if (bibliography.data[newEntryId]) {
       throw new Error('Entry already exists');
@@ -92,7 +92,7 @@ export class BibliographyService {
    * @returns A promise that resolves when the entry has been deleted.
    */
   static async deleteEntry(bibliographyId: string, entryId: string) {
-    let bibliography = await this.get(bibliographyId);
+    const bibliography = await this.get(bibliographyId);
     if (!bibliography) throw new Error('Bibliography not found');
     delete bibliography.data[entryId];
     await this.put(bibliography);
@@ -126,7 +126,7 @@ export class BibliographyService {
     updatedEntryData: TopLevelEntry,
     oldEntryId?: string
   ) {
-    let bibliography = await this.get(bibliographyId);
+    const bibliography = await this.get(bibliographyId);
     if (!bibliography) throw new Error('Bibliography not found');
     if (!bibliography.data[updatedEntryId]) {
       delete bibliography.data[oldEntryId!];
