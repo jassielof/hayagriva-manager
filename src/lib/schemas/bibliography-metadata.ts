@@ -3,7 +3,7 @@ import z from 'zod';
 /**
  * List of reserved IDs that cannot be used for bibliographies IDs.
  */
-const RESERVED_IDS = ['new', 'import'];
+const RESERVED_IDS = ['new'];
 
 /**
  * Zod schema for the bibliography metadata.
