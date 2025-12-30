@@ -122,7 +122,6 @@ export class BibliographyService {
    */
   static async deleteEntry(bibliographyId: string, entryId: string) {
     const bibliography = await this.get(bibliographyId);
-    if (!bibliography) throw new Error('Bibliography not found');
     delete bibliography.data[entryId];
     await this.put(bibliography);
   }

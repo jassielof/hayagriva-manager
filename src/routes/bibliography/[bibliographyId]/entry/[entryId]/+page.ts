@@ -1,26 +1,26 @@
-import { db } from '$lib/db';
 import { hayagrivaService } from '$lib/services/hayagriva.service';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
+import { BibliographyService } from '$lib/services/bibliography.service';
 
 export const ssr = false;
 
 export const load: PageLoad = async ({ params }) => {
   try {
-    let bibliography = await db.bibliographies.get(params.bibliographyId);
-    let entry = bibliography?.data[params.entryId];
+    const bibliography = await BibliographyService.get(params.bibliographyId);
+    const entry = bibliography?.data[params.entryId];
 
     if (!entry) {
       throw error(404, 'Entry not found');
     }
 
-    let yamlData = hayagrivaService.export(entry) as string;
-    let indentedYaml = yamlData
+    const yamlData = hayagrivaService.export(entry) as string;
+    const indentedYaml = yamlData
       .split('\n')
       .map((line) => `  ${line}`)
       .join('\n');
-    let fullYaml = `${params.entryId}:\n${indentedYaml}`;
-    let entryYamlData = fullYaml.split('\n');
+    const fullYaml = `${params.entryId}:\n${indentedYaml}`;
+    const entryYamlData = fullYaml.split('\n');
 
     return {
       entry,
