@@ -13,11 +13,11 @@
   } from '@lucide/svelte';
   import type { PageProps } from './$types';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
+  import { invalidateAll } from '$app/navigation';
 
   let { data }: PageProps = $props();
 
-  // const initialBibliographies = ;
-  let bibliographies: Bibliography[] = $state(data.bibliographies);
+  let bibliographies: Bibliography[] = $derived(data.bibliographies);
 
   function formatDate(date: Date) {
     return new Intl.DateTimeFormat(undefined, {
@@ -115,9 +115,14 @@
               <button
                 class="btn join-item btn-soft btn-error"
                 onclick={async () => {
-                  alert('Are you sure you want to delete this bibliography?');
-                  await db.bibliographies.delete(bib.metadata.id);
-                  bibliographies = await db.bibliographies.toArray();
+                  if (
+                    confirm(
+                      'Are you sure you want to delete this bibliography?'
+                    )
+                  ) {
+                    await db.bibliographies.delete(bib.metadata.id);
+                    await invalidateAll();
+                  }
                 }}
                 title="Delete"
               >
