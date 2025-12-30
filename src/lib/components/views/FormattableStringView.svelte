@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { FormattableString } from '$lib/types/formattable-string';
+  import type { FormattableString } from '$lib/types/hayagriva';
 
   let {
     value,

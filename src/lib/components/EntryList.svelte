@@ -1,7 +1,7 @@
 <script lang="ts">
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
   import { BibliographyService } from '$lib/services/bibliography.service';
-  import type { FormattableString } from '$lib/types/formattable-string';
+  import type { FormattableString } from '$lib/types/hayagriva';
   import type { BibliographyEntry, Hayagriva } from '$lib/types/hayagriva';
   import {
     Calendar,
@@ -63,7 +63,7 @@
       <p class="text-center text-gray-500">This bibliography has no entries.</p>
     </div>
   {:else}
-    <ul class="list bg-base-200 rounded-box shadow-md">
+    <ul class="list rounded-box bg-base-200 shadow-md">
       {#each Object.entries(entries) as [id, entry] (id)}
         {@const { label, Icon } = formatEntryType(entry.type)}
         <li class="list-row">
@@ -105,7 +105,7 @@
               <Ellipsis class="inline-block" />
             </button>
             <ul
-              class="dropdown dropdown-left menu rounded-box bg-base-100 w-max shadow-sm"
+              class="menu dropdown dropdown-left w-max rounded-box bg-base-100 shadow-sm"
               popover
               id={`popover-${id}`}
               style={`position-anchor: --anchor-${id};`}
@@ -124,14 +124,16 @@
               </li>
               <li>
                 <button
-                  class="btn btn-error btn-sm btn-soft"
+                  class="btn btn-soft btn-sm btn-error"
                   onclick={async () => {
-                    confirm(
-                      `Are you sure you want to delete the following entry: ${id}?`
-                    );
-
-                    await BibliographyService.deleteEntry(bibliographyId, id);
-                    delete entries[id];
+                    if (
+                      confirm(
+                        `Are you sure you want to delete the following entry: ${id}?`
+                      )
+                    ) {
+                      await BibliographyService.deleteEntry(bibliographyId, id);
+                      delete entries[id];
+                    }
                   }}
                 >
                   <Trash class="inline size-[1.2em]" />

@@ -8,11 +8,18 @@
     FormattableString,
     Hayagriva
   } from '$lib/types/hayagriva';
+  import { page } from '$app/state';
+  import { stateQuery } from 'dexie-svelte-query';
+  import { BibliographyService } from '$lib/services/bibliography.service';
 
-  let { data }: PageProps = $props();
+  const bibliographyId = page.params.bibliographyId;
+  const bibliographyQuery = stateQuery(() =>
+    BibliographyService.get(bibliographyId!)
+  );
 
-  const initialBibliography = data.bibliography;
-  let bibliography = $state(initialBibliography);
+  const bibliographyQueryLoading = $derived(bibliographyQuery.isLoading);
+
+  const bibliography = $derived(bibliographyQuery.current);
 
   // Search, sort, and filter state
   let searchQuery = $state('');
@@ -172,7 +179,11 @@
 </script>
 
 <main class="mx-auto flex w-full max-w-5xl flex-col p-4">
-  {#if bibliography}
+  {#if bibliographyQueryLoading}
+    <div class="flex min-h-[60vh] items-center justify-center">
+      <span class="loading loading-xl loading-spinner"></span>
+    </div>
+  {:else if bibliography}
     <div class="flex flex-col gap-2 md:flex-row">
       <div class="mb-2 flex-auto">
         <h1 class="truncate text-2xl font-bold">
@@ -195,57 +206,9 @@
       </div>
     </div>
 
-    <!-- Search, Sort, and Filter Controls -->
-    <div class="mt-4 flex flex-col gap-3 md:flex-row">
-      <!-- Search Input -->
-      <label class="input flex-1">
-        <span>
-          <Search class="size-5" />
-        </span>
-        <input
-          type="search"
-          placeholder="Search by ID, title, or author..."
-          class="grow"
-          bind:value={searchQuery}
-        />
-      </label>
-
-      <!-- Filter by Type -->
-      <select
-        name="filter"
-        id="filter"
-        class="select-bordered select w-full md:w-48"
-        bind:value={filterByType}
-      >
-        <option value="all">All types</option>
-        {#each availableEntryTypes as entryType}
-          {@const { label } = formatEntryType(entryType)}
-          <option value={entryType}>{label}</option>
-        {/each}
-      </select>
-
-      <!-- Sort by -->
-      <select
-        name="sort"
-        id="sort"
-        class="select-bordered select w-full md:w-40"
-        bind:value={sortBy}
-      >
-        <option value="id">Sort: ID</option>
-        <option value="title">Sort: Title</option>
-        <option value="author">Sort: Author</option>
-        <option value="date">Sort: Date</option>
-        <option value="type">Sort: Type</option>
-      </select>
-    </div>
-
     <EntryList
       bind:entries={filteredEntries}
       bind:bibliographyId={bibliography.metadata.id}
     />
-  {:else}
-    <div class="flex grow flex-col items-center justify-center">
-      <span class="loading loading-xl loading-spinner"></span>
-    </div>
   {/if}
 </main>

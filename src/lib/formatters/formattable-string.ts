@@ -1,12 +1,7 @@
-import type { FormattableString } from '$lib/types/formattable-string';
+import type { FormattableString } from '$lib/types/hayagriva';
 
 export function formattableStringFormatter(input: FormattableString) {
-  switch (typeof input) {
-    case 'object':
-      break;
-    case 'string':
-      break;
-    default:
-      break;
-  }
+  if (typeof input === 'string') return input;
+
+  return input.short ?? input.value ?? '';
 }

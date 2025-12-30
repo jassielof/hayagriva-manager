@@ -4,10 +4,12 @@
   import type { PageProps } from './$types';
   import { BibliographyService } from '$lib/services/bibliography.service';
   import { CircleAlert } from '@lucide/svelte';
+  import type { Bibliography } from '$lib/types/bibliography';
 
   let { data, params }: PageProps = $props();
 
-  let oldBibliography = $derived(data.oldBibliography);
+  // svelte-ignore state_referenced_locally
+  const bibliography = $state(data.oldBibliography);
 
   let errorMessage = $state(undefined as string | undefined);
 
@@ -15,7 +17,7 @@
     try {
       await BibliographyService.updateMetadata(
         params.bibliographyId,
-        oldBibliography
+        bibliography
       );
 
       goto('/');
@@ -40,7 +42,7 @@
     {/if}
 
     <BibliographyMetadataForm
-      bind:bibliographyMetadata={oldBibliography.metadata}
+      bind:bibliographyMetadata={bibliography.metadata}
     />
 
     <div class="divider"></div>

@@ -3,7 +3,7 @@
   import type { TopLevelEntry } from '$lib/types/hayagriva';
   import type { PageProps } from './$types';
   import { ClipboardPaste, Save, X } from '@lucide/svelte';
-  import { bibliographyService } from '$lib/services/bibliography.service';
+  import { BibliographyService } from '$lib/services/bibliography.service';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
   import { goto } from '$app/navigation';
 
@@ -15,7 +15,7 @@
   });
 
   async function handleSubmit() {
-    await bibliographyService.saveEntry(
+    await BibliographyService.saveEntry(
       params.bibliographyId,
       newEntryId,
       newEntryData
@@ -27,7 +27,7 @@
 
 <form onsubmit={handleSubmit} class="mx-auto w-full max-w-5xl p-6">
   <fieldset
-    class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+    class="fieldset rounded-box border border-base-300 bg-base-100/50 p-4"
   >
     <legend class="fieldset-legend text-xl">New entry</legend>
     <button
@@ -73,7 +73,7 @@
 
     <EntryForm bind:entryData={newEntryData} />
 
-    <button class="btn btn-success mt-4">
+    <button class="btn mt-4 btn-success">
       <Save class="size-[1.2em]" />
       Add
     </button>
