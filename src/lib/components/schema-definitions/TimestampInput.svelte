@@ -7,59 +7,130 @@
     label?: string;
   } = $props();
 
-  let timestampDay: undefined | string = $state();
-  let timestampHour: undefined | string = $state();
-  let timestampMinute: undefined | string = $state();
-  let timestampSecond: undefined | string = $state();
-  let timestampMillisecond: undefined | string = $state();
+  // Use $state for reactive individual fields
+  let day = $state<string>('');
+  let hour = $state<string>('');
+  let minute = $state<string>('');
+  let second = $state<string>('');
+  let millisecond = $state<string>('');
 
-  let timestamp = $derived.by(() => {
-    if (!value) {
-      return {};
+  // Track if we're currently syncing to prevent infinite loops
+  let isSyncing = false;
+
+  // Parse incoming value into individual fields
+  function parseValue(val: string | undefined) {
+    if (isSyncing) return;
+    isSyncing = true;
+
+    if (!val) {
+      day = '';
+      hour = '';
+      minute = '';
+      second = '';
+      millisecond = '';
+      isSyncing = false;
+      return;
     }
 
-    const [
-      timestampDay,
-      timestampHour,
-      timestampMinute,
-      timestampSecond,
-      timestampMillisecond
-    ] = value.split(/[:,]/);
+    // Split by comma first to separate milliseconds
+    const [timePart, msPart] = val.split(',');
+    const parts = timePart.split(':');
 
-    return {
-      day: timestampDay,
-      hour: timestampHour,
-      minute: timestampMinute,
-      second: timestampSecond,
-      millisecond: timestampMillisecond
-    };
-  });
+    // Format: [DD:][HH:]MM:SS[,msms]
+    // Minimum is MM:SS (2 parts)
+    if (parts.length === 2) {
+      // MM:SS
+      day = '';
+      hour = '';
+      minute = parts[0];
+      second = parts[1];
+    } else if (parts.length === 3) {
+      // HH:MM:SS
+      day = '';
+      hour = parts[0];
+      minute = parts[1];
+      second = parts[2];
+    } else if (parts.length === 4) {
+      // DD:HH:MM:SS
+      day = parts[0];
+      hour = parts[1];
+      minute = parts[2];
+      second = parts[3];
+    }
 
-  $effect(() => {
-    $inspect(timestamp, value, !!timestamp.day);
-    // parse the timestamp as dd:hh:mm:ss:ms
-    // if there are more than minute and second, then dd:hh:mm:ss,ms accordingly their existence
-    // if for example all exist but not ms, then it's dd:hh:mm:ss
-    // if not dd but yes to all the rest, then it's hh:mm:ss,ms
+    millisecond = msPart || '';
+    isSyncing = false;
+  }
+
+  // Format fields back into timestamp string
+  function formatValue() {
+    if (isSyncing) return;
+    isSyncing = true;
+
+    // Minimum required: MM:SS
+    if (!minute || !second) {
+      value = undefined;
+      isSyncing = false;
+      return;
+    }
+
     const parts: string[] = [];
-    if (!!timestamp.day) parts.push(String(timestamp.day).padStart(2, '0'));
-    if (!!timestamp.hour) parts.push(String(timestamp.hour).padStart(2, '0'));
-    if (!!timestamp.minute)
-      parts.push(String(timestamp.minute).padStart(2, '0'));
-    if (!!timestamp.second)
-      parts.push(String(timestamp.second).padStart(2, '0'));
-    if (!!timestamp.millisecond)
-      parts.push(String(timestamp.millisecond).padStart(2, '0'));
 
-    if (parts.length === 0) {
-      if (timestamp.millisecond && parts.length > 1) {
-        const mainParts = parts.slice(0, -1);
-        value = mainParts.join(':') + ',' + parts[parts.length - 1];
-      } else {
-        value = parts.join(':');
-      }
-    } else value = undefined;
+    // Only include day if it has a value
+    if (day) {
+      parts.push(day);
+      // If day is present, hour is required
+      parts.push(hour || '0');
+    } else if (hour) {
+      // If hour is present but not day
+      parts.push(hour);
+    }
+
+    // MM:SS are always required
+    parts.push(minute.padStart(2, '0'));
+    parts.push(second.padStart(2, '0'));
+
+    let result = parts.join(':');
+
+    // Add milliseconds if present
+    if (millisecond) {
+      result += ',' + millisecond;
+    }
+
+    value = result;
+    isSyncing = false;
+  }
+
+  // Parse value when it changes from outside
+  $effect(() => {
+    parseValue(value);
   });
+
+  // Handlers for input changes
+  function handleDayInput(e: Event) {
+    day = (e.target as HTMLInputElement).value;
+    formatValue();
+  }
+
+  function handleHourInput(e: Event) {
+    hour = (e.target as HTMLInputElement).value;
+    formatValue();
+  }
+
+  function handleMinuteInput(e: Event) {
+    minute = (e.target as HTMLInputElement).value;
+    formatValue();
+  }
+
+  function handleSecondInput(e: Event) {
+    second = (e.target as HTMLInputElement).value;
+    formatValue();
+  }
+
+  function handleMillisecondInput(e: Event) {
+    millisecond = (e.target as HTMLInputElement).value;
+    formatValue();
+  }
 </script>
 
 {#if label}
@@ -73,40 +144,45 @@
     min="0"
     placeholder="DD"
     class="input join-item validator w-1/5"
-    bind:value={timestamp.day}
+    value={day}
+    oninput={handleDayInput}
   />
   <input
     type="number"
     min="0"
-    max={!!timestamp.day ? 23 : undefined}
+    max={day ? 23 : undefined}
     placeholder="HH"
     class="input join-item validator w-1/5"
-    required={!!timestamp.day}
-    bind:value={timestamp.hour}
+    required={!!day}
+    value={hour}
+    oninput={handleHourInput}
   />
   <input
     type="number"
     min="0"
-    max={!!timestamp.hour ? 59 : undefined}
+    max={hour ? 59 : undefined}
     placeholder="MM"
     class="input join-item validator w-1/5"
-    required={!!timestamp.second || !!timestamp.hour}
-    bind:value={timestamp.minute}
+    required={!!second || !!hour}
+    value={minute}
+    oninput={handleMinuteInput}
   />
   <input
     type="number"
     min="0"
-    max={!!timestamp.minute ? 59 : undefined}
+    max={minute ? 59 : undefined}
     placeholder="SS"
-    required={!!timestamp.minute || !!timestamp.millisecond}
+    required={!!minute || !!millisecond}
     class="input join-item validator w-1/5"
-    bind:value={timestamp.second}
+    value={second}
+    oninput={handleSecondInput}
   />
   <input
     type="number"
     min="0"
     placeholder="ms"
     class="input join-item validator w-1/5"
-    bind:value={timestamp.millisecond}
+    value={millisecond}
+    oninput={handleMillisecondInput}
   />
 </div>

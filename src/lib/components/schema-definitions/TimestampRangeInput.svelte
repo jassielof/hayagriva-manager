@@ -13,34 +13,62 @@
   let start: string | undefined = $state();
   let end: string | undefined = $state();
 
+  // Track if we're syncing to prevent infinite loops
+  let isSyncing = false;
+
+  // Parse the range value into start and end
+  // Timestamp format: [DD:][HH:]MM:SS[,msms]
+  // Range format: start-end
+  // We need to be careful because timestamps contain colons, and we split by hyphen
+  // But timestamps don't contain hyphens, so splitting by hyphen is safe
   function parseRange(range: string | undefined) {
+    if (isSyncing) return;
+    isSyncing = true;
+
     if (range && range.includes('-')) {
-      const [startStr, endStr] = range.split('-');
-      start = startStr;
-      end = endStr;
+      // Find the hyphen that separates start and end
+      // Since timestamps can have format like "12:34" or "1:23:45,567"
+      // and don't contain hyphens themselves, we can split by hyphen
+      const hyphenIndex = range.indexOf('-');
+      start = range.substring(0, hyphenIndex);
+      end = range.substring(hyphenIndex + 1);
     } else {
       start = undefined;
       end = undefined;
     }
+
+    isSyncing = false;
   }
 
+  // Format start and end back into a range string
   function formatRange() {
+    if (isSyncing) return;
+    isSyncing = true;
+
     if (start && end) {
       value = `${start}-${end}`;
     } else {
       value = undefined;
     }
+
+    isSyncing = false;
   }
 
+  // Parse value when it changes from outside
   $effect(() => {
     parseRange(value);
   });
 
+  // Update value when start or end change (from child TimestampInput)
   $effect(() => {
+    // Access start and end to track them
+    const _ = [start, end];
     formatRange();
   });
 
   function clearInput() {
+    start = undefined;
+    end = undefined;
     value = undefined;
   }
 </script>
