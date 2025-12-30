@@ -12,10 +12,6 @@
 
   let { data }: PageProps = $props();
 
-  function highlight(line: string) {
-    // .value contains the safe HTML string
-    return hljs.highlight(line, { language: 'yaml' }).value;
-  }
 </script>
 
 <main>
