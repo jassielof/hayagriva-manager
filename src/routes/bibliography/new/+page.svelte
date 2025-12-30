@@ -8,10 +8,10 @@
   let newBibliography: Bibliography = $state({
     data: {},
     metadata: {
-      createdAt: new Date(),
-      updatedAt: new Date(),
       id: '',
-      title: ''
+      title: '',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   });
 
@@ -71,7 +71,7 @@
         <legend class="fieldset-legend text-2xl">New Bibliography</legend>
 
         <label for="hayagriva-file" class="label">
-          <span class="label-text">Import from Hayagriva YAML file</span>
+          <span class="label-text">Import from a Hayagriva YAML file</span>
         </label>
 
         <input
