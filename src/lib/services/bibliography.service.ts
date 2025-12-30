@@ -2,6 +2,10 @@ import { db } from '$lib/db';
 import type { Bibliography } from '$lib/types/bibliography';
 import type { TopLevelEntry } from '$lib/types/hayagriva';
 import { error } from '@sveltejs/kit';
+import Ajv, { type AnySchema } from 'ajv';
+import {  hayagrivaService } from './hayagriva.service';
+
+const ajv = new Ajv();
 
 /**
  * Service for managing Hayagriva bibliographies and its entries in IndexedDB.
@@ -36,6 +40,15 @@ export class BibliographyService {
    * @returns A promise that resolves when the bibliography has been added.
    */
   static async add(bibliography: Bibliography) {
+    const schema = await hayagrivaService.getSchema();
+    const validate = ajv.compile(schema as AnySchema);
+    const valid = validate(bibliography);
+
+    if (!valid) {
+      console.error('Invalid bibliography.', validate.errors);
+      return;
+    }
+
     await db.bibliographies.add(JSON.parse(JSON.stringify(bibliography)));
   }
 

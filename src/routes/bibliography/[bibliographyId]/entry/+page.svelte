@@ -60,6 +60,8 @@
       Paste from clipboard
     </button>
 
+    <div class="divider"></div>
+
     <label for="entry-id" class="label">ID</label>
     <input
       id="entry-id"
@@ -73,7 +75,9 @@
 
     <EntryForm bind:entryData={newEntryData} />
 
-    <button class="btn mt-4 btn-success">
+    <div class="divider"></div>
+
+    <button class="btn btn-success">
       <Save class="size-[1.2em]" />
       Add
     </button>

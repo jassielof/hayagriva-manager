@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { dateFormatter } from '$lib/formatters/date-formatter';
+  import { getLanguageFlag } from '$lib/formatters/language';
   import type { BibliographyEntry } from '$lib/types/hayagriva';
   import Self from './PreviewEntry.svelte';
 
@@ -23,26 +25,32 @@
       {/if}
     </svelte:element>
     {#if typeof entry.title === 'object' && entry.title.short}
-      <p class="lead">
+      <p class="leading-0">
         <em>Short title: {entry.title.short}</em>
       </p>
     {/if}
   {/if}
 
-  <div class="mb-6 flex flex-wrap items-center gap-4">
+  <ul>
     {#if entry.type}
-      <div class="badge badge-neutral">{entry.type}</div>
+      <li>
+        <strong> Entry type: </strong>
+        {entry.type}
+      </li>
     {/if}
     {#if entry.date}
-      <p class="my-0"><strong>Date:</strong> {entry.date}</p>
+      <li><strong>Date:</strong> {dateFormatter(entry.date)}</li>
     {/if}
     {#if entry.language}
-      <p class="my-0">
+      <li>
         <strong>Language:</strong>
         {entry.language}
-      </p>
+        {#if getLanguageFlag(entry.language)}
+          {getLanguageFlag(entry.language)}
+        {/if}
+      </li>
     {/if}
-  </div>
+  </ul>
 
   {#if entry.author}
     <section>

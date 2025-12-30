@@ -57,6 +57,39 @@ export const entryTypeIcons: Record<string, typeof BookOpen> = {
   exhibition: Eye
 };
 
+export const ENTRY_TYPES = [
+  'article',
+  'chapter',
+  'entry',
+  'anthos',
+  'report',
+  'thesis',
+  'web',
+  'scene',
+  'artwork',
+  'patent',
+  'case',
+  'newspaper',
+  'legislation',
+  'manuscript',
+  'original',
+  'post',
+  'misc',
+  'performance',
+  'periodical',
+  'proceedings',
+  'book',
+  'blog',
+  'reference',
+  'conference',
+  'anthology',
+  'repository',
+  'thread',
+  'video',
+  'audio',
+  'exhibition'
+] as const;
+
 export function formatEntryType(type: string): {
   label: string;
   Icon: typeof BookOpen;

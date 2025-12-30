@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { LANGUAGE_REGEX, type Language } from '$lib/types/hayagriva';
+  import { LANGUAGE_REGEX } from '$lib/formatters/language';
+  import { type Language } from '$lib/types/hayagriva';
 
   let {
     value = $bindable()

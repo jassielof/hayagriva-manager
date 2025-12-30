@@ -1,6 +1,9 @@
 <script lang="ts">
-  import { formatEntryType } from '$lib/formatters/entry-type-formatter';
-  import type { Type, ENTRY_TYPES } from '$lib/types/hayagriva';
+  import {
+    ENTRY_TYPES,
+    formatEntryType
+  } from '$lib/formatters/entry-type-formatter';
+  import type { Type } from '$lib/types/hayagriva';
 
   let {
     value = $bindable()

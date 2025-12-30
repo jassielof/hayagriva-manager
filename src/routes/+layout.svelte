@@ -4,6 +4,7 @@
   import { pwaInfo } from 'virtual:pwa-info';
 
   const webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
+  import { onMount } from 'svelte';
 
   let { children } = $props();
 </script>
