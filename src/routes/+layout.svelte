@@ -15,9 +15,9 @@
     const crumbs = [{ label: 'Bibliographies', href: '/' }];
 
     if (segments[0] === 'bibliography') {
-      if (segments[1] === 'new' || segments[1] === 'import') {
+      if (segments[1] === 'new') {
         crumbs.push({
-          label: `${segments[1].charAt(0).toUpperCase() + segments[1].slice(1)} Bibliography`,
+          label: `${segments[1].charAt(0).toUpperCase() + segments[1].slice(1)}`,
           href: path
         });
       } else if (segments[1]) {
