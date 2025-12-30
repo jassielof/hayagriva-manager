@@ -3,20 +3,15 @@
   import type { PageProps } from './$types';
   import PreviewEntry from '$lib/components/views/PreviewEntry.svelte';
 
-  // 1. Import Core & Language
   import hljs from 'highlight.js/lib/core';
   import yaml from 'highlight.js/lib/languages/yaml';
 
-  // 2. Import a theme (Choose one that matches your UI)
-  // 'github-dark' fits well with standard dark mode terminals
   import 'highlight.js/styles/tomorrow-night-blue.css';
 
-  // 3. Register YAML
   hljs.registerLanguage('yaml', yaml);
 
   let { data }: PageProps = $props();
 
-  // 4. Helper to highlight single lines
   function highlight(line: string) {
     // .value contains the safe HTML string
     return hljs.highlight(line, { language: 'yaml' }).value;
@@ -44,8 +39,9 @@
         <div class="relative">
           <div class="mockup-code w-full">
             {#each data.entryYamlData as line, i}
-              <!-- 5. Render with {@html} -->
-              <pre data-prefix={i + 1}><code>{@html highlight(line)}</code
+              <pre data-prefix={i + 1}><code
+                  >{@html hljs.highlight(line, { language: 'yaml' })
+                    .value}</code
                 ></pre>
             {/each}
           </div>
