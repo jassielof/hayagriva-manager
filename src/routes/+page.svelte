@@ -16,8 +16,8 @@
 
   let { data }: PageProps = $props();
 
-  const initialBibliographies = data.bibliographies;
-  let bibliographies: Bibliography[] = $state(initialBibliographies);
+  // const initialBibliographies = ;
+  let bibliographies: Bibliography[] = $state(data.bibliographies);
 
   function formatDate(date: Date) {
     return new Intl.DateTimeFormat(undefined, {
@@ -37,14 +37,6 @@
     >
       <BookPlus class="size-[1.2em]" />
       New
-    </a>
-    <a
-      href="/bibliography/import"
-      class="btn btn-secondary"
-      title="Import from a YAML file"
-    >
-      <Import class="size-[1.2em]" />
-      Import
     </a>
   </div>
 {/snippet}
