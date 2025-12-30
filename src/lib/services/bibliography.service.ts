@@ -1,7 +1,7 @@
 import { db } from '$lib/db';
-import { bibliographyMetadataSchema } from '$lib/schemas/bibliography-metadata';
 import type { Bibliography } from '$lib/types/bibliography';
 import type { TopLevelEntry } from '$lib/types/hayagriva';
+import { error } from '@sveltejs/kit';
 
 /**
  * Service for managing Hayagriva bibliographies and its entries in IndexedDB.
@@ -21,7 +21,13 @@ export class BibliographyService {
    * @returns A promise that resolves to the bibliography if found, undefined otherwise.
    */
   static async get(id: string) {
-    return await db.bibliographies.get(id);
+    const bibliography = await db.bibliographies.get(id);
+
+    if (!bibliography) {
+      error(404, { message: 'Bibliography not found' });
+    }
+
+    return bibliography;
   }
 
   /**
@@ -30,7 +36,6 @@ export class BibliographyService {
    * @returns A promise that resolves when the bibliography has been added.
    */
   static async add(bibliography: Bibliography) {
-    bibliographyMetadataSchema.parse(bibliography.metadata);
     await db.bibliographies.add(JSON.parse(JSON.stringify(bibliography)));
   }
 
@@ -51,6 +56,30 @@ export class BibliographyService {
    */
   static async update(id: string, changes: Partial<Bibliography>) {
     await db.bibliographies.update(id, changes);
+  }
+
+  static async exists(id: string) {
+    return !!(await db.bibliographies.get(id));
+  }
+
+  static async updateMetadata(id: string, updated: Bibliography) {
+    const newId = updated.metadata.id;
+
+    if (newId == 'new') {
+      error(400, {
+        message: 'Bibliography ID cannot be "new" as it is reserved'
+      });
+    }
+
+    if (newId !== id) {
+      if (await this.exists(newId)) {
+        error(409, { message: 'Bibliography with the new ID already exists' });
+      }
+
+      await this.delete(id);
+    }
+
+    await this.put(updated);
   }
 
   /**

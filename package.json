@@ -48,9 +48,10 @@
 	},
 	"dependencies": {
 		"@lucide/svelte": "^0.562.0",
+		"ajv": "^8.17.1",
 		"dexie": "^4.2.1",
+		"dexie-svelte-query": "^1.0.0",
 		"mode-watcher": "^1.1.0",
-		"yaml": "^2.8.2",
-		"zod": "^4.2.1"
+		"yaml": "^2.8.2"
 	}
 }

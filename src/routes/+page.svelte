@@ -1,23 +1,21 @@
 <script lang="ts">
-  import type { Bibliography } from '$lib/types/bibliography';
   import { db } from '$lib/db';
   import {
     BookOpen,
     BookPlus,
     Copy,
     Download,
-    Import,
     Library,
     Pencil,
     Trash
   } from '@lucide/svelte';
-  import type { PageProps } from './$types';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
-  import { invalidateAll } from '$app/navigation';
+  import { stateQuery } from 'dexie-svelte-query';
+  import { BibliographyService } from '$lib/services/bibliography.service';
 
-  let { data }: PageProps = $props();
-
-  let bibliographies: Bibliography[] = $derived(data.bibliographies);
+  const bibliographyQuery = stateQuery(() => db.bibliographies.toArray());
+  const bibliographyQueryLoading = $derived(bibliographyQuery.isLoading);
+  const bibliographies = $derived(bibliographyQuery.current);
 
   function formatDate(date: Date) {
     return new Intl.DateTimeFormat(undefined, {
@@ -42,7 +40,11 @@
 {/snippet}
 
 <main class="container mx-auto mt-8 max-w-5xl p-4">
-  {#if bibliographies.length === 0}
+  {#if bibliographyQueryLoading}
+    <div class="flex min-h-[60vh] items-center justify-center">
+      <span class="loading loading-xl loading-spinner"></span>
+    </div>
+  {:else if (bibliographies ?? []).length === 0}
     <section class="grid min-h-[60vh] place-content-center text-center">
       <h2 class="text-2xl font-bold">No bibliographies found</h2>
       <p class="mt-2 mb-4">Create a new one or import it from a YAML file.</p>
@@ -117,14 +119,13 @@
                 onclick={async () => {
                   if (
                     confirm(
-                      'Are you sure you want to delete this bibliography?'
+                      `Are you sure you want to delete this bibliography: ${bib.metadata.title}?`
                     )
                   ) {
-                    await db.bibliographies.delete(bib.metadata.id);
-                    await invalidateAll();
+                    await BibliographyService.delete(bib.metadata.id);
                   }
                 }}
-                title="Delete"
+                title={`Delete bibliography: ${bib.metadata.title}?`}
               >
                 <Trash class="size-[1.2em]" />
               </button>

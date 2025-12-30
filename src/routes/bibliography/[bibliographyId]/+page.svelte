@@ -214,7 +214,7 @@
       <select
         name="filter"
         id="filter"
-        class="select select-bordered w-full md:w-48"
+        class="select-bordered select w-full md:w-48"
         bind:value={filterByType}
       >
         <option value="all">All types</option>
@@ -228,7 +228,7 @@
       <select
         name="sort"
         id="sort"
-        class="select select-bordered w-full md:w-40"
+        class="select-bordered select w-full md:w-40"
         bind:value={sortBy}
       >
         <option value="id">Sort: ID</option>
@@ -244,8 +244,8 @@
       bind:bibliographyId={bibliography.metadata.id}
     />
   {:else}
-    <div class="flex flex-grow flex-col items-center justify-center">
-      <span class="loading loading-spinner loading-xl"></span>
+    <div class="flex grow flex-col items-center justify-center">
+      <span class="loading loading-xl loading-spinner"></span>
     </div>
   {/if}
 </main>

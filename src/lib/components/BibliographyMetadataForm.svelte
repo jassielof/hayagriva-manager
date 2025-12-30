@@ -14,20 +14,9 @@
   type="text"
   title="Enter a unique ID for the bibliography"
   placeholder="my-research-papers"
-  class="input validator w-full font-mono"
+  class="validator input w-full font-mono"
   bind:value={bibliographyMetadata.id}
-  onblur={() => {
-    bibliographyMetadata.id = bibliographyMetadata.id.trim();
-    if (
-      bibliographyMetadata.id === 'new' ||
-      bibliographyMetadata.id === 'import'
-    ) {
-      alert(
-        `"${bibliographyMetadata.id}" is a reserved ID. Please choose another one.`
-      );
-      return;
-    }
-  }}
+  onblur={() => (bibliographyMetadata.id = bibliographyMetadata.id.trim())}
   required
 />
 
@@ -37,11 +26,9 @@
   type="text"
   placeholder="My Research Papers"
   title="Enter a title for the bibliography"
-  class="input validator w-full"
+  class="validator input w-full"
   bind:value={bibliographyMetadata.title}
-  oninput={() => {
-    
-  }}
+  oninput={() => {}}
   onblur={() =>
     (bibliographyMetadata.title = bibliographyMetadata.title.trim())}
   required

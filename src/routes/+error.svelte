@@ -4,9 +4,9 @@
 
 <main class="flex flex-col" style="min-height: calc(100vh - 4rem);">
   <section class="flex flex-1 items-center justify-center">
-    <div class="card card-xl bg-error-content">
+    <div class="card bg-error-content card-xl">
       <div class="card-body">
-        <h2 class="card-title text-error text-xl">
+        <h2 class="card-title text-xl text-error">
           {page.error?.message}
         </h2>
       </div>

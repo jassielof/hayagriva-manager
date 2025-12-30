@@ -2,50 +2,50 @@
   import { goto } from '$app/navigation';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
   import type { PageProps } from './$types';
-  import { bibliographyService } from '$lib/services/bibliography.service';
+  import { BibliographyService } from '$lib/services/bibliography.service';
+  import { CircleAlert } from '@lucide/svelte';
 
   let { data, params }: PageProps = $props();
 
-  const initialOldBibliography = data.oldBibliography;
-  let oldBibliography = $state(initialOldBibliography);
+  let oldBibliography = $derived(data.oldBibliography);
 
-  let errorMessage = $state('');
+  let errorMessage = $state(undefined as string | undefined);
 
   async function handleSubmit() {
     try {
-      if (oldBibliography.metadata.id !== params.bibliographyId) {
-        if (await bibliographyService.get(oldBibliography.metadata.id)) {
-          errorMessage = 'A bibliography with this ID already exists.';
-          return;
-        }
-
-        await bibliographyService.put(oldBibliography);
-        await bibliographyService.delete(params.bibliographyId);
-      } else await bibliographyService.put(oldBibliography);
+      await BibliographyService.updateMetadata(
+        params.bibliographyId,
+        oldBibliography
+      );
 
       goto('/');
-    } catch (error) {
-      errorMessage = 'Failed to update bibliography. Please try again.';
-      console.error('Error updating bibliography:', error);
+    } catch (err: any) {
+      errorMessage =
+        err.body?.message || 'Failed to update bibliography. Please try again.';
+      console.error('Error updating bibliography:', err);
     }
   }
 </script>
 
 <form class="mx-auto max-w-md p-6" onsubmit={handleSubmit}>
-  <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-4">
+  <fieldset class="fieldset rounded-box border border-base-300 bg-base-200 p-4">
     <legend class="fieldset-legend"> Edit Bibliography </legend>
 
     {#if errorMessage}
-      <div class="alert alert-error" role="alert">
+      <div role="alert" class="alert alert-error">
+        <CircleAlert />
         <span>{errorMessage}</span>
       </div>
+      <div class="divider"></div>
     {/if}
 
     <BibliographyMetadataForm
       bind:bibliographyMetadata={oldBibliography.metadata}
     />
 
-    <button class="btn btn-primary mt-4">Save</button>
-    <a class="btn" href="/">Cancel</a>
+    <div class="divider"></div>
+
+    <button class="btn btn-primary">Save</button>
+    <a class="btn btn-error" href="/">Cancel</a>
   </fieldset>
 </form>

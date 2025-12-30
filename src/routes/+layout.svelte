@@ -21,7 +21,7 @@
           href: path
         });
       } else if (segments[1]) {
-        crumbs.push({ label: `Bibliography: ${segments[1]}`, href: path });
+        crumbs.push({ label: `${segments[1]}`, href: path });
       }
     }
 
@@ -37,14 +37,14 @@
 
 <header class="navbar bg-base-100 shadow-sm">
   <!-- <a href="/" class="btn text-xl btn-ghost">Hayagriva Manager</a> -->
-  <div class="breadcrumbs pl-4 text-sm">
+  <div class="breadcrumbs pl-4">
     <ul>
       {#each breadcrumbs() as crumb, i}
         <li>
           {#if i === breadcrumbs().length - 1}
             {crumb.label}
           {:else}
-            <a href={crumb.href}>{crumb.label}</a>
+            <a href={crumb.href} class="">{crumb.label}</a>
           {/if}
         </li>
       {/each}

@@ -91,7 +91,7 @@ export interface BibliographyEntry {
    * The number of the item in a library, institution, or collection.
    * Use with the `archive` field.
    */
-  "call-number"?: FormattableString;
+  'call-number'?: FormattableString;
 
   /**
    * The publisher of the item. Can include name and location.
@@ -123,7 +123,7 @@ export interface BibliographyEntry {
   /**
    * The total number of volumes, parts, seasons, etc., in the series that contains this entry.
    */
-  "volume-total"?: number;
+  'volume-total'?: number;
 
   /**
    * The number of the chapter in the referenced work where this item can be found.
@@ -138,18 +138,18 @@ export interface BibliographyEntry {
   /**
    * The range of pages within the parent that this entry occupies.
    */
-  "page-range"?: NumericOrString;
+  'page-range'?: NumericOrString;
 
   /**
    * The total number of pages in the entry.
    */
-  "page-total"?: number;
+  'page-total'?: number;
 
   /**
    * The time range within the parent at which this entry starts and ends.
    * Format: start-end (e.g., "00:12-00:34")
    */
-  "time-range"?: string;
+  'time-range'?: string;
 
   /**
    * The total runtime of the entry.
@@ -166,7 +166,7 @@ export interface BibliographyEntry {
    * Any serial number, including article numbers, associated with the entry.
    * Specialized fields: doi, isbn, issn, pmid, pmcid, arxiv.
    */
-  "serial-number"?: SerialNumber;
+  'serial-number'?: SerialNumber;
 
   /**
    * The language of the entry as a Unicode Language Identifier (BCP 47).
@@ -182,7 +182,7 @@ export interface BibliographyEntry {
   /**
    * The location of the institution/collection where the entry is kept.
    */
-  "archive-location"?: FormattableString;
+  'archive-location'?: FormattableString;
 
   /**
    * A short markup, decoration, or annotation to the entry.
@@ -197,6 +197,9 @@ export interface BibliographyEntry {
 export type FormattableString =
   | string
   | {
+      /**
+       * The main string value.
+       */
       value: string;
       /**
        * If true, disables text case transformations. Preserves casing as it appears in source.
@@ -231,7 +234,7 @@ export type Person =
       /** The family/last name of the person (required). */
       name: string;
       /** The given/first name of the person. */
-      "given-name"?: string;
+      'given-name'?: string;
       /** The prefix of the person's name (e.g., "von", "van der"). */
       prefix?: string;
       /** The suffix of the person's name (e.g., "Jr.", "III"). */
@@ -286,92 +289,92 @@ export type SerialNumber =
  * Note: Typst is case-insensitive for the first letter.
  */
 export type EntryType =
-  | "article"
-  | "chapter"
-  | "entry"
-  | "anthos"
-  | "report"
-  | "thesis"
-  | "web"
-  | "scene"
-  | "artwork"
-  | "patent"
-  | "case"
-  | "newspaper"
-  | "legislation"
-  | "manuscript"
-  | "original"
-  | "post"
-  | "misc"
-  | "performance"
-  | "periodical"
-  | "proceedings"
-  | "book"
-  | "blog"
-  | "reference"
-  | "conference"
-  | "anthology"
-  | "repository"
-  | "thread"
-  | "video"
-  | "audio"
-  | "exhibition"
+  | 'article'
+  | 'chapter'
+  | 'entry'
+  | 'anthos'
+  | 'report'
+  | 'thesis'
+  | 'web'
+  | 'scene'
+  | 'artwork'
+  | 'patent'
+  | 'case'
+  | 'newspaper'
+  | 'legislation'
+  | 'manuscript'
+  | 'original'
+  | 'post'
+  | 'misc'
+  | 'performance'
+  | 'periodical'
+  | 'proceedings'
+  | 'book'
+  | 'blog'
+  | 'reference'
+  | 'conference'
+  | 'anthology'
+  | 'repository'
+  | 'thread'
+  | 'video'
+  | 'audio'
+  | 'exhibition'
   // Allow capitalized versions (common in manual entry)
-  | "Article"
-  | "Chapter"
-  | "Entry"
-  | "Anthos"
-  | "Report"
-  | "Thesis"
-  | "Web"
-  | "Scene"
-  | "Artwork"
-  | "Patent"
-  | "Case"
-  | "Newspaper"
-  | "Legislation"
-  | "Manuscript"
-  | "Original"
-  | "Post"
-  | "Misc"
-  | "Performance"
-  | "Periodical"
-  | "Proceedings"
-  | "Book"
-  | "Blog"
-  | "Reference"
-  | "Conference"
-  | "Anthology"
-  | "Repository"
-  | "Thread"
-  | "Video"
-  | "Audio"
-  | "Exhibition";
+  | 'Article'
+  | 'Chapter'
+  | 'Entry'
+  | 'Anthos'
+  | 'Report'
+  | 'Thesis'
+  | 'Web'
+  | 'Scene'
+  | 'Artwork'
+  | 'Patent'
+  | 'Case'
+  | 'Newspaper'
+  | 'Legislation'
+  | 'Manuscript'
+  | 'Original'
+  | 'Post'
+  | 'Misc'
+  | 'Performance'
+  | 'Periodical'
+  | 'Proceedings'
+  | 'Book'
+  | 'Blog'
+  | 'Reference'
+  | 'Conference'
+  | 'Anthology'
+  | 'Repository'
+  | 'Thread'
+  | 'Video'
+  | 'Audio'
+  | 'Exhibition';
 
 /**
  * The role of an affiliated person.
  */
 export type RoleType =
-  | "translator"
-  | "afterword"
-  | "foreword"
-  | "introduction"
-  | "annotator"
-  | "commentator"
-  | "holder"
-  | "compiler"
-  | "founder"
-  | "collaborator"
-  | "organizer"
-  | "cast-member"
-  | "composer"
-  | "producer"
-  | "executive-producer"
-  | "writer"
-  | "cinematography"
-  | "director"
-  | "illustrator"
-  | "narrator";
+  | 'translator'
+  | 'afterword'
+  | 'foreword'
+  | 'introduction'
+  | 'annotator'
+  | 'commentator'
+  | 'holder'
+  | 'compiler'
+  | 'founder'
+  | 'collaborator'
+  | 'organizer'
+  | 'cast-member'
+  | 'composer'
+  | 'producer'
+  | 'executive-producer'
+  | 'writer'
+  | 'cinematography'
+  | 'director'
+  | 'illustrator'
+  | 'narrator';
 
 /**
  * Type aliases for common usage patterns.
