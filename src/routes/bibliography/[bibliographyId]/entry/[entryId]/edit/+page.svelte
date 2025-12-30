@@ -3,18 +3,20 @@
   import { ClipboardPaste, Save, X } from '@lucide/svelte';
   import type { PageProps } from './$types';
   import EntryForm from '$lib/components/EntryForm.svelte';
-  import { bibliographyService } from '$lib/services/bibliography.service';
+  import { BibliographyService } from '$lib/services/bibliography.service';
   import { goto } from '$app/navigation';
 
   let { data, params }: PageProps = $props();
 
+  // svelte-ignore state_referenced_locally
   let newEntryId = $state(params.entryId);
+  // svelte-ignore state_referenced_locally
   let newEntryData = $state(data.oldEntry);
 </script>
 
 <form
   onsubmit={async () => {
-    await bibliographyService.updateEntry(
+    await BibliographyService.updateEntry(
       params.bibliographyId,
       newEntryId,
       newEntryData,
@@ -26,7 +28,7 @@
   class="mx-auto w-full max-w-5xl p-6"
 >
   <fieldset
-    class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+    class="fieldset rounded-box border border-base-300 bg-base-100/50 p-4"
   >
     <legend class="fieldset-legend text-xl">Edit entry</legend>
     <button
@@ -72,7 +74,7 @@
 
     <EntryForm bind:entryData={newEntryData} />
 
-    <button class="btn btn-success mt-4">
+    <button class="btn mt-4 btn-success">
       <Save class="size-[1.2em]" />
       Add
     </button>

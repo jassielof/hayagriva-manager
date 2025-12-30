@@ -1,11 +1,11 @@
-import { bibliographyService } from '$lib/services/bibliography.service';
+import { BibliographyService } from '$lib/services/bibliography.service';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const ssr = false;
 export const load: PageLoad = async ({ params }) => {
   try {
-    const oldEntry = await bibliographyService.getEntry(
+    const oldEntry = await BibliographyService.getEntry(
       params.bibliographyId,
       params.entryId
     );

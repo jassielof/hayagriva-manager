@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { BibliographyEntry } from '$lib/types/hayagriva';
-  import { datePattern } from '$lib/validators/date';
+  import { DATE_REGEX, type BibliographyEntry } from '$lib/types/hayagriva';
 
   let {
     value = $bindable(),
@@ -21,11 +20,11 @@
 
 <label class="label" for="entry-date">{label}</label>
 <input
-  pattern={datePattern}
+  pattern={DATE_REGEX.source}
   title="Date must match the format: YYYY, YYYY-MM, or YYYY-MM-DD."
   bind:value
   id="entry-date"
   type="text"
-  class="input validator w-full"
+  class="validator input w-full"
   {placeholder}
 />

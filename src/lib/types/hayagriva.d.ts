@@ -223,6 +223,9 @@ export type NumericOrString = number | string;
  * Year 1 B.C.E. is represented as 0000.
  */
 export type HayagrivaDate = string | number;
+export const DATE_REGEX = new RegExp(
+  /^[+-~]?\d{4,}(-(?:0[1-9]|1[0-2])(?:-(?:0[1-9]|[12]\d|3[01]))?)?$/
+);
 
 /**
  * A person with a name and optionally given name, prefix, suffix, and alias.
@@ -288,68 +291,40 @@ export type SerialNumber =
  * The media type of the entry.
  * Note: Typst is case-insensitive for the first letter.
  */
-export type EntryType =
-  | 'article'
-  | 'chapter'
-  | 'entry'
-  | 'anthos'
-  | 'report'
-  | 'thesis'
-  | 'web'
-  | 'scene'
-  | 'artwork'
-  | 'patent'
-  | 'case'
-  | 'newspaper'
-  | 'legislation'
-  | 'manuscript'
-  | 'original'
-  | 'post'
-  | 'misc'
-  | 'performance'
-  | 'periodical'
-  | 'proceedings'
-  | 'book'
-  | 'blog'
-  | 'reference'
-  | 'conference'
-  | 'anthology'
-  | 'repository'
-  | 'thread'
-  | 'video'
-  | 'audio'
-  | 'exhibition'
-  // Allow capitalized versions (common in manual entry)
-  | 'Article'
-  | 'Chapter'
-  | 'Entry'
-  | 'Anthos'
-  | 'Report'
-  | 'Thesis'
-  | 'Web'
-  | 'Scene'
-  | 'Artwork'
-  | 'Patent'
-  | 'Case'
-  | 'Newspaper'
-  | 'Legislation'
-  | 'Manuscript'
-  | 'Original'
-  | 'Post'
-  | 'Misc'
-  | 'Performance'
-  | 'Periodical'
-  | 'Proceedings'
-  | 'Book'
-  | 'Blog'
-  | 'Reference'
-  | 'Conference'
-  | 'Anthology'
-  | 'Repository'
-  | 'Thread'
-  | 'Video'
-  | 'Audio'
-  | 'Exhibition';
+export const ENTRY_TYPES = [
+  'article',
+  'chapter',
+  'entry',
+  'anthos',
+  'report',
+  'thesis',
+  'web',
+  'scene',
+  'artwork',
+  'patent',
+  'case',
+  'newspaper',
+  'legislation',
+  'manuscript',
+  'original',
+  'post',
+  'misc',
+  'performance',
+  'periodical',
+  'proceedings',
+  'book',
+  'blog',
+  'reference',
+  'conference',
+  'anthology',
+  'repository',
+  'thread',
+  'video',
+  'audio',
+  'exhibition'
+] as const;
+
+export type EntryType = (typeof ENTRY_TYPES)[number];
 
 /**
  * The role of an affiliated person.
@@ -388,6 +363,9 @@ export type Date = HayagrivaDate;
 
 /** Alias for language string. */
 export type Language = string;
+export const LANGUAGE_REGEX = new RegExp(
+  /^[a-z]{2,3}(-[A-Z][a-z]{3})?(-[A-Z]{2})?$/
+);
 
 /** Alias for author field type. */
 export type Author = Person | Person[];

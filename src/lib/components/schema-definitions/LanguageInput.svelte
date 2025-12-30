@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { Language } from '$lib/types/hayagriva';
-  import { languagePattern } from '$lib/validators/language';
+  import { LANGUAGE_REGEX, type Language } from '$lib/types/hayagriva';
 
   let {
     value = $bindable()
@@ -14,8 +13,8 @@
   type="text"
   id="entry-language"
   placeholder="en-US"
-  class="input validator w-full"
+  class="validator input w-full"
   title="Language must match the Unicode Language Identifier format."
-  pattern={languagePattern}
+  pattern={LANGUAGE_REGEX.source}
   bind:value
 />

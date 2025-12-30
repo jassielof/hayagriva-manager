@@ -1,14 +1,12 @@
 import type { Hayagriva, TopLevelEntry } from '$lib/types/hayagriva';
+import hayagrivaSchema from '../../../json-schemas/docs/hayagriva.schema.json';
 import YAML from 'yaml';
 
 /**
  * Service for managing Hayagriva YAML files.
  */
 export class HayagrivaService {
-  private readonly JSON_SCHEMA_URL =
-    'https://jassielof.github.io/json-schemas/docs/hayagriva.schema.json';
-  private schemaCache: any = null;
-  private schemaPromise: Promise<any> | null = null;
+  private readonly jsonSchema = hayagrivaSchema;
 
   import(content: string) {
     const data = YAML.parse(content, {
@@ -48,28 +46,8 @@ export class HayagrivaService {
     return data;
   }
 
-  async getSchema() {
-    if (this.schemaCache) return this.schemaCache;
-    if (this.schemaPromise) return this.schemaPromise;
-
-    this.schemaPromise = fetch(this.JSON_SCHEMA_URL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch schema: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((schema) => {
-        this.schemaCache = schema;
-        this.schemaPromise = null;
-        return schema;
-      })
-      .catch((error) => {
-        this.schemaPromise = null;
-        throw error;
-      });
-
-    return this.schemaPromise;
+  static getSchema() {
+    return this.prototype.jsonSchema;
   }
 }
 
