@@ -143,7 +143,7 @@
     type="number"
     min="0"
     placeholder="DD"
-    class="input join-item validator w-1/5"
+    class="validator input join-item w-1/5"
     value={day}
     oninput={handleDayInput}
   />
@@ -152,7 +152,7 @@
     min="0"
     max={day ? 23 : undefined}
     placeholder="HH"
-    class="input join-item validator w-1/5"
+    class="validator input join-item w-1/5"
     required={!!day}
     value={hour}
     oninput={handleHourInput}
@@ -162,7 +162,7 @@
     min="0"
     max={hour ? 59 : undefined}
     placeholder="MM"
-    class="input join-item validator w-1/5"
+    class="validator input join-item w-1/5"
     required={!!second || !!hour}
     value={minute}
     oninput={handleMinuteInput}
@@ -173,7 +173,7 @@
     max={minute ? 59 : undefined}
     placeholder="SS"
     required={!!minute || !!millisecond}
-    class="input join-item validator w-1/5"
+    class="validator input join-item w-1/5"
     value={second}
     oninput={handleSecondInput}
   />
@@ -181,7 +181,7 @@
     type="number"
     min="0"
     placeholder="ms"
-    class="input join-item validator w-1/5"
+    class="validator input join-item w-1/5"
     value={millisecond}
     oninput={handleMillisecondInput}
   />
