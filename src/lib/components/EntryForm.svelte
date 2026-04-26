@@ -210,7 +210,7 @@
 {/if}
 
 {#if parentType === 'list' && Array.isArray(entryData.parent)}
-  {#each entryData.parent as parentEntry, i (i)}
+  {#each entryData.parent as parentEntry, i (parentEntry)}
     <div class="mt-4 flex">
       <div class="flex-1">
         <h3 class="text-lg text-secondary">
@@ -232,7 +232,7 @@
       </div>
     </div>
 
-    <EntryForm bind:entryData={parentEntry} />
+    <EntryForm bind:entryData={entryData.parent[i]} />
   {/each}
 
   <button

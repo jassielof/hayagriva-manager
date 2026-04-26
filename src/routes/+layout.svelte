@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-  <link rel="manifest" href={resolve('/site.webmanifest')} />
+  <link rel="manifest" href="/site.webmanifest" />
 </svelte:head>
 
 <header class="navbar bg-base-100 shadow-sm">

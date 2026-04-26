@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { resolve } from '$app/paths';
   import { dateFormatter } from '$lib/formatters/date-formatter';
   import { getLanguageFlag } from '$lib/formatters/language';
   import type { BibliographyEntry } from '$lib/types/hayagriva';
@@ -229,18 +228,16 @@
     <section>
       <svelte:element this={`h${sectionLevel}`}>URL</svelte:element>
       {#if typeof entry.url === 'object'}
-        <a
-          href={resolve(entry.url.value)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+        <a href={entry.url.value} target="_blank" rel="noopener noreferrer">
           {entry.url.value}
         </a>
         {#if entry.url.date}
           <p><em>(Accessed on: {entry.url.date})</em></p>
         {/if}
       {:else}
-        <a href={resolve(entry.url)} target="_blank" rel="noopener noreferrer">
+        <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+        <a href={entry.url} target="_blank" rel="noopener noreferrer">
           {entry.url}
         </a>
       {/if}
