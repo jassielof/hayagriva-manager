@@ -20,7 +20,7 @@
 		"@ibm/plex-sans": "^1.1.0",
 		"@ibm/plex-serif": "^1.1.0",
 		"@internationalized/date": "^3.10.1",
-		"@sveltejs/adapter-auto": "^7.0.0",
+		"@sveltejs/adapter-auto": "^7.0.1",
 		"@sveltejs/adapter-cloudflare": "^7.2.4",
 		"@sveltejs/kit": "^2.49.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
