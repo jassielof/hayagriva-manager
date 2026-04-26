@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
   import { ClipboardPaste, Save, X } from '@lucide/svelte';
   import type { PageProps } from './$types';
@@ -23,7 +24,7 @@
       params.entryId
     );
 
-    goto(`/bibliography/${params.bibliographyId}/`);
+    goto(resolve(`/bibliography/${params.bibliographyId}/`));
   }}
   class="mx-auto w-full max-w-5xl p-6"
 >
@@ -79,7 +80,7 @@
       Add
     </button>
     <a
-      href={`/bibliography/${params.bibliographyId}/`}
+      href={resolve(`/bibliography/${params.bibliographyId}/`)}
       class="btn btn-error"
       type="button"
     >

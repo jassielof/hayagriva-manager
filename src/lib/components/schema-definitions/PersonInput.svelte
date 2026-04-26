@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { Person } from '$lib/types/hayagriva';
 
-  let { value = $bindable(), remove }: { value: Person; remove: any } =
+  type PersonObject = Exclude<Person, string>;
+
+  let { value = $bindable(), remove }: { value: Person; remove: () => void } =
     $props();
 
   let isDetailed = $state(false);
@@ -43,7 +45,7 @@
   function updateParent() {
     if (isDetailed) {
       // Build the object, only including fields that have values
-      const personObject: any = { name };
+      const personObject: PersonObject = { name };
       if (givenName) personObject['given-name'] = givenName;
       if (prefix) personObject.prefix = prefix;
       if (suffix) personObject.suffix = suffix;

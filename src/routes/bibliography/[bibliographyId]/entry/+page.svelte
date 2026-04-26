@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import EntryForm from '$lib/components/EntryForm.svelte';
   import type { TopLevelEntry } from '$lib/types/hayagriva';
   import type { PageProps } from './$types';
@@ -21,7 +22,7 @@
       newEntryData
     );
 
-    goto(`/bibliography/${params.bibliographyId}/`);
+    goto(resolve(`/bibliography/${params.bibliographyId}/`));
   }
 </script>
 
@@ -82,7 +83,7 @@
       Add
     </button>
     <a
-      href={`/bibliography/${params.bibliographyId}/`}
+      href={resolve(`/bibliography/${params.bibliographyId}/`)}
       class="btn btn-error"
       type="button"
     >

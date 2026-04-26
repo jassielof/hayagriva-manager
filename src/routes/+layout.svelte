@@ -1,20 +1,16 @@
 <script lang="ts">
-  import { page } from '$app/state';
+  import { resolve } from '$app/paths';
   import './layout.css';
-  import { pwaInfo } from 'virtual:pwa-info';
-
-  const webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
-  import { onMount } from 'svelte';
 
   let { children } = $props();
 </script>
 
 <svelte:head>
-  {@html webManifestLink}
+  <link rel="manifest" href={resolve('/site.webmanifest')} />
 </svelte:head>
 
 <header class="navbar bg-base-100 shadow-sm">
-  <a href="/" class="btn text-xl btn-ghost">Hayagriva Manager</a>
+  <a href={resolve('/')} class="btn text-xl btn-ghost">Hayagriva Manager</a>
 </header>
 
 {@render children()}

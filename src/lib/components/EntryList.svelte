@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
   import { BibliographyService } from '$lib/services/bibliography.service';
   import type { FormattableString } from '$lib/types/hayagriva';
@@ -111,13 +112,19 @@
               style={`position-anchor: --anchor-${id};`}
             >
               <li>
-                <a href="/bibliography/{bibliographyId}/entry/{id}">
+                <a
+                  href={resolve(`/bibliography/${bibliographyId}/entry/${id}`)}
+                >
                   <Eye class="inline size-[1.2em]" />
                   View
                 </a>
               </li>
               <li>
-                <a href="/bibliography/{bibliographyId}/entry/{id}/edit">
+                <a
+                  href={resolve(
+                    `/bibliography/${bibliographyId}/entry/${id}/edit`
+                  )}
+                >
                   <Pencil class="inline size-[1.2em]" />
                   Edit</a
                 >

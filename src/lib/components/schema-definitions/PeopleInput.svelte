@@ -54,7 +54,7 @@
       <Plus class="size-[1.2em]" /> Add {label}
     </button>
   {:else if Array.isArray(value)}
-    {#each value as _person, i (i)}
+    {#each value as person, i (`${typeof person === 'string' ? person : person.name}-${i}`)}
       <PersonInput bind:value={value[i]} remove={() => removePerson(i)} />
     {/each}
 

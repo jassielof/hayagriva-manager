@@ -2,6 +2,11 @@
   import type { BibliographyEntry } from '$lib/types/hayagriva';
   import { Plus, X } from '@lucide/svelte';
 
+  type SerialNumberObject = Exclude<
+    NonNullable<BibliographyEntry['serial-number']>,
+    string | number
+  >;
+
   let {
     value = $bindable()
   }: {
@@ -17,6 +22,9 @@
     'pmcid',
     'arxiv'
   ] as const;
+
+  const isKnownKey = (key: string): key is (typeof KNOWN_KEYS)[number] =>
+    KNOWN_KEYS.includes(key as (typeof KNOWN_KEYS)[number]);
 
   let serial = $state('');
   let doi = $state('');
@@ -43,18 +51,19 @@
       arxiv = '';
       customSerials = [];
     } else if (value && typeof value === 'object') {
+      const serialObject = value as SerialNumberObject;
       // Use nullish coalescing to avoid "undefined" text in inputs
-      serial = toNonEmptyString((value as any).serial ?? '');
-      doi = toNonEmptyString((value as any).doi ?? '');
-      isbn = toNonEmptyString((value as any).isbn ?? '');
-      issn = toNonEmptyString((value as any).issn ?? '');
-      pmid = toNonEmptyString((value as any).pmid ?? '');
-      pmcid = toNonEmptyString((value as any).pmcid ?? '');
-      arxiv = toNonEmptyString((value as any).arxiv ?? '');
+      serial = toNonEmptyString(serialObject.serial ?? '');
+      doi = toNonEmptyString(serialObject.doi ?? '');
+      isbn = toNonEmptyString(serialObject.isbn ?? '');
+      issn = toNonEmptyString(serialObject.issn ?? '');
+      pmid = toNonEmptyString(serialObject.pmid ?? '');
+      pmcid = toNonEmptyString(serialObject.pmcid ?? '');
+      arxiv = toNonEmptyString(serialObject.arxiv ?? '');
 
       const nextCustom: { key: string; value: string }[] = [];
-      for (const [key, val] of Object.entries(value)) {
-        if (!KNOWN_KEYS.includes(key as any)) {
+      for (const [key, val] of Object.entries(serialObject)) {
+        if (!isKnownKey(key) && val !== undefined) {
           nextCustom.push({ key, value: toNonEmptyString(val) });
         }
       }
@@ -109,19 +118,21 @@
     return obj;
   }
 
-  function deepEqualSerial(a: any, b: any): boolean {
+  function deepEqualSerial(a: unknown, b: unknown): boolean {
     if (a === b) return true;
     const aIsObj = a && typeof a === 'object';
     const bIsObj = b && typeof b === 'object';
     if (aIsObj !== bIsObj) return false;
     if (!aIsObj) return false; // primitives already handled above
 
-    const aKeys = Object.keys(a).sort();
-    const bKeys = Object.keys(b).sort();
+    const aRecord = a as Record<string, unknown>;
+    const bRecord = b as Record<string, unknown>;
+    const aKeys = Object.keys(aRecord).sort();
+    const bKeys = Object.keys(bRecord).sort();
     if (aKeys.length !== bKeys.length) return false;
     for (let i = 0; i < aKeys.length; i++) {
       if (aKeys[i] !== bKeys[i]) return false;
-      if (a[aKeys[i]] !== b[bKeys[i]]) return false;
+      if (aRecord[aKeys[i]] !== bRecord[bKeys[i]]) return false;
     }
     return true;
   }
@@ -130,7 +141,7 @@
   $effect(() => {
     const next = buildOutgoing();
     if (!deepEqualSerial(value, next)) {
-      value = next as any;
+      value = next;
     }
   });
 </script>
@@ -215,7 +226,7 @@
 
   <div class="divider">Custom serials</div>
 
-  {#each customSerials as _, i (i)}
+  {#each customSerials as serialItem, i (i)}
     <div class="flex items-end gap-2">
       <div class="flex-1">
         <label for="custom-serial-key-{i}" class="label pb-1">Key</label>
@@ -224,7 +235,7 @@
           type="text"
           placeholder="zbl"
           class="input input-sm w-full"
-          bind:value={customSerials[i].key}
+          bind:value={serialItem.key}
         />
       </div>
       <div class="flex-1">
@@ -234,7 +245,7 @@
           type="text"
           placeholder="0634.60011"
           class="input input-sm w-full"
-          bind:value={customSerials[i].value}
+          bind:value={serialItem.value}
         />
       </div>
       <button

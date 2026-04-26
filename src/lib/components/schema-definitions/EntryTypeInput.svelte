@@ -15,7 +15,7 @@
 <label for="entry-type" class="label">Type </label>
 <select id="entry-type" class="select w-full" bind:value>
   <option disabled selected>Select an entry type</option>
-  {#each ENTRY_TYPES as type}
+  {#each ENTRY_TYPES as type (type)}
     {@const { label } = formatEntryType(type)}
     <option value={type}>
       {label}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { goto } from '$app/navigation';
   import { BibliographyService } from '$lib/services/bibliography.service';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
@@ -57,9 +58,14 @@
       }
 
       await BibliographyService.add(newBibliography);
-      goto('/');
-    } catch (error: any) {
-      if (error.name === 'ConstraintError') {
+      goto(resolve('/'));
+    } catch (error: unknown) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'name' in error &&
+        error.name === 'ConstraintError'
+      ) {
         errorMessage = 'Bibliography with this ID already exists.';
       } else {
         errorMessage = 'Failed to save bibliography. Please try again.';
@@ -121,6 +127,6 @@
     <div class="divider"></div>
 
     <button class="btn btn-primary">Save</button>
-    <a class="btn btn-error" href="/">Cancel</a>
+    <a class="btn btn-error" href={resolve('/')}>Cancel</a>
   </fieldset>
 </form>

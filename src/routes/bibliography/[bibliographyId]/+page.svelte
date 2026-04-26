@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
+  import { resolve } from '$app/paths';
   import {
     BookPlus,
     Calendar,
@@ -7,15 +7,13 @@
     Eye,
     Hash,
     Pencil,
-    Search,
     Trash,
     User
   } from '@lucide/svelte';
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
   import type {
     BibliographyEntry,
-    FormattableString,
-    Hayagriva
+    FormattableString
   } from '$lib/types/hayagriva';
   import { page } from '$app/state';
   import { stateQuery } from 'dexie-svelte-query';
@@ -51,13 +49,6 @@
     if (typeof date === 'string') return date.split('T')[0];
     return '';
   }
-
-  function formatDate(date: BibliographyEntry['date']): string | number {
-    if (!date) return '';
-    if (typeof date === 'number') return date;
-    if (typeof date === 'string') return date;
-    return '';
-  }
 </script>
 
 <main class="mx-auto flex w-full max-w-5xl flex-col p-4">
@@ -80,7 +71,7 @@
       <div class="flex flex-auto items-end justify-end md:items-start">
         <a
           class="btn btn-primary"
-          href="/bibliography/{bibliography.metadata.id}/entry/"
+          href={resolve(`/bibliography/${bibliography.metadata.id}/entry/`)}
         >
           <BookPlus class="size-[1.2em]" />
           New entry
@@ -145,7 +136,9 @@
                 >
                   <li>
                     <a
-                      href="/bibliography/{bibliography.metadata.id}/entry/{id}"
+                      href={resolve(
+                        `/bibliography/${bibliography.metadata.id}/entry/${id}`
+                      )}
                     >
                       <Eye class="inline size-[1.2em]" />
                       View
@@ -153,8 +146,9 @@
                   </li>
                   <li>
                     <a
-                      href="/bibliography/{bibliography.metadata
-                        .id}/entry/{id}/edit"
+                      href={resolve(
+                        `/bibliography/${bibliography.metadata.id}/entry/${id}/edit`
+                      )}
                     >
                       <Pencil class="inline size-[1.2em]" />
                       Edit

@@ -30,7 +30,7 @@
 
   {#if value && value.length > 0}
     <div class="space-y-4">
-      {#each value as _, i (i)}
+      {#each value as affiliation, i (i)}
         <div class="rounded-box border border-base-content/20 p-4">
           <div class="flex items-center justify-between">
             <h4 class="text-lg font-semibold">Affiliated Person #{i + 1}</h4>
@@ -47,14 +47,14 @@
           <select
             id={`role-${i}`}
             class="select w-full"
-            bind:value={value[i].role}
+            bind:value={affiliation.role}
           >
-            {#each AFFILIATED_ROLES as role}
-              <option {value}>{role}</option>
+            {#each AFFILIATED_ROLES as role (role)}
+              <option value={role}>{role}</option>
             {/each}
           </select>
 
-          <PeopleInput label="Names" bind:value={value[i].names} />
+          <PeopleInput label="Names" bind:value={affiliation.names} />
         </div>
       {/each}
     </div>

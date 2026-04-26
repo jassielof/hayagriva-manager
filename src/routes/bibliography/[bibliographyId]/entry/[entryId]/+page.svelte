@@ -3,13 +3,6 @@
   import type { PageProps } from './$types';
   import PreviewEntry from '$lib/components/views/PreviewEntry.svelte';
 
-  import hljs from 'highlight.js/lib/core';
-  import yaml from 'highlight.js/lib/languages/yaml';
-
-  import 'highlight.js/styles/tomorrow-night-blue.css';
-
-  hljs.registerLanguage('yaml', yaml);
-
   let { data }: PageProps = $props();
 </script>
 
@@ -33,11 +26,8 @@
       <div class="tab-content border-base-300 bg-base-100 p-6">
         <div class="relative">
           <div class="mockup-code w-full">
-            {#each data.entryYamlData as line, i}
-              <pre data-prefix={i + 1}><code
-                  >{@html hljs.highlight(line, { language: 'yaml' })
-                    .value}</code
-                ></pre>
+            {#each data.entryYamlData as line, i (i)}
+              <pre data-prefix={i + 1}><code>{line}</code></pre>
             {/each}
           </div>
           <button

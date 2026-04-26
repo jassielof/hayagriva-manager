@@ -41,12 +41,15 @@
   }
 
   // Format start and end back into a range string
-  function formatRange() {
+  function formatRange(
+    nextStart: string | undefined,
+    nextEnd: string | undefined
+  ) {
     if (isSyncing) return;
     isSyncing = true;
 
-    if (start && end) {
-      value = `${start}-${end}`;
+    if (nextStart && nextEnd) {
+      value = `${nextStart}-${nextEnd}`;
     } else {
       value = undefined;
     }
@@ -61,9 +64,7 @@
 
   // Update value when start or end change (from child TimestampInput)
   $effect(() => {
-    // Access start and end to track them
-    const _ = [start, end];
-    formatRange();
+    formatRange(start, end);
   });
 
   function clearInput() {

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { db } from '$lib/db';
   import {
     BookOpen,
@@ -29,7 +30,7 @@
 {#snippet actions()}
   <div class="gap-4">
     <a
-      href="/bibliography/new"
+      href={resolve('/bibliography/new')}
       class="btn btn-primary"
       title="Create a new bibliography"
     >
@@ -79,7 +80,7 @@
               class="join join-vertical flex items-center justify-end lg:join-horizontal"
             >
               <a
-                href={`/bibliography/${bib.metadata.id}`}
+                href={resolve(`/bibliography/${bib.metadata.id}`)}
                 class="btn join-item btn-soft"
                 title="View bibliography entries"
               >
@@ -87,7 +88,7 @@
               </a>
               <a
                 class="btn join-item btn-soft"
-                href={`/bibliography/${bib.metadata.id}/edit`}
+                href={resolve(`/bibliography/${bib.metadata.id}/edit`)}
                 title="Edit metadata"
               >
                 <Pencil class="size-[1.2em]" />

@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { goto } from '$app/navigation';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
   import type { PageProps } from './$types';
   import { BibliographyService } from '$lib/services/bibliography.service';
   import { CircleAlert } from '@lucide/svelte';
-  import type { Bibliography } from '$lib/types/bibliography';
+
+  type ErrorWithBody = { body?: { message?: string } };
 
   let { data, params }: PageProps = $props();
 
@@ -20,10 +22,14 @@
         bibliography
       );
 
-      goto('/');
-    } catch (err: any) {
+      goto(resolve('/'));
+    } catch (err: unknown) {
+      const bodyMessage =
+        typeof err === 'object' && err !== null
+          ? (err as ErrorWithBody).body?.message
+          : undefined;
       errorMessage =
-        err.body?.message || 'Failed to update bibliography. Please try again.';
+        bodyMessage || 'Failed to update bibliography. Please try again.';
       console.error('Error updating bibliography:', err);
     }
   }
@@ -48,6 +54,6 @@
     <div class="divider"></div>
 
     <button class="btn btn-primary">Save</button>
-    <a class="btn btn-error" href="/">Cancel</a>
+    <a class="btn btn-error" href={resolve('/')}>Cancel</a>
   </fieldset>
 </form>

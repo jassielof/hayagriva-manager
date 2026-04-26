@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { dateFormatter } from '$lib/formatters/date-formatter';
   import { getLanguageFlag } from '$lib/formatters/language';
   import type { BibliographyEntry } from '$lib/types/hayagriva';
@@ -57,7 +58,7 @@
       <svelte:element this={`h${sectionLevel}`}>Authors</svelte:element>
       {#if Array.isArray(entry.author)}
         <ul>
-          {#each entry.author as person}
+          {#each entry.author as person, i (`${typeof person === 'string' ? person : person.name}-${i}`)}
             <li>
               {#if typeof person === 'string'}
                 {person}
@@ -90,7 +91,7 @@
       <svelte:element this={`h${sectionLevel}`}>Editors</svelte:element>
       {#if Array.isArray(entry.editor)}
         <ul>
-          {#each entry.editor as person}
+          {#each entry.editor as person, i (`${typeof person === 'string' ? person : person.name}-${i}`)}
             <li>
               {#if typeof person === 'string'}
                 {person}
@@ -228,14 +229,18 @@
     <section>
       <svelte:element this={`h${sectionLevel}`}>URL</svelte:element>
       {#if typeof entry.url === 'object'}
-        <a href={entry.url.value} target="_blank" rel="noopener noreferrer">
+        <a
+          href={resolve(entry.url.value)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {entry.url.value}
         </a>
         {#if entry.url.date}
           <p><em>(Accessed on: {entry.url.date})</em></p>
         {/if}
       {:else}
-        <a href={entry.url} target="_blank" rel="noopener noreferrer">
+        <a href={resolve(entry.url)} target="_blank" rel="noopener noreferrer">
           {entry.url}
         </a>
       {/if}
@@ -247,12 +252,16 @@
       <svelte:element this={`h${sectionLevel}`}>Serial Numbers</svelte:element>
       {#if typeof entry['serial-number'] === 'object' && !Array.isArray(entry['serial-number'])}
         <ul>
-          {#each Object.entries(entry['serial-number'] as Record<string, string>) as [key, value]}
+          {#each Object.entries(entry['serial-number'] as Record<string, string>) as [key, value] (key)}
             <li><strong>{key.toUpperCase()}:</strong> {value}</li>
           {/each}
         </ul>
       {:else}
-        <p>{entry['serial-number'] as any}</p>
+        <p>
+          {typeof entry['serial-number'] === 'number'
+            ? entry['serial-number'].toString()
+            : entry['serial-number']}
+        </p>
       {/if}
     </section>
   {/if}
@@ -298,14 +307,14 @@
       <svelte:element this={`h${sectionLevel}`}
         >Affiliated People</svelte:element
       >
-      {#each entry.affiliated as affiliation}
+      {#each entry.affiliated as affiliation, i (`${affiliation.role}-${i}`)}
         <svelte:element this={`h${subSectionLevel}`}>
           {affiliation.role.charAt(0).toUpperCase() + affiliation.role.slice(1)}
         </svelte:element>
 
         {#if Array.isArray(affiliation.names)}
           <ul>
-            {#each affiliation.names as person}
+            {#each affiliation.names as person, j (`${typeof person === 'string' ? person : person.name}-${j}`)}
               <li>
                 {#if typeof person === 'string'}
                   {person}
@@ -342,7 +351,7 @@
       </svelte:element>
 
       {#if Array.isArray(entry.parent)}
-        {#each entry.parent as p}
+        {#each entry.parent as p, i (i)}
           <Self entry={p} baseHeadingLevel={baseHeadingLevel + 1} />
         {/each}
       {:else}
