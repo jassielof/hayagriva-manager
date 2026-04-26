@@ -5,7 +5,9 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-@plugin 'daisyui' {
+/* TODO: Workaround until https://github.com/saadeghi/daisyui/issues/4505 is fixed */
+@plugin 'daisyui/index.js';
+@plugin 'daisyui/theme/index.js' {
   themes:
     emerald --default,
     dim --prefersdark;
