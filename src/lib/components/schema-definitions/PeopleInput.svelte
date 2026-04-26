@@ -42,13 +42,13 @@
 </script>
 
 <fieldset
-  class="fieldset bg-base-300/50 border-base-content/20 rounded-box gap-2 border p-4"
+  class="fieldset gap-2 rounded-box border border-base-content/20 bg-base-300/50 p-4"
 >
   <legend class="fieldset-legend">{label} </legend>
   {#if value === undefined || value === null}
     <button
       type="button"
-      class="btn btn-outline btn-success w-full"
+      class="btn w-full btn-outline btn-success"
       onclick={addPerson}
     >
       <Plus class="size-[1.2em]" /> Add {label}
@@ -60,7 +60,7 @@
 
     <button
       type="button"
-      class="btn btn-outline btn-success mt-2 w-full"
+      class="btn mt-2 w-full btn-outline btn-success"
       onclick={addPerson}
     >
       <Plus class="size-[1.2em]" /> Add Person
@@ -70,7 +70,7 @@
 
     <button
       type="button"
-      class="btn btn-outline btn-success mt-2 w-full"
+      class="btn mt-2 w-full btn-outline btn-success"
       onclick={addPerson}
     >
       <Plus class="size-[1.2em]" /> Add Person

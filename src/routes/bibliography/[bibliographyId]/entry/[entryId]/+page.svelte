@@ -11,7 +11,6 @@
   hljs.registerLanguage('yaml', yaml);
 
   let { data }: PageProps = $props();
-
 </script>
 
 <main>

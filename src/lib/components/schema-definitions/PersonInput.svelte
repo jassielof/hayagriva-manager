@@ -62,7 +62,7 @@
 </script>
 
 <fieldset
-  class="fieldset bg-base-300/50 border-base-content/20 rounded-box gap-2 border p-4"
+  class="fieldset gap-2 rounded-box border border-base-content/20 bg-base-300/50 p-4"
 >
   <legend class="fieldset-legend">
     <label class="cursor-pointer">
@@ -146,7 +146,7 @@
       </div>
     </div>
   {/if}
-  <button class="btn btn-error mt-2" type="button" onclick={() => remove()}
+  <button class="btn mt-2 btn-error" type="button" onclick={() => remove()}
     >Remove</button
   >
 </fieldset>

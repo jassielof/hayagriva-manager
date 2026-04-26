@@ -44,14 +44,14 @@
 </script>
 
 <fieldset
-  class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+  class="fieldset rounded-box border border-base-300 bg-base-100/50 p-4"
 >
   <legend class="fieldset-legend"> {label} </legend>
   <label for="publisher-entry" class="label">{label}</label>
   <input
     type="text"
     id="publisher-entry"
-    class="input w-full validator"
+    class="validator input w-full"
     bind:value={publisherName}
     {placeholder}
     required={publisherLocation ? true : false}

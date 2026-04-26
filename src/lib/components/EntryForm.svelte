@@ -21,7 +21,7 @@
   let parentType: 'none' | 'single' | 'list' = $state('none');
 
   $effect(() => {
-      if (entryData.parent === undefined || entryData.parent === null) {
+    if (entryData.parent === undefined || entryData.parent === null) {
       parentType = 'none';
     } else if (Array.isArray(entryData.parent)) {
       parentType = 'list';
@@ -196,7 +196,7 @@
 </select>
 
 {#if parentType === 'single' && entryData.parent && !Array.isArray(entryData.parent)}
-  <h3 class="text-secondary mt-4 text-lg">
+  <h3 class="mt-4 text-lg text-secondary">
     Parent entry of
     <span class="font-semibold italic">
       {#if typeof entryData.title == 'string'}
@@ -213,7 +213,7 @@
   {#each entryData.parent as _, i}
     <div class="mt-4 flex">
       <div class="flex-1">
-        <h3 class="text-secondary text-lg">
+        <h3 class="text-lg text-secondary">
           Parent entry #{i + 1} of
           <span class="font-semibold italic">
             {entryData.title}
@@ -224,7 +224,7 @@
       <div class="flex items-center">
         <button
           type="button"
-          class="btn btn-sm btn-circle btn-outline btn-error"
+          class="btn btn-circle btn-outline btn-sm btn-error"
           onclick={() => removeParent(i)}
         >
           <X class="h-4 w-4" />
@@ -237,7 +237,7 @@
 
   <button
     type="button"
-    class="btn btn-secondary btn-outline mt-4"
+    class="btn mt-4 btn-outline btn-secondary"
     onclick={addParent}
   >
     Add Parent

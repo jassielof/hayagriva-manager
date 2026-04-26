@@ -26,7 +26,7 @@
 
 <dialog bind:this={dialog} onclose={onClose} class="modal">
   <div class="modal-box">
-    <h3 class="text-error text-lg font-bold">{title}</h3>
+    <h3 class="text-lg font-bold text-error">{title}</h3>
     <p class="py-4">{message}</p>
     <div class="modal-action">
       <form method="dialog">

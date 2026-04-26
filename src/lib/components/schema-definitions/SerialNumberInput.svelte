@@ -8,7 +8,15 @@
     value: BibliographyEntry['serial-number'];
   } = $props();
 
-  const KNOWN_KEYS = ['serial', 'doi', 'isbn', 'issn', 'pmid', 'pmcid', 'arxiv'] as const;
+  const KNOWN_KEYS = [
+    'serial',
+    'doi',
+    'isbn',
+    'issn',
+    'pmid',
+    'pmcid',
+    'arxiv'
+  ] as const;
 
   let serial = $state('');
   let doi = $state('');
@@ -127,9 +135,8 @@
   });
 </script>
 
-
 <fieldset
-  class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+  class="fieldset rounded-box border border-base-300 bg-base-100/50 p-4"
 >
   <legend class="fieldset-legend">Serial Number</legend>
 
@@ -232,7 +239,7 @@
       </div>
       <button
         type="button"
-        class="btn btn-error btn-sm btn-square"
+        class="btn btn-square btn-sm btn-error"
         onclick={() => {
           customSerials.splice(i, 1);
         }}
@@ -244,7 +251,7 @@
 
   <button
     type="button"
-    class="btn btn-outline btn-sm w-full"
+    class="btn w-full btn-outline btn-sm"
     onclick={() => {
       customSerials.push({ key: '', value: '' });
     }}

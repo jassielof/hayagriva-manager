@@ -43,7 +43,7 @@
 </script>
 
 <fieldset
-  class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+  class="fieldset rounded-box border border-base-300 bg-base-100/50 p-4"
 >
   <legend class="fieldset-legend">{label}</legend>
 

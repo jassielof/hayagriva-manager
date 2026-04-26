@@ -24,19 +24,19 @@
 </script>
 
 <fieldset
-  class="fieldset bg-base-100/50 border-base-300 rounded-box border p-4"
+  class="fieldset rounded-box border border-base-300 bg-base-100/50 p-4"
 >
   <legend class="fieldset-legend"> Affiliated people </legend>
 
   {#if value && value.length > 0}
     <div class="space-y-4">
       {#each value as _, i (i)}
-        <div class="rounded-box border-base-content/20 border p-4">
+        <div class="rounded-box border border-base-content/20 p-4">
           <div class="flex items-center justify-between">
             <h4 class="text-lg font-semibold">Affiliated Person #{i + 1}</h4>
             <button
               type="button"
-              class="btn btn-error btn-sm btn-circle btn-outline"
+              class="btn btn-circle btn-outline btn-sm btn-error"
               onclick={() => removeAffiliated(i)}
             >
               <X class="h-4 w-4" />
@@ -60,7 +60,7 @@
     </div>
   {/if}
 
-  <button type="button" class="btn btn-outline w-full" onclick={addAffiliated}>
+  <button type="button" class="btn w-full btn-outline" onclick={addAffiliated}>
     <Plus class="size-[1.2em]" />
     Add Affiliated Person
   </button>
