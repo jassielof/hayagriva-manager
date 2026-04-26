@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { resolve } from '$app/paths';
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
   import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
-  import type { PageProps } from './$types';
   import { BibliographyService } from '$lib/services/bibliography.service';
   import { CircleAlert } from '@lucide/svelte';
+  import type { PageProps } from './$types';
 
   type ErrorWithBody = { body?: { message?: string } };
 

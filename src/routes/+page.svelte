@@ -1,6 +1,8 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
   import { db } from '$lib/db';
+  import { BibliographyService } from '$lib/services/bibliography.service';
+  import { hayagrivaService } from '$lib/services/hayagriva.service';
   import {
     BookOpen,
     BookPlus,
@@ -10,9 +12,7 @@
     Pencil,
     Trash
   } from '@lucide/svelte';
-  import { hayagrivaService } from '$lib/services/hayagriva.service';
   import { stateQuery } from 'dexie-svelte-query';
-  import { BibliographyService } from '$lib/services/bibliography.service';
 
   const bibliographyQuery = stateQuery(() => db.bibliographies.toArray());
   const bibliographyQueryLoading = $derived(bibliographyQuery.isLoading);

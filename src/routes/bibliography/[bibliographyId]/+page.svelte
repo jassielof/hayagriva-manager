@@ -1,5 +1,12 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
+  import { page } from '$app/state';
+  import { formatEntryType } from '$lib/formatters/entry-type-formatter';
+  import { BibliographyService } from '$lib/services/bibliography.service';
+  import type {
+    BibliographyEntry,
+    FormattableString
+  } from '$lib/types/hayagriva';
   import {
     BookPlus,
     Calendar,
@@ -10,14 +17,7 @@
     Trash,
     User
   } from '@lucide/svelte';
-  import { formatEntryType } from '$lib/formatters/entry-type-formatter';
-  import type {
-    BibliographyEntry,
-    FormattableString
-  } from '$lib/types/hayagriva';
-  import { page } from '$app/state';
   import { stateQuery } from 'dexie-svelte-query';
-  import { BibliographyService } from '$lib/services/bibliography.service';
 
   const bibliographyId = page.params.bibliographyId;
   const bibliographyQuery = stateQuery(() =>

@@ -1,7 +1,7 @@
 <script lang="ts">
+  import PreviewEntry from '$lib/components/views/PreviewEntry.svelte';
   import { Clipboard, Code, Eye } from '@lucide/svelte';
   import type { PageProps } from './$types';
-  import PreviewEntry from '$lib/components/views/PreviewEntry.svelte';
 
   let { data }: PageProps = $props();
 </script>

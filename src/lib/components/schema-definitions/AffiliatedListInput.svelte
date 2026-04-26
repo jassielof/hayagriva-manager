@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { AffiliatedPeople } from '$lib/types/hayagriva';
+  import { AFFILIATED_ROLES } from '$lib/validators/affiliated-roles';
   import { Plus, X } from '@lucide/svelte';
   import PeopleInput from './PeopleInput.svelte';
-  import { AFFILIATED_ROLES } from '$lib/validators/affiliated-roles';
 
   let { value = $bindable() }: { value?: AffiliatedPeople } = $props();
 

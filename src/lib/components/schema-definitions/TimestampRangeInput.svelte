@@ -1,6 +1,6 @@
 <script lang="ts">
-  import TimestampInput from './TimestampInput.svelte';
   import { X } from '@lucide/svelte';
+  import TimestampInput from './TimestampInput.svelte';
 
   let {
     value = $bindable(),

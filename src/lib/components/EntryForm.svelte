@@ -1,20 +1,20 @@
 <script lang="ts">
-  import type { BibliographyEntry } from '$lib/types/hayagriva';
-  import EntryForm from './EntryForm.svelte';
   import EntryTypeInput from '$lib/components/schema-definitions/EntryTypeInput.svelte';
   import FormattableStringInput from '$lib/components/schema-definitions/FormattableStringInput.svelte';
+  import type { BibliographyEntry } from '$lib/types/hayagriva';
   import { X } from '@lucide/svelte';
-  import PeopleInput from './schema-definitions/PeopleInput.svelte';
+  import EntryForm from './EntryForm.svelte';
+  import AffiliatedListInput from './schema-definitions/AffiliatedListInput.svelte';
   import DateInput from './schema-definitions/DateInput.svelte';
-  import LanguageInput from './schema-definitions/LanguageInput.svelte';
-  import UrlInput from './schema-definitions/UrlInput.svelte';
-  import NumericOrStringInput from './schema-definitions/NumericOrStringInput.svelte';
   import IntegerInput from './schema-definitions/IntegerInput.svelte';
+  import LanguageInput from './schema-definitions/LanguageInput.svelte';
+  import NumericOrStringInput from './schema-definitions/NumericOrStringInput.svelte';
+  import PeopleInput from './schema-definitions/PeopleInput.svelte';
   import PublisherInput from './schema-definitions/PublisherInput.svelte';
   import SerialNumberInput from './schema-definitions/SerialNumberInput.svelte';
-  import AffiliatedListInput from './schema-definitions/AffiliatedListInput.svelte';
   import TimestampInput from './schema-definitions/TimestampInput.svelte';
   import TimestampRangeInput from './schema-definitions/TimestampRangeInput.svelte';
+  import UrlInput from './schema-definitions/UrlInput.svelte';
 
   let { entryData = $bindable() }: { entryData: BibliographyEntry } = $props();
 

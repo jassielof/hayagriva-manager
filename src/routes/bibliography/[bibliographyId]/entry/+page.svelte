@@ -1,12 +1,12 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import { resolve } from '$app/paths';
   import EntryForm from '$lib/components/EntryForm.svelte';
-  import type { TopLevelEntry } from '$lib/types/hayagriva';
-  import type { PageProps } from './$types';
-  import { ClipboardPaste, Save, X } from '@lucide/svelte';
   import { BibliographyService } from '$lib/services/bibliography.service';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
-  import { goto } from '$app/navigation';
+  import type { TopLevelEntry } from '$lib/types/hayagriva';
+  import { ClipboardPaste, Save, X } from '@lucide/svelte';
+  import type { PageProps } from './$types';
 
   let { params }: PageProps = $props();
 

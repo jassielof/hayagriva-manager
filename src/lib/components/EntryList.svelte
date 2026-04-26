@@ -2,8 +2,11 @@
   import { resolve } from '$app/paths';
   import { formatEntryType } from '$lib/formatters/entry-type-formatter';
   import { BibliographyService } from '$lib/services/bibliography.service';
-  import type { FormattableString } from '$lib/types/hayagriva';
-  import type { BibliographyEntry, Hayagriva } from '$lib/types/hayagriva';
+  import type {
+    BibliographyEntry,
+    FormattableString,
+    Hayagriva
+  } from '$lib/types/hayagriva';
   import {
     Calendar,
     Ellipsis,

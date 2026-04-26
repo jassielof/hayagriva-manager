@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { resolve } from '$app/paths';
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
+  import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
   import { BibliographyService } from '$lib/services/bibliography.service';
   import { hayagrivaService } from '$lib/services/hayagriva.service';
   import type { Bibliography } from '$lib/types/bibliography';
   import type { Hayagriva } from '$lib/types/hayagriva';
-  import BibliographyMetadataForm from '$lib/components/BibliographyMetadataForm.svelte';
   import { CircleAlert } from '@lucide/svelte';
 
   let newBibliography: Bibliography = $state({
