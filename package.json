@@ -47,7 +47,7 @@
     "vite": "^8.0.10"
   },
   "dependencies": {
-    "@lucide/svelte": "^1.11.0",
+    "@lucide/svelte": "^1.14.0",
     "ajv": "^8.20.0",
     "dexie": "^4.4.2",
     "dexie-svelte-query": "^1.0.0",
