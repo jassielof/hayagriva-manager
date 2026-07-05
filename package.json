@@ -14,7 +14,7 @@
     "lint": "prettier --check . && eslint ."
   },
   "devDependencies": {
-    "@eslint/compat": "^2.0.5",
+    "@eslint/compat": "^2.1.0",
     "@eslint/js": "^10.0.1",
     "@ibm/plex-mono": "^1.1.0",
     "@ibm/plex-sans": "^1.1.0",
